@@ -43,7 +43,7 @@ require_once('calendar/classes/tc_calendar.php');
     <![endif]-->
 
     <style>
-	  #google_map {
+	  #google_map1 {
 	    width: 110%;
 	  }
 	  html, body {
@@ -163,7 +163,7 @@ require_once('calendar/classes/tc_calendar.php');
                         </div>
                         <div class="panel-body">
 							  <p class="largetxt"><b>Select start date and drag the marker to your location</b></p>
-							  <form name="form1" method="post" action="">
+							  <form name="form1" method="GET" action="./refreshdata.php">
 							  <?php
 							  $myCalendar = new tc_calendar("date5", true, false);
 							  $myCalendar->setTimezone("Europe/London");
@@ -174,9 +174,11 @@ require_once('calendar/classes/tc_calendar.php');
 							  $myCalendar->setAlignment('left', 'bottom');
 							  $myCalendar->writeScript();
 							  ?>
-							  <div id="google_map" style="width:800px;height:400px;"></div>
-							  <div id="Lat">Nothing yet...</div>
-							  <div id="Long">Nothing yet...</div>
+							  <div id="google_map" style="width:600px;height:600px;"></div>
+							  <div id="Latmark">Nothing yet...</div>
+							  <div id="Longmark">Nothing yet...</div>
+							  <input type="hidden" name="Lat" id="Lat">
+							  <input type="hidden" name="Long" id="Long">
   							  <script>
 								  function initMap() {
 									var oxford = {lat: 51.88, lng: -1.31};
@@ -190,21 +192,21 @@ require_once('calendar/classes/tc_calendar.php');
 									  map: map
 									});
 									google.maps.event.addListener(marker, 'dragend', function (evt) {
-									    document.getElementById('Lat').innerHTML = evt.latLng.lat().toFixed(3);
-									    document.getElementById('Long').innerHTML =evt.latLng.lng().toFixed(3);
+									    document.getElementById('Latmark').innerHTML = evt.latLng.lat().toFixed(3);
+									    document.getElementById('Longmark').innerHTML = evt.latLng.lng().toFixed(3);
+									    document.getElementById('Lat').value = evt.latLng.lat().toFixed(3);
+									    document.getElementById('Long').value = evt.latLng.lng().toFixed(3);
 									});
 									google.maps.event.addListener(marker, 'dragstart', function (evt) {
-									    document.getElementById('Lat').innerHTML = '<p>Currently dragging marker...</p>';
-									    document.getElementById('Long').innerHTML = '<p>Currently dragging marker...</p>';
+									    document.getElementById('Latmark').innerHTML = '<p>Currently dragging marker...</p>';
+									    document.getElementById('Longmark').innerHTML = '<p>Currently dragging marker...</p>';
 									});
 								  }
 								</script>
 								<script type="text/javascript" async defer
 								  src="https://maps.googleapis.com/maps/api/js?key=AIzaSyA3j6m0AQ0AwqetHgGg3OE6by4TqUCb-oE&callback=initMap">
 								</script>
-							  <input type="button" name="button" id="button" value="Use these Values"
-								  	onClick="javascript:alert(this.form.date5.value + ' ' + document.getElementById('Lat').innerHTML + ' '+ document.getElementById('Long').innerHTML);">
-
+							  <input type="submit" name="button" id="button" value="Use these Values">
 							  </form>
                         </div>
                         <div class="panel-footer">
