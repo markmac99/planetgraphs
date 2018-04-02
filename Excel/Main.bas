@@ -1,21 +1,36 @@
 Attribute VB_Name = "Main"
-Global Const pi = 3.141592654
-Global Const twopi = 6.283185307
-Global Const erad = 6378.14
-Global Const au = 149597870.7
-Global Const rad2deg = 57.29577951
+Global Const PI = 3.141592654
+Global Const TWOPI = 6.283185307
+Global Const ERAD = 6378.14
+Global Const AU = 149597870.7
+Global Const RAD2DEG = 57.29577951
 Global Const HR2DEG = 15.04107
 
-Global Const SUN = -1
-Global Const MOON = 0
-Global Const MERCURY = 1
-Global Const VENUS = 2
-Global Const MARS = 3
-Global Const JUPITER = 4
-Global Const SATURN = 5
-Global Const URANUS = 6
-Global Const NEPTUNE = 7
-Global Const EARTH = 8
+Global Const SUN = 0
+Global Const MOON = 1
+Global Const MERCURY = 2
+Global Const VENUS = 3
+Global Const MARS = 4
+Global Const JUPITER = 5
+Global Const SATURN = 6
+Global Const URANUS = 7
+Global Const NEPTUNE = 8
+Global Const EARTH = 9
+Global Const PLUTO = 10
+
+Public Type OrbitalElements
+    name As String
+    N(2) As Double
+    incl(2) As Double
+    omega(2) As Double
+    a(2) As Double
+    e(2) As Double
+    MA(2) As Double
+    mag(2) As Double
+    siz As Double
+End Type
+
+Public elements(10) As OrbitalElements
 
 Function sunriseset(dt As Date, lat As Double, longi As Double, ros As Integer, h As Double) As Double
     ' sunset can mean many things:
@@ -28,6 +43,7 @@ Function sunriseset(dt As Date, lat As Double, longi As Double, ros As Integer, 
     ' h = -15 degrees: Amateur astronomical twilight (the sky is dark enough for most astronomical observations)
     ' h = -18 degrees: Astronomical twilight (the sky is completely dark)
         
+    Call LoadOrbitalElements
     sunriseset = RiseSet(-1, dt, lat, longi, ros, h)
 End Function
 Function RiseSet(planetno As Integer, dt As Date, lat As Double, longi As Double, ros As Integer, ByVal h As Double) As Double
@@ -36,29 +52,31 @@ Function RiseSet(planetno As Integer, dt As Date, lat As Double, longi As Double
     Dim dd As Double, lst As Double, temp As Double, pres As Double, lha As Double, coslha As Double
     dd = days(Year(dt), Month(dt), Day(dt), 12, 0, 0)
     lst = LocalSiderealTime(Year(dt), Month(dt), Day(dt), 0, 0, 0, lat)
-    If planetno > 0 Then
+    
+    Call LoadOrbitalElements
+    If planetno > MOON Then
         ut_sis = TimeofTransit(planetno, dt, lat, longi)
     Else
         temp = 10 ' default value
         pres = 1010 ' default value
         tz = 0 ' for GMT
         ra = PlanetXYZ(SUN, dd, 6, lst, lat, temp, pres)
-        sunlong = MeanAnomaly(SUN, dd) + ArgOfPerihelion(-1, dd)
-        gmst0 = sunlong + pi
-        While gmst0 > twopi
-            gmst0 = gmst0 - twopi
+        sunlong = MeanAnomaly(SUN, dd) + ArgOfPerihelion(SUN, dd)
+        gmst0 = sunlong + PI
+        While gmst0 > TWOPI
+            gmst0 = gmst0 - TWOPI
         Wend
-        gmst0 = gmst0 * rad2deg
+        gmst0 = gmst0 * RAD2DEG
         ut_sis = (ra - gmst0 - longi)
         If ut_sis < 0 Then ut_sis = ut_sis + 360
         If ut_sis > 360 Then ut_sis = ut_sis - 360
         ut_sis = ut_sis / 15 ' not HR2DEG here, gets the maths wrong...
     End If
        
-    h = h / rad2deg
-    lati = lat / rad2deg
+    h = h / RAD2DEG
+    lati = lat / RAD2DEG
     decl = PlanetXYZ(planetno, dd, 7, lst, lat, temp, pres)
-    decl = decl / rad2deg
+    decl = decl / RAD2DEG
     
     ' local hour angle is the angle between local south and sunset or rise
     coslha = (Sin(h) - Sin(decl) * Sin(lati)) / (Cos(decl) * Cos(lati))
@@ -73,7 +91,7 @@ Function RiseSet(planetno As Integer, dt As Date, lat As Double, longi As Double
         End If
     Else
         lha = WorksheetFunction.Acos(coslha)
-        lha = lha * rad2deg
+        lha = lha * RAD2DEG
         If ros = 1 Then
             RiseSet = ut_sis - lha / HR2DEG
         Else
@@ -97,6 +115,8 @@ End Function
 Function IsVisible(planetno As Integer, dt As Date, lat As Double, longi As Double, vis_or_tele As Integer, a_or_t As String) As Double
     
     Dim sunalt As Double, planalt As Double
+    
+    Call LoadOrbitalElements
     If vis_or_tele = 1 Then ' visual
         sunalt = -0.8333   ' civil sunset when centre of sun is 0.8333 degrees below horizon
         planalt = 5         ' planet high enough to clear low obstructions
@@ -127,18 +147,28 @@ Function IsVisible(planetno As Integer, dt As Date, lat As Double, longi As Doub
         pres = 1010
         ' if the transit is in daylight, calculate the best height in dark
         ' if transit is before noon, use dawn, otherwise sunset
-        If tt > sunrise And tt < 12 Then
-            tt = sunrise
-        ElseIf tt > 12 And tt < sunset0 Then
+        If tt > sunrise And tt < sunset0 Then
+            lst = LSTFromDt(dt + sunrise / 24, longi) / 24
+            dd = AstroDaysFromDt(dt)
+            talt1 = PlanetXYZ(planetno, dd, 8, lst, lat, temp, pres)
+            lst = LSTFromDt(dt + sunset0 / 24, longi) / 24
+            dd = AstroDaysFromDt(dt)
+            talt2 = PlanetXYZ(planetno, dd, 8, lst, lat, temp, pres)
+            talt = talt2
             tt = sunset0
-        End If
-        lst = LSTFromDt(dt + tt / 24, longi) / 24
-        dd = AstroDaysFromDt(dt)
-        If a_or_t = "a" Then
+            If talt1 > talt2 Then
+                talt = talt1
+                tt = sunrise
+            End If
+        Else
+            lst = LSTFromDt(dt + tt / 24, longi) / 24
+            dd = AstroDaysFromDt(dt)
             talt = PlanetXYZ(planetno, dd, 8, lst, lat, temp, pres)
+        End If
+        If a_or_t = "a" Then
             IsVisible = talt
         Else
-            IsVisible = tt
+            IsVisible = tt / 24
         End If
     End If
 End Function
@@ -152,6 +182,7 @@ Function TimeofTransit(planetno As Integer, dt As Date, lat As Double, longi As 
 ' Me = mean anomaly of earth
 ' PIe = Long of Asc Node of Earth + argument of perihelion
 
+    Call LoadOrbitalElements
     Dim dd As Double, lst As Double, temp As Double, pres As Double
     temp = 10 ' default value
     pres = 1010 ' default value
@@ -159,15 +190,15 @@ Function TimeofTransit(planetno As Integer, dt As Date, lat As Double, longi As 
     dd = days(Year(dt), Month(dt), Day(dt), 0, 0, 0)
     lst = LocalSiderealTime(Year(dt), Month(dt), Day(dt), 0, 0, 0, lat)
     ra = PlanetXYZ(planetno, dd, 6, lst, lat, temp, pres)
-    ma = MeanAnomaly(EARTH, dd) * 180 / pi
-    n = (Sheets("Orbital Elements").Cells(3, 21) + Sheets("Orbital Elements").Cells(3, 22) * dd)
-    While n < 0
-        n = n + 360
+    MA = MeanAnomaly(EARTH, dd) * 180 / PI
+    N = elements(EARTH).N(1) + elements(EARTH).N(2) * dd
+    While N < 0
+        N = N + 360
     Wend
-    aop = ArgOfPerihelion(8, dd) * 180 / pi
-    n = n + aop
-    If (n > 360) Then n = n - 360
-    tt = (ra - longi - ma - n) / 15 - tz
+    aop = ArgOfPerihelion(EARTH, dd) * 180 / PI
+    N = N + aop
+    If (N > 360) Then N = N - 360
+    tt = (ra - longi - MA - N) / 15 - tz
     While tt < 0
         tt = tt + 24
     Wend
@@ -187,6 +218,7 @@ longi = -1.308
 typ = 1 ' visual
 ret = "a"
 
+Call LoadOrbitalElements
 For planetno = MERCURY To NEPTUNE
     f1 = FreeFile
     f2 = f1 + 1
@@ -202,7 +234,7 @@ For planetno = MERCURY To NEPTUNE
     End If
     dt = DateSerial(2018, 1, 1)
     
-    pname = Sheets("Orbital Elements").Cells(1, 5 + (2 * planetno))
+    pname = elements(planetno).name
     
     Open "c:\temp\" & pname & "Altitude.js" For Output As f1
     Open "c:\temp\" & pname & "Magnitude.js" For Output As f2

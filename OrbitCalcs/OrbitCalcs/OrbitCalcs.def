@@ -1,0 +1,10 @@
+LIBRARY ORBITCALCS
+EXPORTS
+	AstroDaysFromDt
+	days
+	JulianDate
+	LocalSiderealTime
+	LSTFromDt
+	GetDateFromDtval
+	DtvalToUnixTS
+	MeanAnomaly
