@@ -22,6 +22,10 @@
     <ClCompile Include="DateMaths.cpp" />
     <ClCompile Include="InitStaticData.cpp" />
     <ClCompile Include="OrbitCalcs.cpp" />
+    <ClCompile Include="Outputter.cpp" />
+    <ClCompile Include="Perturbations.cpp" />
+    <ClCompile Include="Pluto.cpp" />
+    <ClCompile Include="TransitRiseSet.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="OrbitCalcs.h" />

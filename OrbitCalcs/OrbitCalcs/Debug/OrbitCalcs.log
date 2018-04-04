@@ -1,3 +1,11 @@
-﻿  OrbitCalcs.cpp
-  OrbitCalcs.vcxproj -> C:\Users\Mark\Documents\projects\planetgraphs\OrbitCalcs\Debug\OrbitCalcs.dll
-  OrbitCalcs.vcxproj -> C:\Users\Mark\Documents\projects\planetgraphs\OrbitCalcs\Debug\OrbitCalcs.pdb (Full PDB)
+﻿  TransitRiseSet.cpp
+  Generating Code...
+  Compiling...
+  Pluto.cpp
+  Perturbations.cpp
+  Outputter.cpp
+  OrbitCalcs.cpp
+  InitStaticData.cpp
+  DateMaths.cpp
+  Generating Code...
+LINK : fatal error LNK1168: cannot open C:\Users\Mark\Documents\projects\planetgraphs\OrbitCalcs\Debug\OrbitCalcs.dll for writing

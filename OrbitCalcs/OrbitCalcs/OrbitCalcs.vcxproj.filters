@@ -24,6 +24,18 @@
     <ClCompile Include="InitStaticData.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="Perturbations.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Pluto.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Outputter.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="TransitRiseSet.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="OrbitCalcs.h">

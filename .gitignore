@@ -3,6 +3,6 @@
 *.pdb
 *.exp
 *.ilk
-**/*.obj
-**/*.tlog
-**/*.log
+*.obj
+*.tlog
+*.log
