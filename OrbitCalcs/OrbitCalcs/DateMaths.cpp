@@ -41,16 +41,21 @@ double __stdcall JulianDate(int yy, int mo, int dd, int hh, int mm, int ss)
 	return JD;
 }
 
-int __stdcall GetDateFromDtval(double dtval, int& yy, int& mo, int& dd, int& hh, int& mm, int& ss )
+double __stdcall GetDateFromDtval(double dtval, int& yy, int& mo, int& dd, int& hh, int& mm, int& ss )
 {
-	yy = (int)(dtval / 10000);
-	mo = (int)((dtval - yy * 10000) / 100);
-	dd = (int)((dtval - yy * 10000 - mo * 100));
-	double dyfrac = dtval - yy * 10000 - mo * 100 - dd;
-	hh = (int)(dyfrac * 24.0);
-	mm = (int)((dyfrac * 24.0 - hh) * 60);
-	ss = (int)(((dyfrac * 24.0 - hh) * 60 -mm)*60);
-	return (int)(dyfrac*1000);
+	time_t unixdt= (time_t)((dtval - 25569.0) * 86400.0);
+	struct tm tmval;
+	errno_t err = _gmtime64_s(&tmval, &unixdt);
+
+	yy = tmval.tm_year+1900;
+	mo = tmval.tm_mon+1;
+	dd = tmval.tm_mday;
+	hh = tmval.tm_hour;
+	mm = tmval.tm_min;
+	ss = tmval.tm_sec;
+
+	return (double)(unixdt);
+//	return dtval;
 }
 
 double __stdcall LSTFromDt(double dtval, double longi)

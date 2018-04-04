@@ -8,3 +8,22 @@ EXPORTS
 	GetDateFromDtval
 	DtvalToUnixTS
 	MeanAnomaly
+	Eccentricity
+	Inclination
+	EccentricAnomaly
+	ArgOfPerihelion
+	ObliquityofEcliptic
+	PrecessionCorr
+	SunLongitude
+	SunRA
+	SunDec
+	PlanDist
+	PlanTrueAnomaly
+	AzFromRADec
+	PlanetXYZ
+	MoonPerturbations
+	GasPerturbations
+	SunRiseSet
+	RiseSet
+	TimeofTransit
+	IsVisible

@@ -35,7 +35,7 @@ extern struct OrbitalElements elements[10];
 
 void LoadOrbitalElements(OrbitalElements* elements);
 
-int __stdcall GetDateFromDtval(double dtval, int& yy, int& mo, int& dd, int& hh, int& mm, int& ss);
+double __stdcall GetDateFromDtval(double dtval, int& yy, int& mo, int& dd, int& hh, int& mm, int& ss);
 
 double __stdcall AstroDaysFromDt(double dtval);
 double __stdcall days(int yy, int mo, int dd, int hh, int mm, int ss);
@@ -45,5 +45,27 @@ double __stdcall LSTFromDt(double dtval, double longi);
 long __stdcall DtvalToUnixTS(double dtval);
 
 double __stdcall MeanAnomaly(int planetno, double dd);
+double __stdcall Eccentricity(int planetno, double d);
+double __stdcall Inclination(int planetno, double d);
+double __stdcall EccentricAnomaly(double m, double e);
+double __stdcall ArgOfPerihelion(int planetno, double dd);
+double __stdcall ObliquityofEcliptic(double dd);
+double __stdcall PrecessionCorr(double epoch, double dd);
+double __stdcall SunLongitude(double v, double dd);
+double __stdcall SunRA(double dd);
+double __stdcall SunDec(double dd);
+double __stdcall PlanDist(int planetno, double dd);
+double __stdcall PlanTrueAnomaly(int planetno, double d);
+double __stdcall AzFromRADec(double  lst, double ra, double dec, double lat, char zora, double temp, double pres);
+double __stdcall PlanetXYZ(int planetno, double dd, int xyz, double lst, double lat, double temp, double pres); 
+double __stdcall MoonPerturbations(double dd, int latlongpos);
+double __stdcall GasPerturbations(int planetno, double dd, int latlongpos);
+double __stdcall  SunRiseSet(double dtval, double lat, double longi, int ros, double h);
+double __stdcall RiseSet(int planetno, double dtval, double  lat, double longi, int ros, double h);
+double __stdcall TimeofTransit(int planetno, double dtval, double lat, double longi);
+double __stdcall IsVisible(int planetno, double dtval, double lat, double longi, int vis_or_tele, int a_or_t);
+
+void DoPluto(double dd, double& lonecl, double& latecl, double& r);
+
 
 
