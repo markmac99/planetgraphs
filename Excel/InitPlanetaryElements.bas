@@ -1,5 +1,5 @@
 Attribute VB_Name = "InitPlanetaryElements"
-Sub LoadOrbitalElements()
+Sub vbLoadOrbitalElements()
    elements(0).name = "Sun"
    elements(0).N(1) = 0
    elements(0).N(2) = 0
@@ -11,8 +11,8 @@ Sub LoadOrbitalElements()
    elements(0).a(2) = 0
    elements(0).e(1) = 0.016709
    elements(0).e(2) = -1.15091033538672E-09
-   elements(0).MA(1) = 356.047
-   elements(0).MA(2) = 0.9856002585
+   elements(0).ma(1) = 356.047
+   elements(0).ma(2) = 0.9856002585
    elements(0).mag(1) = -26.76
    elements(0).mag(2) = 0
    elements(0).siz = 1919.26
@@ -28,8 +28,8 @@ Sub LoadOrbitalElements()
    elements(1).a(2) = 0
    elements(1).e(1) = 0.0549
    elements(1).e(2) = 0
-   elements(1).MA(1) = 115.3654
-   elements(1).MA(2) = 13.0649929509
+   elements(1).ma(1) = 115.3654
+   elements(1).ma(2) = 13.0649929509
    elements(1).mag(1) = 0.23
    elements(1).mag(2) = 0.026
    elements(1).siz = 1873.7
@@ -45,8 +45,8 @@ Sub LoadOrbitalElements()
    elements(2).a(2) = 0
    elements(2).e(1) = 0.205635
    elements(2).e(2) = 0.000000000559
-   elements(2).MA(1) = 168.6562
-   elements(2).MA(2) = 4.0923344368
+   elements(2).ma(1) = 168.6562
+   elements(2).ma(2) = 4.0923344368
    elements(2).mag(1) = -0.36
    elements(2).mag(2) = 0.027
    elements(2).siz = 6.74
@@ -62,8 +62,8 @@ Sub LoadOrbitalElements()
    elements(3).a(2) = 0
    elements(3).e(1) = 0.006773
    elements(3).e(2) = -0.000000001302
-   elements(3).MA(1) = 48.0052
-   elements(3).MA(2) = 1.6021302244
+   elements(3).ma(1) = 48.0052
+   elements(3).ma(2) = 1.6021302244
    elements(3).mag(1) = -4.34
    elements(3).mag(2) = 0.013
    elements(3).siz = 16.92
@@ -79,8 +79,8 @@ Sub LoadOrbitalElements()
    elements(4).a(2) = 0
    elements(4).e(1) = 0.093405
    elements(4).e(2) = 0.000000002516
-   elements(4).MA(1) = 18.6021
-   elements(4).MA(2) = 0.5240207766
+   elements(4).ma(1) = 18.6021
+   elements(4).ma(2) = 0.5240207766
    elements(4).mag(1) = -1.51
    elements(4).mag(2) = 0.016
    elements(4).siz = 9.36
@@ -96,8 +96,8 @@ Sub LoadOrbitalElements()
    elements(5).a(2) = 0
    elements(5).e(1) = 0.048498
    elements(5).e(2) = 0.000000004469
-   elements(5).MA(1) = 19.895
-   elements(5).MA(2) = 0.0830853001
+   elements(5).ma(1) = 19.895
+   elements(5).ma(2) = 0.0830853001
    elements(5).mag(1) = -9.25
    elements(5).mag(2) = 0.014
    elements(5).siz = 196.34
@@ -113,8 +113,8 @@ Sub LoadOrbitalElements()
    elements(6).a(2) = 0
    elements(6).e(1) = 0.055546
    elements(6).e(2) = -0.000000009499
-   elements(6).MA(1) = 316.967
-   elements(6).MA(2) = 0.0334442282
+   elements(6).ma(1) = 316.967
+   elements(6).ma(2) = 0.0334442282
    elements(6).mag(1) = -9
    elements(6).mag(2) = 0.044
    elements(6).siz = 165.6
@@ -130,8 +130,8 @@ Sub LoadOrbitalElements()
    elements(7).a(2) = -0.0000000155
    elements(7).e(1) = 0.047318
    elements(7).e(2) = 0.00000000745
-   elements(7).MA(1) = 142.5905
-   elements(7).MA(2) = 0.011725806
+   elements(7).ma(1) = 142.5905
+   elements(7).ma(2) = 0.011725806
    elements(7).mag(1) = -7.15
    elements(7).mag(2) = 0.001
    elements(7).siz = 65.8
@@ -147,8 +147,8 @@ Sub LoadOrbitalElements()
    elements(8).a(2) = 0.00000003313
    elements(8).e(1) = 0.008606
    elements(8).e(2) = 0.00000000215
-   elements(8).MA(1) = 260.2471
-   elements(8).MA(2) = 0.005995147
+   elements(8).ma(1) = 260.2471
+   elements(8).ma(2) = 0.005995147
    elements(8).mag(1) = -6.9
    elements(8).mag(2) = 0.001
    elements(8).siz = 62.2
@@ -164,8 +164,8 @@ Sub LoadOrbitalElements()
    elements(9).a(2) = 0
    elements(9).e(1) = 0.016709
    elements(9).e(2) = -1.15091033538672E-09
-   elements(9).MA(1) = 356.047
-   elements(9).MA(2) = 0.9856002585
+   elements(9).ma(1) = 356.047
+   elements(9).ma(2) = 0.9856002585
    elements(9).mag(1) = 0
    elements(9).mag(2) = 0
    elements(9).siz = 17.59

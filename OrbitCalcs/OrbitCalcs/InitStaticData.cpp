@@ -5,9 +5,18 @@
 #include <string.h>
 #include <math.h>
 
+/*
+Main planetary data from http://www.stjarnhimlen.se/comp/ppcomp.html#4 Data is J2000 Epoch
+Minor bodies orbital elements from https://ssd.jpl.nasa.gov/sbdb.cgi?sstr=1 Data epoch stated on webpage
+
+Other useful pages http://www.met.rdg.ac.uk/~ross/Astronomy/Planets.html - orbital elements (slightly different values!)
+and http://cosinekitty.com/solar_system.html - calculator for comparing with my calcs
+*/
 
 void LoadOrbitalElements(OrbitalElements* elements)
 {
+	memset(elements, 0, sizeof(OrbitalElements)*NUMELEMENTS);
+
 	strcpy(elements[0].name,"Sun");
 	elements[0].N[0] = 0;
 	elements[0].N[1] = 0;
@@ -22,7 +31,7 @@ void LoadOrbitalElements(OrbitalElements* elements)
 	elements[0].MA[0] = 356.047;
 	elements[0].MA[1] = 0.9856002585;
 	elements[0].mag[0] = -26.76;
-	elements[0].mag[1] = 0;
+	elements[0].mag[1] = elements[2].mag[1] = elements[0].mag[3] = 0;
 	elements[0].siz = 1919.26;
 
 	strcpy(elements[1].name,"Moon");
@@ -40,6 +49,8 @@ void LoadOrbitalElements(OrbitalElements* elements)
 	elements[1].MA[1] = 13.0649929509;
 	elements[1].mag[0] = 0.23;
 	elements[1].mag[1] = 0.026;
+	elements[1].mag[2] = 0.000000004;
+	elements[1].mag[3] = 4;
 	elements[1].siz = 1873.7;
 
 	strcpy(elements[2].name,"Mercury");
@@ -57,6 +68,8 @@ void LoadOrbitalElements(OrbitalElements* elements)
 	elements[2].MA[1] = 4.0923344368;
 	elements[2].mag[0] = -0.36;
 	elements[2].mag[1] = 0.027;
+	elements[2].mag[2] = 0.00000000000022;
+	elements[2].mag[3] = 6;
 	elements[2].siz = 6.74;
 
 	strcpy(elements[3].name, "Venus");
@@ -74,6 +87,8 @@ void LoadOrbitalElements(OrbitalElements* elements)
 	elements[3].MA[1] = 1.6021302244;
 	elements[3].mag[0] = -4.34;
 	elements[3].mag[1] = 0.013;
+	elements[3].mag[2] = 0.00000042;
+	elements[3].mag[3] = 3;
 	elements[3].siz = 16.92;
 
 	strcpy(elements[4].name, "Mars");
@@ -91,6 +106,8 @@ void LoadOrbitalElements(OrbitalElements* elements)
 	elements[4].MA[1] = 0.5240207766;
 	elements[4].mag[0] = -1.51;
 	elements[4].mag[1] = 0.016;
+	elements[4].mag[2] = 0;
+	elements[4].mag[3] = 0;
 	elements[4].siz = 9.36;
 
 	strcpy(elements[5].name, "Jupiter");
@@ -108,6 +125,8 @@ void LoadOrbitalElements(OrbitalElements* elements)
 	elements[5].MA[1] = 0.0830853001;
 	elements[5].mag[0] = -9.25;
 	elements[5].mag[1] = 0.014;
+	elements[5].mag[2] = 0;
+	elements[5].mag[3] = 0;
 	elements[5].siz = 196.34;
 
 	strcpy(elements[6].name, "Saturn");
@@ -125,6 +144,8 @@ void LoadOrbitalElements(OrbitalElements* elements)
 	elements[6].MA[1] = 0.0334442282;
 	elements[6].mag[0] = -9;
 	elements[6].mag[1] = 0.044;
+	elements[6].mag[2] = 0;
+	elements[6].mag[3] = 0;
 	elements[6].siz = 165.6;
 
 	strcpy(elements[7].name, "Uranus");
@@ -142,6 +163,8 @@ void LoadOrbitalElements(OrbitalElements* elements)
 	elements[7].MA[1] = 0.011725806;
 	elements[7].mag[0] = -7.15;
 	elements[7].mag[1] = 0.001;
+	elements[7].mag[2] = 0;
+	elements[7].mag[3] = 0;
 	elements[7].siz = 65.8;
 
 	strcpy(elements[8].name, "Neptune");
@@ -159,6 +182,8 @@ void LoadOrbitalElements(OrbitalElements* elements)
 	elements[8].MA[1] = 0.005995147;
 	elements[8].mag[0] = -6.9;
 	elements[8].mag[1] = 0.001;
+	elements[8].mag[2] = 0;
+	elements[8].mag[3] = 0;
 	elements[8].siz = 62.2;
 
 	strcpy(elements[9].name, "Earth");
@@ -176,5 +201,46 @@ void LoadOrbitalElements(OrbitalElements* elements)
 	elements[9].MA[1] = 0.9856002585;
 	elements[9].mag[0] = 0;
 	elements[9].mag[1] = 0;
+	elements[9].mag[2] = 0;
+	elements[9].mag[3] = 0;
 	elements[9].siz = 17.59;
+
+	// can't use 10 as this is pluto!
+
+	int n = 11;
+	strcpy(elements[n].name, "1-Ceres");
+	elements[n].N[0] = 80.30991865594387;
+	elements[n].N[1] = 0;
+	elements[n].incl[0] = 10.5935097971363;
+	elements[n].incl[1] = 0;
+	elements[n].omega[0] = 73.11534200131032;
+	elements[n].omega[1] = 0;
+	elements[n].a[0] = 2.767046248500289;
+	elements[n].a[1] = 0;
+	elements[n].e[0] = 0.07553461024389638;
+	elements[n].e[1] = 0;
+	elements[n].MA[0] = 352.2304611765882;
+	elements[n].MA[1] = 0;
+	elements[n].mag[0] = 3.34;
+	elements[n].mag[1] = 0;
+	elements[n].mag[2] = 0;
+	elements[n].mag[3] = 0;
+	elements[n].siz = 939.4; // km 
+	//elements[n].epoch = 2458200.5;
+	elements[n].epoch[0] = 2018;
+	elements[n].epoch[1] = 3;
+	elements[n].epoch[2] = 23;
+	elements[n].meanmotion = 0.2141309515334005;
+
+	// adjust size to be in arcsecs
+	elements[n].siz *= (3600.0 * RAD2DEG) / (elements[n].a[0] * AU);
+
+	//  adjust to J2000 epoch from the epoch of the data from JPL
+	double jd = JulianDate(elements[n].epoch[0], elements[n].epoch[1], elements[n].epoch[2], 0, 0, 0);
+	double dd = days(elements[n].epoch[0], elements[n].epoch[1], elements[n].epoch[2], 0, 0, 0);
+	double epochyr = elements[n].epoch[0] + elements[n].epoch[1] / 12.0 + elements[n].epoch[2] / 30.0; // approx value
+
+	elements[n].MA[0] -= elements[n].meanmotion*(jd - 2451543.5); // adjust MA to J2000 
+	elements[n].N[0] -= PrecessionCorr(epochyr, dd); // precession correction to the longitude of the ascending node
+
 }

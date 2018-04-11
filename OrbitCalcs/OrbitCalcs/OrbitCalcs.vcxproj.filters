@@ -36,6 +36,9 @@
     <ClCompile Include="TransitRiseSet.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="MagAndSize.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="OrbitCalcs.h">

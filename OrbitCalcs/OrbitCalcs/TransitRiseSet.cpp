@@ -5,7 +5,7 @@
 
 
 
-double __stdcall  SunRiseSet(double dtval, double lat, double longi, int ros, double h)
+double __stdcall  SunRiseSet(double dtval, double lat, double longi, int ros, double h, double temp, double pres)
 {
 	// sunset can mean many things:
 	// h = 0 degrees: Center of Sun's disk touches a mathematical horizon
@@ -17,27 +17,26 @@ double __stdcall  SunRiseSet(double dtval, double lat, double longi, int ros, do
 	// h = -15 degrees: Amateur astronomical twilight (the sky is dark enough for most astronomical observations)
 	// h = -18 degrees: Astronomical twilight (the sky is completely dark)
 
-	return RiseSet(SUN, dtval, lat, longi, ros, h);
+	return RiseSet(SUN, dtval, lat, longi, ros, h, temp, pres);
 }
 
-double __stdcall RiseSet(int planetno, double dtval, double  lat, double longi, int ros, double h)
+double __stdcall RiseSet(int planetno, double dtval, double  lat, double longi, int ros, double h, double temp, double pres)
 {
 	// calculate UT when the planet is due south
 
-	double dd, lst, temp, pres, lha, coslha;
+	double dd, lst, lha, coslha;
 	int yy, mo, dy, hh, mm, ss, tz;
-	double ra, sunlong, gmst0, ut_sis;
-	double lati, decl;
+	double ra, sunlong, gmst0, ut_sis=0;
+	double lati=0, decl=0;
+	double rs=0;
 
 	GetDateFromDtval(dtval, yy, mo, dy, hh, mm, ss);
 	dd = days(yy, mo, dy, 12, 0, 0);
 	lst = LocalSiderealTime(yy, mo, dy, 0, 0, 0, lat);
-	temp = 10; // default value
-	pres = 1010; // default value
 	tz = 0; // for GMT
 
 	if(planetno > MOON)
-		double ut_sis = TimeofTransit(planetno, dtval, lat, longi);
+		ut_sis = TimeofTransit(planetno, dtval, lat, longi);
 	else
 	{
 		ra = PlanetXYZ(SUN, dd, 6, lst, lat, temp, pres);
@@ -74,7 +73,6 @@ double __stdcall RiseSet(int planetno, double dtval, double  lat, double longi, 
 	}
 	else // ok planet rises and sets
 	{
-		double rs;
 		lha = acos(coslha);
 		lha = lha * RAD2DEG;
 		if (ros == 1)
@@ -136,15 +134,15 @@ double __stdcall TimeofTransit(int planetno, double dtval, double lat, double lo
 	// - visual / widefield - planet must be above horizon, sun must be below, planet elong > 20 degs
 	// - telescopic / imaging - planet must be more than 20 degs above, sun more than 10 degs below horizon
 
-double __stdcall IsVisible(int planetno, double dtval, double lat, double longi, int vis_or_tele, int a_or_t)
+double __stdcall IsVisible(int planetno, double dtval, double lat, double longi, int vis_or_tele, int a_or_t, double temp, double pres)
 {
 	int yy, mo, dy, hh, mm, ss;
 	double talt, tt;
 	double sunalt, planalt, sunrise, sunset0, planrise, planset0;
-	double dd, lst, temp, pres;
+	double dd, lst;
 
 	GetDateFromDtval(dtval, yy, mo, dy, hh, mm, ss);
-	if (vis_or_tele = 1)
+	if (vis_or_tele == 1)
 	{
 		//visual
 		sunalt = -0.8333;   // civil sunset when centre of sun is 0.8333 degrees below horizon
@@ -157,19 +155,19 @@ double __stdcall IsVisible(int planetno, double dtval, double lat, double longi,
 	}
 
 	// effective rise and set times
-	sunrise = RiseSet(SUN, dtval, lat, longi, 1, sunalt);
-	sunset0 = RiseSet(SUN, dtval, lat, longi, 2, sunalt);
+	sunrise = RiseSet(SUN, dtval, lat, longi, 1, sunalt, temp, pres);
+	sunset0 = RiseSet(SUN, dtval, lat, longi, 2, sunalt, temp, pres);
 
 	// effective rise and set times
-	planrise = RiseSet(planetno, dtval, lat, longi, 1, planalt);
-	planset0 = RiseSet(planetno, dtval, lat, longi, 2, planalt);
+	planrise = RiseSet(planetno, dtval, lat, longi, 1, planalt, temp, pres);
+	planset0 = RiseSet(planetno, dtval, lat, longi, 2, planalt, temp, pres);
 
 	// if the planet only meets the criteria after sunrise AND before sunset, return zero
 	// the planet might set after midnight, so adjust the time to cater for that.
 	if (planset0 < planrise)
 		planset0 = planset0 + 24;
 
-	if (planrise > sunrise && planrise < sunset0 && planset0 < sunset0 && planset0 > sunrise)
+	if ((planrise > sunrise) && (planrise < sunset0) && (planset0 < sunset0) && (planset0 > sunrise))
 	{
 		return 0;
 	}
@@ -178,11 +176,10 @@ double __stdcall IsVisible(int planetno, double dtval, double lat, double longi,
 	else
 	{
 		tt = TimeofTransit(planetno, dtval, lat, longi);
-		temp = 10;
-		pres = 1010;
+
 		// if the transit is in daylight, calculate the best height in dark
 		// if transit is before noon, use dawn, otherwise sunset
-		if (tt > sunrise && tt < sunset0)
+		if ((tt > sunrise) && (tt < sunset0))
 		{
 			double talt1, talt2;
 			// get altitude at sunrise and sunset to see which is best

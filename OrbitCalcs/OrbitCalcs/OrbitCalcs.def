@@ -8,6 +8,7 @@ EXPORTS
 	GetDateFromDtval
 	DtvalToUnixTS
 	MeanAnomaly
+	LongOfAscNode
 	Eccentricity
 	Inclination
 	EccentricAnomaly
@@ -27,3 +28,8 @@ EXPORTS
 	RiseSet
 	TimeofTransit
 	IsVisible
+	Phase
+	Elongation
+	VisualMagnitude
+	ApparentSize
+	AltAtTransit

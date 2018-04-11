@@ -1,6 +1,8 @@
 #include "OrbitCalcs.h"
 #include <time.h>
 
+// model taken from http://www.stjarnhimlen.se/comp/ppcomp.html
+
 double __stdcall AstroDaysFromDt(double dtval)
 {
 	int yy, mo, dd, hh, mm, ss;

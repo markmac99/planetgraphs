@@ -21,6 +21,7 @@
   <ItemGroup>
     <ClCompile Include="DateMaths.cpp" />
     <ClCompile Include="InitStaticData.cpp" />
+    <ClCompile Include="MagAndSize.cpp" />
     <ClCompile Include="OrbitCalcs.cpp" />
     <ClCompile Include="Outputter.cpp" />
     <ClCompile Include="Perturbations.cpp" />

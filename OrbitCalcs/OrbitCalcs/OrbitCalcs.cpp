@@ -2,7 +2,9 @@
 #include <math.h>
 #include "OrbitCalcs.h"
 
-struct OrbitalElements elements[10];
+// model taken from http://www.stjarnhimlen.se/comp/ppcomp.html
+
+struct OrbitalElements elements[NUMELEMENTS];
 
 extern "C" BOOL WINAPI DllMain(HANDLE hinstDLL, DWORD fdwReason, LPVOID lpvReserved)
 {
@@ -26,6 +28,18 @@ double __stdcall MeanAnomaly(int planetno , double dd )
 	while (ma < 0)
 		ma = ma + TWOPI;
 	return ma ;
+}
+
+double __stdcall LongOfAscNode(int planetno, double d)
+{
+	double n1 = elements[planetno].N[0];
+	double n2 = elements[planetno].N[1];
+	double n = (n1 + n2 * d);
+	while (n > TWOPI)
+		n -= TWOPI;
+	while (n < 0)
+		n += TWOPI;
+	return n;
 }
 
 double __stdcall Eccentricity(int planetno, double d)
@@ -68,8 +82,9 @@ double __stdcall ArgOfPerihelion(int planetno, double dd)
 }
 double __stdcall ObliquityofEcliptic(double dd)
 {
-	return ((23.4392911 - 0.000000356115 * dd) / RAD2DEG);
+	return (23.4392911 - 0.000000356115 * dd)/RAD2DEG;
 }
+
 double __stdcall PrecessionCorr(double epoch, double dd)
 {
 	return (0.0000382394 * (365.2422 * (epoch - 2000.0) - dd));
@@ -93,7 +108,7 @@ double __stdcall SunDec(double dd)
 
 double __stdcall PlanDist(int planetno, double dd)
 {
-	if (planetno = PLUTO)
+	if (planetno == PLUTO)
 	{
 		double lonecl, latecl, r;
 		DoPluto(dd, lonecl, latecl, r);
@@ -107,7 +122,7 @@ double __stdcall PlanDist(int planetno, double dd)
 		double ea = EccentricAnomaly(m, e);
 		double xv = cos(ea) - e;
 		double yv = sqrt(1.0 - e*e) * sin(ea);
-		return (a * sqrt(xv*xv + yv*xv));
+		return (a * sqrt(xv*xv + yv*yv));
 	}
 }
 
@@ -118,7 +133,7 @@ double __stdcall PlanTrueAnomaly(int planetno, double d)
 	double ea = EccentricAnomaly(m, e);
 	double xv = (cos(ea) - e);
 	double yv = (sqrt(1.0 - e*e) * sin(ea));
-	double pta = atan2(xv, yv);
+	double pta = atan2(yv, xv);
 
 	while (pta > TWOPI)
 		pta = pta - TWOPI;
@@ -127,7 +142,7 @@ double __stdcall PlanTrueAnomaly(int planetno, double d)
 	return pta;
 }
 
-double __stdcall AzFromRADec(double  lst, double ra, double dec, double lat, char zora, double temp, double pres)
+double __stdcall AzFromRADec(double  lst, double ra, double dec, double lat, int zora, double temp, double pres)
 {
 
 	double ha = (lst * 360 - ra) / RAD2DEG;
@@ -142,26 +157,37 @@ double __stdcall AzFromRADec(double  lst, double ra, double dec, double lat, cha
 	double yhor = y;
 	double zhor = x * cos(lat) + Z * sin(lat);
 
-	double az = atan2(xhor, yhor) * RAD2DEG + 180.0;
-	if (zora == 'z')
+	double az = atan2(yhor, xhor) * RAD2DEG + 180.0;
+	if (zora == 0)
 		return az;
 	else
 	{
-		double alti = atan2(sqrt(xhor*xhor + yhor*yhor), zhor);
+		double alti = atan2(zhor, sqrt(xhor*xhor + yhor*yhor));
 		// correction for atmospheric distortion - after Saemundsson
-		double r = 1.02 / tan(alti + 10.3 / (alti * 180 / PI + 5.11) / RAD2DEG);
-		//temperature & pressure correction
-		r = r * pres / 1010 * 283 / (temp + 273.0);
+		double h = alti*RAD2DEG;
+		double hh = h + (10.3 / (h + 5.11));
+		double r = 1.02 / tan(hh/RAD2DEG);
+
+		//temperature & pressure correction - above formula assumes P=1010 and T=10
+		r = r * pres / 1010 * 283.0 / (temp + 273.0);
 
 		return (alti * RAD2DEG + r / 60.0);
 	}
+}
+
+double __stdcall AltAtTransit(int planetno, double dtval, double lat, double longi, double temp, double pres)
+{
+	double tt = TimeofTransit(planetno, dtval, lat, longi);
+	double dd = AstroDaysFromDt(dtval + tt / 24.0);
+	double lst = LSTFromDt(dtval + tt/24.0, longi)/24.0;
+	return PlanetXYZ(planetno, dd, 8, lst, lat, temp, pres);
 }
 
 double __stdcall PlanetXYZ(int planetno, double dd, int xyz, double lst, double lat, double temp, double pres)
 {
 	double lonecl, latecl, r, v;
 	double xh, yh, zh, ra, decl, azi, alti;
-	if (planetno < PLUTO)
+	if (planetno != PLUTO)
 	{
 		double a = elements[planetno].a[0] + dd * elements[planetno].a[1];
 		double N = (elements[planetno].N[0] + dd * elements[planetno].N[1]) / RAD2DEG;
@@ -178,7 +204,7 @@ double __stdcall PlanetXYZ(int planetno, double dd, int xyz, double lst, double 
 
 		// distance and true anomaly from perihelion
 		r = a * sqrt(xv*xv + yv*yv);
-		v = atan2(xv, yv);
+		v = atan2(yv, xv);
 
 		// calculate heliocentric coords excluding perturbations
 		// nb these coords are *geo*centric for the moon
@@ -189,8 +215,8 @@ double __stdcall PlanetXYZ(int planetno, double dd, int xyz, double lst, double 
 		r = sqrt(xh*xh + yh*yh + zh*zh);
 
 		// coords in ecliptic plane
-		lonecl = atan2(xh, yh);
-		latecl = atan2(sqrt(xh*xh + yh*yh), zh);
+		lonecl = atan2(yh, xh);
+		latecl = atan2(zh, sqrt(xh*xh + yh*yh));
 	}
 	else
 	{
@@ -212,7 +238,7 @@ double __stdcall PlanetXYZ(int planetno, double dd, int xyz, double lst, double 
 	{
 		// nothing needed for the very outer planets
 	}
-	else if (planetno > MARS)
+	else if (planetno > MARS && planetno < PLUTO)
 	{
 		// jupiter, saturn and uranus
 		// longitude adjustment for all three
@@ -255,20 +281,20 @@ double __stdcall PlanetXYZ(int planetno, double dd, int xyz, double lst, double 
 		double xe = xh;
 		double ye = yh * cos(ecl) - zh * sin(ecl);
 		double ze = yh * sin(ecl) + zh * cos(ecl);
-		ra = atan2(xe, ye) * RAD2DEG;
-		decl = atan2(sqrt(xe*xe + ye*ye), ze) * RAD2DEG;
+		ra = atan2(ye, xe) * RAD2DEG;
+		decl = atan2(ze, sqrt(xe*xe + ye*ye)) * RAD2DEG;
 		while (ra < 0)
 			ra = ra + 360.0;
 		while (ra > 360.0)
 			ra = ra - 360.0;
 
-		azi = AzFromRADec(lst, ra, decl, lat, 'z', temp, pres);
-		alti = AzFromRADec(lst, ra, decl, lat, 'l', temp, pres);
+		azi = AzFromRADec(lst, ra, decl, lat, 0, temp, pres);
+		alti = AzFromRADec(lst, ra, decl, lat, 1, temp, pres);
 
 		// correct to topographic coords (surface of earth)
 		// mainly relevant for the moon but worth doing for the others
 		alti = alti * PI / 180;
-		if (planetno = MOON)
+		if (planetno == MOON)
 			alti = alti - cos(alti) * asin(1 / r);
 		else
 			alti = alti - (8.794 / 3600.0) / RAD2DEG / r;
@@ -291,3 +317,5 @@ double __stdcall PlanetXYZ(int planetno, double dd, int xyz, double lst, double 
 	default:	return 0;
 	}
 }
+
+
