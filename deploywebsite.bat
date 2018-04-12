@@ -1,0 +1,1 @@
+xcopy /srd website\* \\thelinux\www$\html\planetgraphs
