@@ -6,12 +6,13 @@
 #include <string.h>
 #include <stdio.h>
 #include <math.h>
+#include <stdlib.h>
 
 /*
 Main planetary data from http://www.stjarnhimlen.se/comp/ppcomp.html#4 Data is J2000 Epoch
 Minor bodies orbital elements from https://ssd.jpl.nasa.gov/sbdb.cgi?sstr=1 Data epoch stated on webpage
 
-download multiple datasets here: https://ssd.jpl.nasa.gov/sbdb_query.cgi#x
+download multiple minor planet datasets here: https://ssd.jpl.nasa.gov/sbdb_query.cgi#x
 
 Other useful pages http://www.met.rdg.ac.uk/~ross/Astronomy/Planets.html - orbital elements (slightly different values!)
 and http://cosinekitty.com/solar_system.html - calculator for comparing with my calcs
@@ -211,33 +212,9 @@ int LoadOrbitalElements(OrbitalElements* elements)
 
 	// Asteroids start from ID 11
 	int n = 11;
-/*
-	strcpy(elements[n].name, "1-Ceres");
-	elements[n].N[0] = 80.30991865594387;
-	elements[n].N[1] = 0;
-	elements[n].incl[0] = 10.5935097971363;
-	elements[n].incl[1] = 0;
-	elements[n].omega[0] = 73.11534200131032;
-	elements[n].omega[1] = 0;
-	elements[n].a[0] = 2.767046248500289;
-	elements[n].a[1] = 0;
-	elements[n].e[0] = 0.07553461024389638;
-	elements[n].e[1] = 0;
-	elements[n].MA[0] = 352.2304611765882;
-	elements[n].MA[1] = 0.2141309515334005;
-	elements[n].mag[0] = 3.34;
-	elements[n].mag[1] = 0;
-	elements[n].mag[2] = 0;
-	elements[n].mag[3] = 0;
-	elements[n].siz = 939.4; // km 
-	//elements[n].epoch = 2458200.5;
-	elements[n].epoch[0] = 2018;
-	elements[n].epoch[1] = 3;
-	elements[n].epoch[2] = 23;
-*/
-	int maxn = LoadAsteroids(n);
+	int maxn = LoadAsteroidsMPC(n);
 	if (maxn == -1)
-		return -1;
+		return 10;
 	for (int i = n; i <= maxn; i++)
 	{
 		// adjust size to be in arcsecs
@@ -260,7 +237,7 @@ int LoadOrbitalElements(OrbitalElements* elements)
 	return 0;
 }
 
-int LoadAsteroids(int n)
+int LoadAsteroidsJPL(int n)
 {
 	FILE *f = NULL;
 	FILE *errf = NULL;
@@ -274,26 +251,183 @@ int LoadAsteroids(int n)
 		fclose(errf);
 		return -1;
 	}
+	char line[256];
 	errf = fopen("c:/temp/asteroid-log.txt", "w");
-	while (!feof(f) && n <= NUMELEMENTS)
+	while ((fgets(line, 256, f) != NULL) && (n <=NUMELEMENTS))
 	{
-		char tmp[10] = { 0 };
-		fgets(elements[n].name, 63, f);
-		fscanf(f, "%lf %lf", &(elements[n].N[0]), &(elements[n].N[1]));
-		fscanf(f, "%lf %lf", &(elements[n].incl[0]), &(elements[n].incl[1]));
-		fscanf(f, "%lf %lf", &(elements[n].omega[0]), &(elements[n].omega[1]));
-		fscanf(f, "%lf %lf", &(elements[n].a[0]), &(elements[n].a[1]));
-		fscanf(f, "%lf %lf", &(elements[n].e[0]), &(elements[n].e[1]));
-		fscanf(f, "%lf %lf", &(elements[n].MA[0]), &(elements[n].MA[1]));
-		fscanf(f, "%lf %lf %lf %lf", &(elements[n].mag[0]), &(elements[n].mag[1]), &(elements[n].mag[2]), &(elements[n].mag[3]));
-		fscanf(f, "%lf", &(elements[n].siz));
-		fscanf(f, "%d %d %d", &(elements[n].epoch[0]), &(elements[n].epoch[1]), &(elements[n].epoch[2]));
-		fgets(tmp, 9, f); //separator
-		fprintf(errf, "Body %s LAN %lf MA %lf Epoch %d/%d/%d\n", elements[n].name, 
-			elements[n].N[0], elements[n].MA[0], elements[n].epoch[0], elements[n].epoch[1], elements[n].epoch[2] );
+		int epochdt, yr, mo, dy;
+		double epoch;
+		int id = 0;
+		char *token;
+		char seps[] = ",";
+
+		fprintf(errf, "%s\n", line);
+		fclose(errf);
+		errf = fopen("c:/temp/asteroid-log.txt", "a");
+
+		token = strtok(line, seps);
+		sscanf(token, "%d", &id);
+
+		token = strtok(NULL, seps);
+		sscanf(token, "%s", elements[n].name);
+		token = strtok(NULL, seps);
+		sscanf(token, "%d", &epochdt);
+		yr = epochdt / 10000;
+		mo = (epochdt - yr * 10000) / 100;
+		dy = (epochdt - yr * 10000 - mo * 100);
+		elements[n].epoch[0] = yr;
+		elements[n].epoch[1] = mo;
+		elements[n].epoch[2] = dy;
+
+		token = strtok(NULL, seps);
+		sscanf(token, "%lf", &epoch);
+
+		token = strtok(NULL, seps);
+		sscanf(token, "%lf", &(elements[n].N[0]));
+		elements[n].N[1] = 0.0;
+
+		token = strtok(NULL, seps);
+		sscanf(token, "%lf", &(elements[n].incl[0]));
+		elements[n].incl[1] = 0.0;
+
+		token = strtok(NULL, seps);
+		sscanf(token, "%lf", &(elements[n].omega[0]));
+		elements[n].omega[1] = 0.0;
+
+		token = strtok(NULL, seps);
+		sscanf(token, "%lf", &(elements[n].a[0]));
+		elements[n].a[1] = 0.0;
+
+		token = strtok(NULL, seps);
+		sscanf(token, "%lf", &(elements[n].e[0]));
+		elements[n].e[1] = 0.0;
+
+		token = strtok(NULL, seps);
+		sscanf(token, "%lf", &(elements[n].MA[0]));
+		token = strtok(NULL, seps);
+		sscanf(token, "%lf", &(elements[n].MA[1]));
+
+		token = strtok(NULL, seps);
+		sscanf(token, "%lf", &(elements[n].mag[0]));
+		token = strtok(NULL, seps);
+		sscanf(token, "%lf", &(elements[n].mag[1]));
+		elements[n].mag[2] = elements[n].mag[3] = 0.0;
+
+		token = strtok(NULL, seps);
+		sscanf(token, "%lf", &(elements[n].siz));
+
+		fprintf(errf, "Body %s LAN %lf MA %lf e %lf a %lf Epoch %d/%d/%d\n", elements[n].name,
+			elements[n].N[0], elements[n].MA[0], 
+			elements[n].e[0], elements[n].a[0],
+			elements[n].epoch[0], elements[n].epoch[1], elements[n].epoch[2]);
+
 		n++;
 	}
 	fclose(errf);
 	fclose(f);
+	return n-1;
+}
+
+void trim(char *str)
+{
+	int i = 0;
+	char outstr[32] = { 0 };
+	while (str[i] == ' ')i++;
+	strcpy(outstr, str + i);
+	i = strlen(outstr) - 1;
+	while (outstr[i] == ' ')i--;
+	outstr[i + 1] = 0;
+	strcpy(str, outstr);
+}
+
+
+// get data file from http://www.minorplanetcenter.net/iau/MPCORB/MPCORB.DAT.gz
+// will need to be gunzipped
+
+int LoadAsteroidsMPC(int n)
+{
+	FILE *f = NULL;
+	FILE *errf = NULL;
+	char fileloc[512];
+	char id[8], name[32];
+	double M, G, MA, w, N, i, e, dm, a;
+	long epochyyyymmdd;
+
+	sprintf(fileloc, "%s/MPCORB.DAT", szPath);
+	f = fopen(fileloc, "r");
+	if (f == NULL)
+	{
+		errf = fopen("c:/temp/error.txt", "w");
+		fprintf(errf, "unable to find file in %s", szPath);
+		fclose(errf);
+		return -1;
+	}
+	char line[256] = { 0 };
+	errf = fopen("c:/temp/asteroid-log.txt", "w");
+	while (strncmp(line, "----", 4) != 0)
+		fgets(line, 256, f);
+
+	int ii = 0;
+	while (fgets(line, 256, f) != NULL && ii < 10)
+	{
+		char tmp[11] = { 0 };
+		memset(name, 0, 32);
+		memset(id, 0, 8);
+
+		strncpy(id, line, 7);
+		trim(id);
+
+		strncpy(tmp, line + 8, 5);
+		M = atof(tmp);
+		strncpy(tmp, line + 14, 5);
+		G = atof(tmp);
+
+		strncpy(tmp, line + 26, 9);
+		MA = atof(tmp);
+		strncpy(tmp, line + 37, 9);
+		w = atof(tmp);
+		strncpy(tmp, line + 48, 9);
+		N = atof(tmp);
+		strncpy(tmp, line + 59, 9);
+		i = atof(tmp);
+		strncpy(tmp, line + 70, 9);
+		e = atof(tmp);
+		strncpy(tmp, line + 81, 10);
+		dm = atof(tmp);
+		strncpy(tmp, line + 93, 10);
+		a = atof(tmp);
+
+		strncpy(name, line + 170, 20);
+		trim(name);
+		epochyyyymmdd = atol(line + 194);
+
+		printf("%s %s %d %lf\n", name, id, epochyyyymmdd, M);
+		ii++;
+		strcpy(elements[n].name, name);
+		elements[n].N[0] = N; elements[n].N[1] = 0.0;
+		elements[n].incl[0] = i; elements[n].incl[1] = 0.0;
+		elements[n].omega[0] = w; elements[n].omega[1] = 0.0;
+		elements[n].a[0] = a; elements[n].a[1] = 0.0;
+		elements[n].e[0] = e; elements[n].e[1] = 0.0;
+		elements[n].MA[0] = MA; elements[n].MA[1] = dm;
+		elements[n].mag[0] = M; elements[n].mag[1] = G;
+		elements[n].siz = 0;
+		long yr = epochyyyymmdd / 10000;
+		long mo = (epochyyyymmdd - yr * 10000) / 100;
+		long dy = (epochyyyymmdd - yr * 10000 - mo * 100);
+		elements[n].epoch[0] = yr;
+		elements[n].epoch[1] = mo;
+		elements[n].epoch[2] = dy;
+
+		fprintf(errf, "Body %s LAN %lf MA %lf e %lf a %lf Epoch %d/%d/%d\n", elements[n].name,
+			elements[n].N[0], elements[n].MA[0],
+			elements[n].e[0], elements[n].a[0],
+			elements[n].epoch[0], elements[n].epoch[1], elements[n].epoch[2]);
+
+		n++;
+	}
+	fclose(errf);
+	fclose(f);
+
 	return n-1;
 }

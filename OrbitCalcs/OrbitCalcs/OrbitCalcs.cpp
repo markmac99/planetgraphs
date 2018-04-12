@@ -6,6 +6,7 @@
 // model taken from http://www.stjarnhimlen.se/comp/ppcomp.html
 
 char szPath[512];
+int maxloaded = 0;
 
 struct OrbitalElements elements[NUMELEMENTS];
 
@@ -16,7 +17,7 @@ extern "C" BOOL WINAPI DllMain(HANDLE hinstDLL, DWORD fdwReason, LPVOID lpvReser
 		case DLL_PROCESS_ATTACH:
 			GetModuleFileNameA((HMODULE)hinstDLL, szPath, sizeof szPath);
 			PathRemoveFileSpecA(szPath);
-			int x = LoadOrbitalElements(elements);
+			maxloaded = LoadOrbitalElements(elements);
 
 			break;
 	}	
@@ -66,6 +67,8 @@ double __stdcall EccentricAnomaly(double m, double e)
 {
 	double deltae = 1;
 	double e0 = m + e * sin(m) * (1.0 + e * cos(m));
+	if (e0==0) return 0;
+
 	while (deltae > 0.00000001)
 	{
 		double e1 = e0 - (e0 - e * sin(e0) - m) / (1 - e * cos(e0));
@@ -150,7 +153,6 @@ double __stdcall PlanTrueAnomaly(int planetno, double d)
 
 double __stdcall AzFromRADec(double  lst, double ra, double dec, double lat, int zora, double temp, double pres)
 {
-
 	double ha = (lst * 360 - ra) / RAD2DEG;
 	dec = dec / RAD2DEG;
 	lat = lat / RAD2DEG;
@@ -183,6 +185,7 @@ double __stdcall AzFromRADec(double  lst, double ra, double dec, double lat, int
 
 double __stdcall AltAtTransit(int planetno, double dtval, double lat, double longi, double temp, double pres)
 {
+//	if (planetno > maxloaded) return 0;
 	double tt = TimeofTransit(planetno, dtval, lat, longi);
 	double dd = AstroDaysFromDt(dtval + tt / 24.0);
 	double lst = LSTFromDt(dtval + tt/24.0, longi)/24.0;
@@ -193,6 +196,9 @@ double __stdcall PlanetXYZ(int planetno, double dd, int xyz, double lst, double 
 {
 	double lonecl, latecl, r, v;
 	double xh, yh, zh, ra, decl, azi, alti;
+
+//	if (planetno > maxloaded) return 0;
+
 	if (planetno != PLUTO)
 	{
 		double a = elements[planetno].a[0] + dd * elements[planetno].a[1];

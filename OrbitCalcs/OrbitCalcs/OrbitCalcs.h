@@ -41,9 +41,10 @@ typedef struct OrbitalElements
 extern struct OrbitalElements elements[NUMELEMENTS];
 extern char szPath[512];
 
-int LoadAsteroids(int n);
+int LoadAsteroidsJPL(int n);
+int LoadAsteroidsMPC(int n);
 int LoadOrbitalElements(OrbitalElements* elements);
-
+extern int maxloaded;
 
 double __stdcall GetDateFromDtval(double dtval, int& yy, int& mo, int& dd, int& hh, int& mm, int& ss);
 

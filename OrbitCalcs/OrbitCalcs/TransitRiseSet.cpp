@@ -97,6 +97,8 @@ double __stdcall TimeofTransit(int planetno, double dtval, double lat, double lo
 	// Me = mean anomaly of earth
 	// PIe = Long of Asc Node of Earth + argument of perihelion
 
+//	if (planetno > maxloaded) return 0;
+
 	double dd, lst, temp, pres;
 	int yy, mo, dy, hh, mm, ss, tz;
 	double ra, MA, N, aop, tt;
@@ -140,6 +142,8 @@ double __stdcall IsVisible(int planetno, double dtval, double lat, double longi,
 	double talt, tt;
 	double sunalt, planalt, sunrise, sunset0, planrise, planset0;
 	double dd, lst;
+
+//	if (planetno > maxloaded) return 0;
 
 	GetDateFromDtval(dtval, yy, mo, dy, hh, mm, ss);
 	if (vis_or_tele == 1)
