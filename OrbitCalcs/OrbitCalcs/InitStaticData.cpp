@@ -2,18 +2,22 @@
 // shaddap with the strncpy warnings
 #define  _CRT_SECURE_NO_WARNINGS 1
 
+
 #include <string.h>
+#include <stdio.h>
 #include <math.h>
 
 /*
 Main planetary data from http://www.stjarnhimlen.se/comp/ppcomp.html#4 Data is J2000 Epoch
 Minor bodies orbital elements from https://ssd.jpl.nasa.gov/sbdb.cgi?sstr=1 Data epoch stated on webpage
 
+download multiple datasets here: https://ssd.jpl.nasa.gov/sbdb_query.cgi#x
+
 Other useful pages http://www.met.rdg.ac.uk/~ross/Astronomy/Planets.html - orbital elements (slightly different values!)
 and http://cosinekitty.com/solar_system.html - calculator for comparing with my calcs
 */
 
-void LoadOrbitalElements(OrbitalElements* elements)
+int LoadOrbitalElements(OrbitalElements* elements)
 {
 	memset(elements, 0, sizeof(OrbitalElements)*NUMELEMENTS);
 
@@ -205,9 +209,9 @@ void LoadOrbitalElements(OrbitalElements* elements)
 	elements[9].mag[3] = 0;
 	elements[9].siz = 17.59;
 
-	// can't use 10 as this is pluto!
-
+	// Asteroids start from ID 11
 	int n = 11;
+/*
 	strcpy(elements[n].name, "1-Ceres");
 	elements[n].N[0] = 80.30991865594387;
 	elements[n].N[1] = 0;
@@ -220,7 +224,7 @@ void LoadOrbitalElements(OrbitalElements* elements)
 	elements[n].e[0] = 0.07553461024389638;
 	elements[n].e[1] = 0;
 	elements[n].MA[0] = 352.2304611765882;
-	elements[n].MA[1] = 0;
+	elements[n].MA[1] = 0.2141309515334005;
 	elements[n].mag[0] = 3.34;
 	elements[n].mag[1] = 0;
 	elements[n].mag[2] = 0;
@@ -230,17 +234,66 @@ void LoadOrbitalElements(OrbitalElements* elements)
 	elements[n].epoch[0] = 2018;
 	elements[n].epoch[1] = 3;
 	elements[n].epoch[2] = 23;
-	elements[n].meanmotion = 0.2141309515334005;
+*/
+	int maxn = LoadAsteroids(n);
+	if (maxn == -1)
+		return -1;
+	for (int i = n; i <= maxn; i++)
+	{
+		// adjust size to be in arcsecs
+		elements[i].siz *= (3600.0 * RAD2DEG) / (elements[i].a[0] * AU);
 
-	// adjust size to be in arcsecs
-	elements[n].siz *= (3600.0 * RAD2DEG) / (elements[n].a[0] * AU);
+		//  adjust to J2000 epoch - 2451543.5 - from the epoch of the data from JPL
+		double jd = JulianDate(elements[i].epoch[0], elements[i].epoch[1], elements[i].epoch[2], 0, 0, 0);
+		double dd = days(elements[i].epoch[0], elements[i].epoch[1], elements[i].epoch[2], 0, 0, 0);
+		double epochyr = elements[i].epoch[0] + elements[i].epoch[1] / 12.0 + elements[i].epoch[2] / 30.0; // approx value
 
-	//  adjust to J2000 epoch from the epoch of the data from JPL
-	double jd = JulianDate(elements[n].epoch[0], elements[n].epoch[1], elements[n].epoch[2], 0, 0, 0);
-	double dd = days(elements[n].epoch[0], elements[n].epoch[1], elements[n].epoch[2], 0, 0, 0);
-	double epochyr = elements[n].epoch[0] + elements[n].epoch[1] / 12.0 + elements[n].epoch[2] / 30.0; // approx value
+		elements[i].MA[0] -= elements[i].MA[1] * (jd - 2451543.5);
+		while (elements[i].MA[0] > 360)
+			elements[i].MA[0] -= 360;
+		while (elements[i].MA[0] < 0)
+			elements[i].MA[0] += 360;
 
-	elements[n].MA[0] -= elements[n].meanmotion*(jd - 2451543.5); // adjust MA to J2000 
-	elements[n].N[0] -= PrecessionCorr(epochyr, dd); // precession correction to the longitude of the ascending node
+		// precession correction to the longitude of the ascending node - makes very small difference!
+		elements[i].N[0] -= PrecessionCorr(epochyr, dd);
+	}
+	return 0;
+}
 
+int LoadAsteroids(int n)
+{
+	FILE *f = NULL;
+	FILE *errf = NULL;
+	char fileloc[512];
+	sprintf(fileloc, "%s\\asteroids.txt", szPath);
+	f = fopen(fileloc, "r");
+	if (f == NULL)
+	{
+		errf = fopen("c:/temp/error.txt", "w");
+		fprintf(errf, "unable to find file in %s", szPath);
+		fclose(errf);
+		return -1;
+	}
+	errf = fopen("c:/temp/asteroid-log.txt", "w");
+	while (!feof(f) && n <= NUMELEMENTS)
+	{
+		char tmp[10] = { 0 };
+		fgets(elements[n].name, 63, f);
+		fscanf(f, "%lf %lf", &(elements[n].N[0]), &(elements[n].N[1]));
+		fscanf(f, "%lf %lf", &(elements[n].incl[0]), &(elements[n].incl[1]));
+		fscanf(f, "%lf %lf", &(elements[n].omega[0]), &(elements[n].omega[1]));
+		fscanf(f, "%lf %lf", &(elements[n].a[0]), &(elements[n].a[1]));
+		fscanf(f, "%lf %lf", &(elements[n].e[0]), &(elements[n].e[1]));
+		fscanf(f, "%lf %lf", &(elements[n].MA[0]), &(elements[n].MA[1]));
+		fscanf(f, "%lf %lf %lf %lf", &(elements[n].mag[0]), &(elements[n].mag[1]), &(elements[n].mag[2]), &(elements[n].mag[3]));
+		fscanf(f, "%lf", &(elements[n].siz));
+		fscanf(f, "%d %d %d", &(elements[n].epoch[0]), &(elements[n].epoch[1]), &(elements[n].epoch[2]));
+		fgets(tmp, 9, f); //separator
+		fprintf(errf, "Body %s LAN %lf MA %lf Epoch %d/%d/%d\n", elements[n].name, 
+			elements[n].N[0], elements[n].MA[0], elements[n].epoch[0], elements[n].epoch[1], elements[n].epoch[2] );
+		n++;
+	}
+	fclose(errf);
+	fclose(f);
+	return n-1;
 }

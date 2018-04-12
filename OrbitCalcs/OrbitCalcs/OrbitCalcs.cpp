@@ -1,8 +1,11 @@
 #include <Windows.h>
+#include "shlwapi.h"
 #include <math.h>
 #include "OrbitCalcs.h"
 
 // model taken from http://www.stjarnhimlen.se/comp/ppcomp.html
+
+char szPath[512];
 
 struct OrbitalElements elements[NUMELEMENTS];
 
@@ -11,7 +14,10 @@ extern "C" BOOL WINAPI DllMain(HANDLE hinstDLL, DWORD fdwReason, LPVOID lpvReser
 	switch (fdwReason) 
 	{
 		case DLL_PROCESS_ATTACH:
-			LoadOrbitalElements(elements);
+			GetModuleFileNameA((HMODULE)hinstDLL, szPath, sizeof szPath);
+			PathRemoveFileSpecA(szPath);
+			int x = LoadOrbitalElements(elements);
+
 			break;
 	}	
 	return TRUE;

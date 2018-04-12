@@ -6,7 +6,7 @@
 #define RAD2DEG		57.29577951	
 #define HR2DEG		15.04107		// precision value
 
-#define NUMELEMENTS 15
+#define NUMELEMENTS 30
 
 #define SUN			0
 #define MOON		1
@@ -36,12 +36,14 @@ typedef struct OrbitalElements
 	double	mag[4];
 	double	siz;
 	int		epoch[3];
-	double	meanmotion;
 }_OrbitalElements;
 
 extern struct OrbitalElements elements[NUMELEMENTS];
+extern char szPath[512];
 
-void LoadOrbitalElements(OrbitalElements* elements);
+int LoadAsteroids(int n);
+int LoadOrbitalElements(OrbitalElements* elements);
+
 
 double __stdcall GetDateFromDtval(double dtval, int& yy, int& mo, int& dd, int& hh, int& mm, int& ss);
 
@@ -83,6 +85,8 @@ double __stdcall Phase(long planetno, double dd);
 double __stdcall VisualMagnitude(long planetno, double dd);
 double __stdcall ApparentSize(long planetno, double dd);
 double __stdcall SaturnRingMag(double dd);
+
+
 
 
 
