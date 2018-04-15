@@ -43,6 +43,27 @@ double __stdcall JulianDate(int yy, int mo, int dd, int hh, int mm, int ss)
 	return JD;
 }
 
+double __stdcall GetDtvalFromDate(int yy, int mo, int dd, int hh, int mm, int ss)
+{
+	time_t unixdt;
+	double dtval;
+	struct tm tmval;
+
+	tmval.tm_year = yy-1900;
+	tmval.tm_mon =mo-1;
+	tmval.tm_mday = dd;
+	tmval.tm_hour =hh;
+	tmval.tm_min =mm;
+	tmval.tm_sec=ss;
+
+	unixdt = _mkgmtime64(&tmval);
+
+	dtval = unixdt / 86400.0;
+	dtval += 25569;
+
+	return dtval;
+}
+
 double __stdcall GetDateFromDtval(double dtval, int& yy, int& mo, int& dd, int& hh, int& mm, int& ss )
 {
 	time_t unixdt= (time_t)((dtval - 25569.0) * 86400.0);
@@ -84,6 +105,12 @@ double __stdcall LocalSiderealTime(int yy, int mo, int dd, int hh, int Mm, int s
 		lst = lst + 24;
 	return lst;
 }
+
+long __stdcall AstroDtToUnixTS(double dd)
+{
+	return  (long)((dd +35625-25569.0) * 86400.0);
+}
+
 long __stdcall DtvalToUnixTS(double dtval)
 {
 	time_t date;

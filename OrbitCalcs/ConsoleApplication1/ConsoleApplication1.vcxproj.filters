@@ -15,42 +15,37 @@
     </Filter>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="OrbitCalcs.cpp">
+    <ClCompile Include="..\OrbitCalcs\DateMaths.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="DateMaths.cpp">
+    <ClCompile Include="..\OrbitCalcs\InitStaticData.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="InitStaticData.cpp">
+    <ClCompile Include="..\OrbitCalcs\MagAndSize.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="Perturbations.cpp">
+    <ClCompile Include="..\OrbitCalcs\OrbitCalcs.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="Pluto.cpp">
+    <ClCompile Include="..\OrbitCalcs\Outputter.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="Outputter.cpp">
+    <ClCompile Include="..\OrbitCalcs\Perturbations.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="TransitRiseSet.cpp">
+    <ClCompile Include="..\OrbitCalcs\Pluto.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="MagAndSize.cpp">
+    <ClCompile Include="..\OrbitCalcs\TransitRiseSet.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="DLLMain.cpp">
+    <ClCompile Include="main.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="OrbitCalcs.h">
-      <Filter>Source Files</Filter>
+    <ClInclude Include="..\OrbitCalcs\OrbitCalcs.h">
+      <Filter>Header Files</Filter>
     </ClInclude>
-  </ItemGroup>
-  <ItemGroup>
-    <None Include="OrbitCalcs.def">
-      <Filter>Source Files</Filter>
-    </None>
   </ItemGroup>
 </Project>

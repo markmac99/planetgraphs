@@ -20,8 +20,10 @@ and http://cosinekitty.com/solar_system.html - calculator for comparing with my 
 
 int LoadOrbitalElements(OrbitalElements* elements)
 {
+	int yr = 2000, mo = 1, dy=0;
 	memset(elements, 0, sizeof(OrbitalElements)*NUMELEMENTS);
 
+	int n = 0;
 	strcpy(elements[0].name,"Sun");
 	elements[0].N[0] = 0;
 	elements[0].N[1] = 0;
@@ -38,7 +40,11 @@ int LoadOrbitalElements(OrbitalElements* elements)
 	elements[0].mag[0] = -26.76;
 	elements[0].mag[1] = elements[2].mag[1] = elements[0].mag[3] = 0;
 	elements[0].siz = 1919.26;
+	elements[0].epoch[0] = yr;
+	elements[0].epoch[1] = mo;
+	elements[0].epoch[2] = dy;
 
+	n++;
 	strcpy(elements[1].name,"Moon");
 	elements[1].N[0] = 125.1228;
 	elements[1].N[1] = -0.0529538083;
@@ -57,6 +63,10 @@ int LoadOrbitalElements(OrbitalElements* elements)
 	elements[1].mag[2] = 0.000000004;
 	elements[1].mag[3] = 4;
 	elements[1].siz = 1873.7;
+	elements[n].epoch[0] = yr;
+	elements[n].epoch[1] = mo;
+	elements[n].epoch[2] = dy;
+	n++;
 
 	strcpy(elements[2].name,"Mercury");
 	elements[2].N[0] = 48.3313;
@@ -76,6 +86,10 @@ int LoadOrbitalElements(OrbitalElements* elements)
 	elements[2].mag[2] = 0.00000000000022;
 	elements[2].mag[3] = 6;
 	elements[2].siz = 6.74;
+	elements[n].epoch[0] = yr;
+	elements[n].epoch[1] = mo;
+	elements[n].epoch[2] = dy;
+	n++;
 
 	strcpy(elements[3].name, "Venus");
 	elements[3].N[0] = 76.6799;
@@ -95,6 +109,10 @@ int LoadOrbitalElements(OrbitalElements* elements)
 	elements[3].mag[2] = 0.00000042;
 	elements[3].mag[3] = 3;
 	elements[3].siz = 16.92;
+	elements[n].epoch[0] = yr;
+	elements[n].epoch[1] = mo;
+	elements[n].epoch[2] = dy;
+	n++;
 
 	strcpy(elements[4].name, "Mars");
 	elements[4].N[0] = 49.5574;
@@ -114,6 +132,10 @@ int LoadOrbitalElements(OrbitalElements* elements)
 	elements[4].mag[2] = 0;
 	elements[4].mag[3] = 0;
 	elements[4].siz = 9.36;
+	elements[n].epoch[0] = yr;
+	elements[n].epoch[1] = mo;
+	elements[n].epoch[2] = dy;
+	n++;
 
 	strcpy(elements[5].name, "Jupiter");
 	elements[5].N[0] = 100.4542;
@@ -133,6 +155,10 @@ int LoadOrbitalElements(OrbitalElements* elements)
 	elements[5].mag[2] = 0;
 	elements[5].mag[3] = 0;
 	elements[5].siz = 196.34;
+	elements[n].epoch[0] = yr;
+	elements[n].epoch[1] = mo;
+	elements[n].epoch[2] = dy;
+	n++;
 
 	strcpy(elements[6].name, "Saturn");
 	elements[6].N[0] = 113.6634;
@@ -152,6 +178,10 @@ int LoadOrbitalElements(OrbitalElements* elements)
 	elements[6].mag[2] = 0;
 	elements[6].mag[3] = 0;
 	elements[6].siz = 165.6;
+	elements[n].epoch[0] = yr;
+	elements[n].epoch[1] = mo;
+	elements[n].epoch[2] = dy;
+	n++;
 
 	strcpy(elements[7].name, "Uranus");
 	elements[7].N[0] = 74.0005;
@@ -170,7 +200,11 @@ int LoadOrbitalElements(OrbitalElements* elements)
 	elements[7].mag[1] = 0.001;
 	elements[7].mag[2] = 0;
 	elements[7].mag[3] = 0;
-	elements[7].siz = 65.8;
+	elements[7].siz = 65.8/0.93;
+	elements[n].epoch[0] = yr;
+	elements[n].epoch[1] = mo;
+	elements[n].epoch[2] = dy;
+	n++;
 
 	strcpy(elements[8].name, "Neptune");
 	elements[8].N[0] = 131.7806;
@@ -189,7 +223,11 @@ int LoadOrbitalElements(OrbitalElements* elements)
 	elements[8].mag[1] = 0.001;
 	elements[8].mag[2] = 0;
 	elements[8].mag[3] = 0;
-	elements[8].siz = 62.2;
+	elements[8].siz = 62.2/0.91;
+	elements[n].epoch[0] = yr;
+	elements[n].epoch[1] = mo;
+	elements[n].epoch[2] = dy;
+	n++;
 
 	strcpy(elements[9].name, "Earth");
 	elements[9].N[0] = 174.873;
@@ -209,9 +247,21 @@ int LoadOrbitalElements(OrbitalElements* elements)
 	elements[9].mag[2] = 0;
 	elements[9].mag[3] = 0;
 	elements[9].siz = 17.59;
+	elements[n].epoch[0] = yr;
+	elements[n].epoch[1] = mo;
+	elements[n].epoch[2] = dy;
+	n++;
+	// no orbital elements for pluto
+	strcpy(elements[10].name, "Pluto");
+	elements[n].a[0] = 40;
+	elements[n].siz = 2376.0 / AU * 3600.0 * RAD2DEG;
+	elements[n].epoch[0] = yr;
+	elements[n].epoch[1] = mo;
+	elements[n].epoch[2] = dy;
+	n++;
 
 	// Asteroids start from ID 11
-	int n = 11;
+	n = 11;
 	int maxn = LoadAsteroidsMPC(n);
 	if (maxn == -1)
 		return 10;
@@ -234,9 +284,9 @@ int LoadOrbitalElements(OrbitalElements* elements)
 		// precession correction to the longitude of the ascending node - makes very small difference!
 		elements[i].N[0] -= PrecessionCorr(epochyr, dd);
 	}
-	return 0;
+	return maxn;
 }
-
+#if 0
 int LoadAsteroidsJPL(int n)
 {
 	FILE *f = NULL;
@@ -327,7 +377,7 @@ int LoadAsteroidsJPL(int n)
 	fclose(f);
 	return n-1;
 }
-
+#endif
 void trim(char *str)
 {
 	int i = 0;

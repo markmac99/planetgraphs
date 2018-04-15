@@ -7,6 +7,8 @@ Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "OrbitCalcs", "OrbitCalcs\Or
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{81C54BC1-3C1D-4B14-87A1-ADF26E964876}"
 EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "OrbitCalcsCL", "ConsoleApplication1\ConsoleApplication1.vcxproj", "{0438AA74-0DF8-4882-A409-CE9257597744}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|x64 = Debug|x64
@@ -23,6 +25,14 @@ Global
 		{10530F9C-9DEC-4572-AA1F-D66647B62538}.Release|x64.Build.0 = Release|x64
 		{10530F9C-9DEC-4572-AA1F-D66647B62538}.Release|x86.ActiveCfg = Release|Win32
 		{10530F9C-9DEC-4572-AA1F-D66647B62538}.Release|x86.Build.0 = Release|Win32
+		{0438AA74-0DF8-4882-A409-CE9257597744}.Debug|x64.ActiveCfg = Debug|x64
+		{0438AA74-0DF8-4882-A409-CE9257597744}.Debug|x64.Build.0 = Debug|x64
+		{0438AA74-0DF8-4882-A409-CE9257597744}.Debug|x86.ActiveCfg = Debug|Win32
+		{0438AA74-0DF8-4882-A409-CE9257597744}.Debug|x86.Build.0 = Debug|Win32
+		{0438AA74-0DF8-4882-A409-CE9257597744}.Release|x64.ActiveCfg = Release|x64
+		{0438AA74-0DF8-4882-A409-CE9257597744}.Release|x64.Build.0 = Release|x64
+		{0438AA74-0DF8-4882-A409-CE9257597744}.Release|x86.ActiveCfg = Release|Win32
+		{0438AA74-0DF8-4882-A409-CE9257597744}.Release|x86.Build.0 = Release|Win32
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

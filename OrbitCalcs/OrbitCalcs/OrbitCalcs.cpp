@@ -1,27 +1,43 @@
-#include <Windows.h>
-#include "shlwapi.h"
+#define _CRT_SECURE_NO_WARNINGS 1
+
 #include <math.h>
+#include <stdio.h>
 #include "OrbitCalcs.h"
 
 // model taken from http://www.stjarnhimlen.se/comp/ppcomp.html
 
-char szPath[512];
-int maxloaded = 0;
+char szPath[512]; // path to the DLL and asteroid and comet data files
+int maxloaded = 0; // number of objects loaded, including the planets sun and moon
 
 struct OrbitalElements elements[NUMELEMENTS];
 
-extern "C" BOOL WINAPI DllMain(HANDLE hinstDLL, DWORD fdwReason, LPVOID lpvReserved)
+double __stdcall GetOrbitalParam(int planetno, int what)
 {
-	switch (fdwReason) 
-	{
-		case DLL_PROCESS_ATTACH:
-			GetModuleFileNameA((HMODULE)hinstDLL, szPath, sizeof szPath);
-			PathRemoveFileSpecA(szPath);
-			maxloaded = LoadOrbitalElements(elements);
-
-			break;
-	}	
-	return TRUE;
+	planetno = (planetno > maxloaded ? maxloaded : planetno);
+#ifdef _DEBUG
+	FILE *f = fopen("c:/temp/dd.txt","w");
+	fprintf(f, "%d %d\n", planetno, what);
+	fclose(f);
+#endif
+	if (what == 'N' || what =='n')
+		return LongOfAscNode(planetno, 0);
+	if (what == 'i' || what =='I')
+		return Inclination(planetno, 0);
+	if (what == 'w' || what =='W')
+		return ArgOfPerihelion(planetno, 0);
+	if (what == 'a' || what == 'A')
+		return elements[planetno].a[0] *(planetno == MOON ? ERAD : AU);
+	if (what == 'e' || what=='E')
+		return Eccentricity(planetno,0);
+	if (what == 'M' || what =='m')
+		return MeanAnomaly(planetno, 0);
+	if (what == 'G' || what =='G')
+		return elements[planetno].mag[0];
+	if (what == 's' || what == 'S')
+		return elements[planetno].siz *(planetno == MOON ? ERAD*60 : AU) / (3600.0 * RAD2DEG);
+	if (what == 'T' ||  what =='t')
+		return (double)(elements[planetno].epoch[0]*10000+ elements[planetno].epoch[1] * 10+ elements[planetno].epoch[2]);
+	return 0.0;
 }
 
 double __stdcall MeanAnomaly(int planetno , double dd ) 

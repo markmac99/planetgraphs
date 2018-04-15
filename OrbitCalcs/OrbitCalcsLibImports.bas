@@ -1,4 +1,9 @@
 Attribute VB_Name = "LibDecls"
+
+Declare Function GetObjectNames _
+    Lib "C:/users/mark/documents/projects/planetgraphs/orbitcalcs/Release/orbitcalcs.dll" _
+    (ByRef numloaded As Long) As String()
+
 Declare Function AstroDaysFromDt _
     Lib "C:/users/mark/documents/projects/planetgraphs/orbitcalcs/Release/orbitcalcs.dll" _
     (ByVal dtval As Double) As Double
@@ -26,6 +31,10 @@ Declare Function GetDateFromDtval _
 Declare Function DtvalToUnixTS _
     Lib "C:/users/mark/documents/projects/planetgraphs/orbitcalcs/Release/orbitcalcs.dll" _
     (ByVal dtval As Double) As Long
+
+Declare Function GetOrbitalParam _
+    Lib "C:/users/mark/documents/projects/planetgraphs/orbitcalcs/Release/orbitcalcs.dll" _
+    (ByVal planetno As Long, ByVal what As Long) As Double
 
 Declare Function MeanAnomaly _
     Lib "C:/users/mark/documents/projects/planetgraphs/orbitcalcs/Release/orbitcalcs.dll" _
@@ -123,6 +132,14 @@ Declare Function AltAtTransit _
     Lib "C:/users/mark/documents/projects/planetgraphs/orbitcalcs/Release/orbitcalcs.dll" _
     (ByVal planetno As Long, ByVal dtval As Double, ByVal lat As Double, ByVal longi As Double, ByVal temp As Double, ByVal pres As Double) As Double
 
+Declare Function GetMA _
+    Lib "C:/users/mark/documents/projects/planetgraphs/orbitcalcs/Release/orbitcalcs.dll" _
+    (ByVal planetno As Long) As Double
+
+Declare Function GetMADrift _
+    Lib "C:/users/mark/documents/projects/planetgraphs/orbitcalcs/Release/orbitcalcs.dll" _
+    (ByVal planetno As Long) As Double
+
 
 
 '  display decimal degrees in string format DD° MMm SSs
@@ -149,5 +166,15 @@ Function Convert_Degree(Decimal_Deg) As Variant
     End With
 End Function
 
-
+Function VBGetObjectNames()
+    Dim v() As String
+    Dim v2() As String
+    Dim numloaded As Long
+    v = GetObjectNames(numloaded)
+    ReDim v2(numloaded, 1)
+    For i = 0 To numloaded - 1
+        v2(i, 0) = StrConv(v(0, i), vbUnicode)
+    Next i
+    VBGetObjectNames = v2
+End Function
 

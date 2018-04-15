@@ -47,6 +47,7 @@ int LoadOrbitalElements(OrbitalElements* elements);
 extern int maxloaded;
 
 double __stdcall GetDateFromDtval(double dtval, int& yy, int& mo, int& dd, int& hh, int& mm, int& ss);
+double __stdcall GetDtvalFromDate(int yy, int mo, int dd, int hh, int mm, int ss);
 
 double __stdcall AstroDaysFromDt(double dtval);
 double __stdcall days(int yy, int mo, int dd, int hh, int mm, int ss);
@@ -54,7 +55,9 @@ double __stdcall JulianDate(int yy, int mo, int dd, int hh, int mm, int ss);
 double __stdcall LocalSiderealTime(int yy, int mo, int dd, int hh, int Mm, int ss, double ll);
 double __stdcall LSTFromDt(double dtval, double longi);
 long __stdcall DtvalToUnixTS(double dtval);
+long __stdcall AstroDtToUnixTS(double dd);
 
+double __stdcall GetOrbitalParam(int planetno, int what);
 double __stdcall MeanAnomaly(int planetno, double dd);
 double __stdcall LongOfAscNode(int planetno, double d);
 double __stdcall Eccentricity(int planetno, double d);

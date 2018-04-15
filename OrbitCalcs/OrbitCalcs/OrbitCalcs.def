@@ -1,4 +1,5 @@
 LIBRARY ORBITCALCS
+DESCRIPTION 'Library of Orbital Mechanichs calcs for Excel and other use'
 EXPORTS
 	AstroDaysFromDt
 	days
@@ -7,6 +8,7 @@ EXPORTS
 	LSTFromDt
 	GetDateFromDtval
 	DtvalToUnixTS
+	GetOrbitalParam
 	MeanAnomaly
 	LongOfAscNode
 	Eccentricity
@@ -34,3 +36,4 @@ EXPORTS
 	ApparentSize
 	AltAtTransit
 
+	GetObjectNames
