@@ -1,5 +1,3 @@
 #!/bin/bash
-# get todays date
-OUTPUT="$(date)"
-touch /tmp/testscript.txt
-echo $OUTPUT $1 $2 > /tmp/testscript.txt
+echo \<font color=\"Red\"\>Observer Location $1 $2\<br\>\</font\> > location.html
+./orbitcalcs $1 $2 $3

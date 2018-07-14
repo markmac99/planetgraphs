@@ -2,6 +2,7 @@
 require_once('calendar/classes/tc_calendar.php');
 ?>
 
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -59,93 +60,12 @@ require_once('calendar/classes/tc_calendar.php');
     <div id="wrapper">
         <!-- Navigation -->
         <nav class="navbar navbar-default navbar-static-top" role="navigation" style="margin-bottom: 0">
-            <div class="navbar-header">
-                <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
-                    <span class="sr-on5ly">Toggle navigation</span>
-                    <span class="icon-bar"></span>
-                    <span class="icon-bar"></span>
-                    <span class="icon-bar"></span>
-                </button>
-                <a class="navbar-brand" href="https://www.marymcintyreastronomy.co.uk/"><img src="images/maryslogo.png" alt="Mary McIntyre, Logo"/></a>
-            </div>
-            <!-- /.navbar-header -->
-
-            <ul class="nav navbar-top-links navbar-right">
-                <li class="dropdown">
-                    <a class="dropdown-toggle" data-toggle="dropdown" href="#">
-                        <i class="fa fa-envelope fa-fw"></i>  <i class="fa fa-caret-down"></i>
-                    </a>
-                    <ul class="dropdown-menu dropdown-messages">
-                        <li>
-                            <a href="#">
-                                <div>
-                                    <strong>Email me </strong>
-                                    <span class="pull-right text-muted">
-                                        <em>mark.jm.mcintyre@cesmail.net</em>
-                                    </span>
-                                </div>
-                                <div>Email me with questions etc</div>
-                            </a>
-                        </li>
-                        <li class="divider"></li>
-                        <li>
-                            <a class="text-center" href="#">
-                                <strong><a href="mailto:mark.jm.mcintyre@cesmail.net?Subject=Communication from Web Site" target="_top">Send Mail</a></strong>
-                                <i class="fa fa-angle-right"></i>
-                            </a>
-                        </li>
-                    </ul>
-                    <!-- /.dropdown-messages -->
-                </li>
-                <!-- /.dropdown -->
-                <li class="dropdown">
-                    <a class="dropdown-toggle" data-toggle="dropdown" href="#">
-                        <i class="fa fa-user fa-fw"></i>  <i class="fa fa-caret-down"></i>
-                    </a>
-                    <ul class="dropdown-menu dropdown-user">
-                        <li><a href="#"><i class="fa fa-upload fa-fw"></i> Link *****</a>
-                        </li>
-                        <li class="divider"></li>
-						<li><a href="aboutthis.html"><i class="fa fa-user fa-fw"></i> About</a>
-                        </li>
-
-                    </ul>
-                    <!-- /.dropdown-user -->
-                </li>
-                <!-- /.dropdown -->
-            </ul>
-            <!-- /.navbar-top-links -->
+	    <!--#include virtual="top-bar.html" -->
 
             <div class="navbar-default sidebar" role="navigation">
                 <div class="sidebar-nav navbar-collapse">
                     <ul class="nav" id="side-menu">
-                        <li>
-                            <a href="#"><i class="fa fa-bar-chart-o fa-fw"></i> Charts<span class="fa arrow"></span></a>
-                            <ul class="nav nav-second-level">
-                                <li>
-                                    <a href="MercuryGraphs.html">Mercury</a>
-                                </li>
-                                <li>
-                                    <a href="VenusGraphs.html">Venus</a>
-                                </li>
-                                <li>
-                                    <a href="MarsGraphs.html">Mars</a>
-                                </li>
-                                <li>
-                                    <a href="JupiterGraphs.html">Jupiter</a>
-                                </li>
-                                <li>
-                                    <a href="SaturnGraphs.html">Saturn</a>
-                                </li>
-                                <li>
-                                    <a href="UranusGraphs.html">Uranus</a>
-                                </li>
-                                <li>
-                                    <a href="NeptuneGraphs.html">Neptune</a>
-                                </li>
-                            </ul>
-                            <!-- /.nav-second-level -->
-                        </li>
+                    <!--#include virtual="left-menu.html" -->
                     </ul>
                 </div>
                 <!-- /.sidebar-collapse -->
@@ -163,6 +83,7 @@ require_once('calendar/classes/tc_calendar.php');
                         </div>
                         <div class="panel-body">
 							  <p class="largetxt"><b>Select start date and drag the marker to your location</b></p>
+	                            Current <!--#include virtual="location.html" -->
 							  <form name="form1" method="GET" action="./refreshdata.php">
 							  <?php
 							  $myCalendar = new tc_calendar("date5", true, false);

@@ -1,0 +1,185 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="description" content="Planetary Observability Data.">
+    <meta name="author" content="Mark McIntyre">
+	<meta name="keywords" content="******"/>
+
+    <title>Planetary Observability Calculations</title>
+
+    <!-- Bootstrap Core CSS -->
+    <link href="css/bootstrap.min.css" rel="stylesheet">
+
+    <!-- MetisMenu CSS -->
+    <link href="css/plugins/metisMenu/metisMenu.min.css" rel="stylesheet">
+
+    <!-- Timeline CSS -->
+    <link href="css/plugins/timeline.css" rel="stylesheet">
+
+    <!-- Custom CSS -->
+    <link href="css/dragontail.css" rel="stylesheet">
+
+    <!-- Morris Charts CSS -->
+    <link href="css/plugins/morris.css" rel="stylesheet">
+
+    <!-- Custom Fonts -->
+    <link href="font-awesome-4.5.0/css/font-awesome.min.css" rel="stylesheet" type="text/css">
+
+    <!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
+    <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
+    <!--[if lt IE 9]>
+        <script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
+        <script src="https://oss.maxcdn.com/libs/respond.js/1.4.2/respond.min.js"></script>
+    <![endif]-->
+</head>
+
+<body>
+    <div id="wrapper">
+        <!-- Navigation -->
+        <nav class="navbar navbar-default navbar-static-top" role="navigation" style="margin-bottom: 0">
+	    <!--#include virtual="top-bar.html" -->
+
+            <div class="navbar-default sidebar" role="navigation">
+                <div class="sidebar-nav navbar-collapse">
+                    <ul class="nav" id="side-menu">
+                     <!--#include virtual="left-menu.html" -->
+                    </ul>
+                </div>
+                <!-- /.sidebar-collapse -->
+            </div>
+            <!-- /.navbar-static-side -->
+        </nav>
+        <!-- Page Content -->
+        <div id="page-wrapper">
+            <div class="container-fluid">
+            <div class="row">
+                <div class="col-lg-8">
+                    <div class="panel panel-primary">
+                        <div class="panel-heading">
+                            About These Calculations
+                        </div>
+                        <div class="panel-body">
+                            <p>
+                            <b>Basis of Calculations</b><br>
+                            These pages calculate approximate observability of the planets for an observer in
+                            the southern UK. Calculations are based on Paul Schulyter's excellent web tutorial of how to
+                            calculate the positions of the planets
+                            (<a href=http://www.stjarnhimlen.se/comp/ppcomp.html>available here</a>). Corrections for
+                            atmospheric refraction are after Saemundsson et al, for example as shown
+                            <a href=http://www.jgiesen.de/refract/index.html>here</a>. The planetary osculations (orbital parameters) are taken
+                            from Schulyter's page.
+                            <br>
+                            <br>The asteroid orbital parameters are taken from the MPC daily
+                            datafile which is downloaded each night to my server. Asteroid orbital parameters are updated
+                            roughly every 100 days with different update dates for each asteroid group but their orbits
+                            are quite variable, especially the smaller ones, so do not expect much accuracy beyond 100 days.
+                            <br>
+                            <br>
+                            <b>Be sure to set your location first via the Switch Location page</b> <br>
+                            Also do check the location before using the data. The calculator is not multi-user and so if
+                            someone else changes the location, all pages will reflect that new location!
+
+
+                            <br><br>
+                            <b>What the Graphs Show</b>
+                            <li> <b>Best Visual Altitude</b> - the highest altitude (culmination) of the planet on that
+                            particular day, if itis observable at all (zero means unobservable).
+                            If the planet culminates in daylight, then the higher of dawn
+                            or dusk altitude is used. Hover your mouse over the graph to see the actual best time. See note below for what
+                            'observable' means exactly.
+                            <br>
+                            <font color="red">NB: When observing at dawn, please take care that sunrise does not happen in the field of
+                            view of your scope or camera, or you will blind yourself.</font>
+
+
+                            <li> <b>Size and Magnitude</b> - The approximate size and magnitude on the date shown.
+							The brightness of inner planets takes into account their phase as well as distances.
+							The brightness of Saturn's rings and their tilt is included. For
+							asteroids and pluto, the data will be sketchy.
+
+                            <li> <b>Download raw data</b> - the raw data that went into the graphs is available to download.
+                            Although I calculate the data to many decimals, its really only accurate to two or three so I
+                            round it in the files.
+                            <br><br>
+                            <b>Observability, and Visual vs Imaging</b><br>
+							To be 'observable', I have assumed the sun must be below the horizon and the planet at least 5&deg; above.
+							A value of zero means the planet is unobservable, either too close to the Sun or
+							not above the horizon during darkness. A non-zero value does not mean it will be easy to see !
+							Generally a planet will be unobservable if less
+							than 10&deg; from the Sun, and dangerous if less than 20&deg; away. Thats why I made
+							sure the Sun was below the horizon.
+
+                            <br><br>
+                            The graphs show when the planet will be <em>visible</em>, for astro-imaging
+							you really want the sun more than 15&deg; below the horizon and the planet more than 20-25&deg; above. I have
+							also modelled this and will add it as a feature when I have time but for now you can estimate it by
+                            ignoring all data at dawn, dusk or where altitude is less than 20-25&deg;. You can certainly image
+                            at lower altitudes but the results will be less wonderful.
+                            <br><br>
+                            <b>Adjusting for Other UK Locations</b>
+							<li> Either use the location switcher page, or just add (subtract) approx 1 degree from the altitude
+							for every degree south (north) you live.
+
+							<li>Adjust the time later for more western locations and earlier for more eastern locations.
+							Its not easy to say how much I'm afraid, but around 15 mins per degree should be about right.
+
+                            <br>
+							<br>
+							<b>How I Calculated the Data</b><br>
+							I modelled the orbits in Excel VBA for a fixed location (mine!), and tested it
+							by comparing to Stellarium. I then rewrote the calcs in C++, added the ability to
+							model different locations and created some code which
+							pushed the numbers into javascript suitable for	the graphing tool.
+							<br><br>
+                            <b>Accuracy</b><br>
+							Do not expect sub-degree accuracy! There are many detailed perturbations which affect planetary positions, notably
+                            resonances between planets, the Sun and the Moon, which cause small deviations. I've modelled the biggest
+                            of these for Jupiter
+                            Saturn, Uranus and Neptune (and the Moon) as well as adjusting from geo to topcentric coordinates,
+                            but I'm not modelling things like wobbles of the Earth's
+                            axis, Earth's movement around the Earth-Moon barycentre, resonances between the inner planets and so on. I've
+                            spot-checked the numbers for all the planets at random dates out to 2026 and am generally within a degree or so
+                            altitude and 5-10 minutes time, but there are some larger errors especially for the asteroids.
+							<br><br>
+							<b>Coming Soon</b><br>
+							I hope to add the following shortly:
+							<li> <del>Model the brightness of Saturn's rings.</del>Done.
+							<li> <del>add Pluto and a few minor planets or asteroids.</del>Done.
+							<li> <del>move the calculations into C++ and make them dynamic.</del>Done.
+							<li> <del>create dynamic webpages to allow people to calculate data for their own location.</del>Done.
+							<li> model the effect of the Moon on observability.
+                            </p>
+                        </div>
+                        <div class="panel-footer">
+                            Good luck and may the weather be with you.
+                        </div>
+                    </div>
+                </div>
+                <!-- /.col-lg-4 -->
+            </div>
+                <!-- /.row -->
+            </div>
+            <!-- /.container-fluid -->
+        </div>
+        <!-- /#page-wrapper -->
+
+    </div>
+    <!-- /#wrapper -->
+
+    <!-- jQuery -->
+    <script src="js/jquery.js"></script>
+
+    <!-- Bootstrap Core JavaScript -->
+    <script src="js/bootstrap.min.js"></script>
+
+    <!-- Metis Menu Plugin JavaScript -->
+    <script src="js/plugins/metisMenu/metisMenu.min.js"></script>
+
+    <!-- Custom Theme JavaScript -->
+    <script src="js/sb-admin-2.js"></script>
+</body>
+
+</html>
