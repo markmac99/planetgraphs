@@ -15,9 +15,7 @@ double __stdcall Elongation(long planetno, double dd)
 
 double __stdcall PhaseOrElong(long planetno, double dd, short poe)
 {
-	double spa = 0;
 	double r = PlanDist(planetno, dd);   //heliocentric distance of planet
-	double lst = 1;
 	double r1 = PlanetXYZ(planetno, dd, 10, 0, 0, 0, 0); // geocentric distance of planet
 	double s = PlanDist(SUN, dd); //distance of sun from earth
 	if (planetno == MOON)
@@ -52,16 +50,9 @@ double __stdcall PhaseOrElong(long planetno, double dd, short poe)
 double __stdcall VisualMagnitude(long planetno, double dd)
 {
 	double magBase = -1, magPhaseFactor = 0;
-	if (planetno == PLUTO)
-	{
-		magBase = -1;
-		double magPhaseFactor = 0;
-	}
-	else
-	{
-		magBase = elements[planetno].mag[0];
-		magPhaseFactor = elements[planetno].mag[1];
-	}
+	magBase = elements[planetno].mag[0];
+	magPhaseFactor = elements[planetno].mag[1];
+
 	double magNonlinearFactor = elements[planetno].mag[2];
 	double magNonlinearExponent = elements[planetno].mag[3];
 

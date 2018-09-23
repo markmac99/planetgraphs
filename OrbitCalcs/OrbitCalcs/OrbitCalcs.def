@@ -1,5 +1,4 @@
 LIBRARY ORBITCALCS
-DESCRIPTION 'Library of Orbital Mechanichs calcs for Excel and other use'
 EXPORTS
 	AstroDaysFromDt
 	days

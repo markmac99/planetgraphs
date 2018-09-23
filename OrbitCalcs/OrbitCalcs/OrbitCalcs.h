@@ -40,12 +40,16 @@ typedef struct OrbitalElements
 
 extern struct OrbitalElements elements[NUMELEMENTS];
 extern char szPath[512];
+extern char szOutputPath[512];
 
 int LoadAsteroidsJPL(int n);
 int LoadAsteroidsMPC(int n);
 int LoadOrbitalElements(OrbitalElements* elements);
 extern int maxloaded;
 
+#ifndef _WIN32
+#define __stdcall 
+#endif 
 double __stdcall GetDateFromDtval(double dtval, int& yy, int& mo, int& dd, int& hh, int& mm, int& ss);
 double __stdcall GetDtvalFromDate(int yy, int mo, int dd, int hh, int mm, int ss);
 
@@ -90,7 +94,4 @@ double __stdcall VisualMagnitude(long planetno, double dd);
 double __stdcall ApparentSize(long planetno, double dd);
 double __stdcall SaturnRingMag(double dd);
 
-
-
-
-
+void CreateOutputFiles(double lati, double longi, double dt);

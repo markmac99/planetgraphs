@@ -3,14 +3,43 @@
 // shaddap with the fopen warnings
 #define _CRT_SECURE_NO_WARNINGS 1
 
-#include <Windows.h>
+#include <string.h>
 #include <math.h>
 #include <stdio.h>
+
+double MyRound(double input, int places, int updown);
+void addHeader(FILE* f, char* pname, char* typ);
+void addFooter(FILE* f, char* unt, char* typ, double minv, double maxv);
+
+void addHeader(FILE* f, char* pname, char* typ)
+{
+	fprintf(f, "$(function() {\n");
+	fprintf(f, "Morris.Line({\n");
+	fprintf(f, "  element: 'planet-%s',\n", typ);
+	fprintf(f, "data: [ \n");
+}
+
+void addFooter(FILE* f, char* unt, char* typ, double minv, double maxv)
+{
+	fprintf(f, "        xkey: 'time',\n");
+	fprintf(f, "        ykeys: ['%s'],\n", typ);
+	fprintf(f, "        labels: ['%s'],\n", typ);
+	fprintf(f, "        hideHover: 'auto',\n");
+	fprintf(f, "        xLabelAngle: 45,\n");
+	fprintf(f, "        ymax: %.0lf ,\n", maxv);
+	fprintf(f, "        ymin: %.0lf,\n", minv);
+	fprintf(f, "        postUnits: '%s',\n", unt);
+	fprintf(f, "        resize: true\n");
+	fprintf(f, "    });\n");
+	fprintf(f, "});\n");
+}
 
 
 void SaveOrbitalElements(void)
 {
-	FILE* f = fopen("c:/temp/orbitalelements.csv", "w");
+	char fileloc[256];
+	sprintf(fileloc, "%s/orbitalelements.csv", szPath);
+	FILE* f = fopen(fileloc, "w");
 	for (int i = 0; i < 10; i++)
 	{
 		fprintf(f, "%s,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f\n",
@@ -27,121 +56,111 @@ void SaveOrbitalElements(void)
 	fclose(f);
 }
 
-#if 0
-Sub CreateOutputFiles()
-Dim planetno As Integer, dt As Date
-Dim lati As Double, longi As Double, typ As Integer
-Dim alti As Double, ret As String
-lati = 51.883
-longi = -1.308
-typ = 1 ' visual
-ret = "a"
+void CreateOutputFiles(double lati, double longi, double dt)
+{
+	int planetno;
 
-Call LoadOrbitalElements
-For planetno = MERCURY To NEPTUNE
-f1 = FreeFile
-f2 = f1 + 1
-f3 = f1 + 2
-f4 = f1 + 3
+	for(planetno = MERCURY; planetno <= maxloaded; planetno++)
+	{
+		if (planetno == EARTH) planetno++;
+		FILE *f1, *f2, *f3, *f4;
+		char fnam[256];
+		char* pname = elements[planetno].name;
+		if (pname[0] == '(')
+		{
+			char tmpnam[256] = { 0 };
+			int j = 0;
+			for (int i = 1; i < (int)strlen(pname); i++)
+			{
+				if (pname[i] == ')') pname[i] = '-';
+				if (pname[i] == ' ') i++;
+				tmpnam[j++] = pname[i];
+			}
+			strcpy(pname, tmpnam);
+		}
 
-If planetno < 3 Then
-	intvl = 7
-	maxiters = 104 ' two years of weekly dat
-	Else
-	intvl = 31
-	maxiters = 71 ' six years roughly
-	End If
-	dt = DateSerial(2018, 1, 1)
+		int intvl = (planetno < 4|| planetno > PLUTO ? 7 : 30);
+		int maxiters = (planetno < 4 || planetno > PLUTO ? 104 : 72);
 
-	pname = elements(planetno).name
+		sprintf(fnam, "%s/%sAltitude.js", szOutputPath, pname);
+		f1 = fopen(fnam, "w");
+		if(!f1) 
+		{ 
+			FILE *errf = fopen("/tmp/orbitcalcs.err","w");
+			fprintf(errf, "unable to open %s for writing\n", fnam);
+			fclose(errf);
+			return;
+		}
+		sprintf(fnam, "%s/%sMagnitude.js", szOutputPath, pname);
+		f2 = fopen(fnam, "w");
+		sprintf(fnam, "%s/%sSize.js", szOutputPath, pname);
+		f3 = fopen(fnam, "w");
+		sprintf(fnam, "%s/%sData.csv", szOutputPath, pname);
+		f4 = fopen(fnam, "w");
 
-	Open "c:\temp\" & pname & "Altitude.js" For Output As f1
-	Open "c:\temp\" & pname & "Magnitude.js" For Output As f2
-	Open "c:\temp\" & pname & "Size.js" For Output As f3
-	Open "c:\temp\" & pname & "Data.csv" For Output As f4
+		addHeader(f1, pname, "altitude");
+		addHeader(f2, pname, "magnitude");
+		addHeader(f3, pname, "size");
+		double minsiz = 100;
+		double maxsiz = 0;
+		double maxbri = -20;
+		double minbri = 200;
+		double minalt = 0;
+		double maxalt = 0;
+		fprintf(f4, "Date,Altitude,Magnitude,size\n");
 
-	Call addHeader(f1, pname, "Altitude")
-	Call addHeader(f2, pname, "Magnitude")
-	Call addHeader(f3, pname, "Size")
-	minsiz = 100
-	maxsiz = 0
-	maxbri = -20
-	minbri = 200
-	minalt = 0
-	maxalt = 0
-	Print #f4, "Date,Altitude,Magnitude,size"
+		for (int i = 0; i <= maxiters; i++)
+		{
+			double alti = IsVisible(planetno, dt + intvl * i, lati, longi, 1, 1, 10, 1010);
+			double best = IsVisible(planetno, dt + intvl * i, lati, longi, 1, 2, 10, 1010);
+			double brig = VisualMagnitude(planetno, AstroDaysFromDt(dt + intvl * i));
+			double siz = ApparentSize(planetno, AstroDaysFromDt(dt + intvl * i));
 
-	For i = 1 To maxiters
-	alti = IsVisible(planetno, dt + intvl * i, lati, longi, typ, "a")
-	best = IsVisible(planetno, dt + intvl * i, lati, longi, typ, "t") / 24
-	brig = VisualMagnitude(planetno, AstroDaysFromDt(dt + intvl * i))
-	siz = ApparentSize(planetno, AstroDaysFromDt(dt + intvl * i))
+			if (siz > maxsiz) maxsiz = siz;
+			if (siz < minsiz) minsiz = siz;
+			if (brig > maxbri) maxbri = brig;
+			if (brig < minbri) minbri = brig;
+			if (alti > maxalt) maxalt = alti;
+//			long tmst = DtvalToUnixTS(dt + intvl * i);
+			long tms2 = DtvalToUnixTS(dt + intvl * i + best);
 
-	If siz > maxsiz Then maxsiz = siz
-	If siz < minsiz Then minsiz = siz
-	If brig > maxbri Then maxbri = brig
-	If brig < minbri Then minbri = brig
-	If alti > maxalt Then maxalt = alti
-	tmst = toUnixTS(dt + intvl * i)
-	tms2 = toUnixTS(dt + intvl * i + best)
+			if (i < maxiters)
+			{
+				fprintf(f1, "{time: %ld000, altitude: %.2lf},\n", tms2, alti);
+				fprintf(f2, "{time: %ld000, magnitude: %.2lf},\n", tms2, brig);
+				fprintf(f3, "{time: %ld000, size: %.2lf},\n", tms2, siz);
+			}
+			else
+			{
+				fprintf(f1, "{time: %ld000, altitude: %.2lf}],\n", tms2, alti);
+				fprintf(f2, "{time: %ld000, magnitude: %.2lf}],\n", tms2, brig);
+				fprintf(f3, "{time: %ld000, size: %.2lf}],\n", tms2, siz);
+			}
+			int yy, mo, dy, hh, mm, ss;
+			GetDateFromDtval(dt + intvl * i + best, yy, mo, dy, hh, mm, ss);
+			
+			fprintf(f4, "%4.4d-%2.2d-%2.2d %2.2d:%2.2d:%2.2d, %.2lf, %.2lf, %.2lf\n", yy, mo, dy, hh, mm, ss, alti, brig, siz);
+		}
 
-	If i < maxiters Then
-	Print #f1, "{time: " & tms2 & ", altitude: " & Round(alti, 2) & "},"
-	Print #f2, "{time: " & tms2 & ", magnitude: " & Round(brig, 2) & "},"
-	Print #f3, "{time: " & tms2 & ", size: " & Round(siz, 2) & "},"
-	Else
-	Print #f1, "{time: " & tms2 & ", altitude: " & Round(alti, 2) & "}],"
-	Print #f2, "{time: " & tms2 & ", magnitude: " & Round(brig, 2) & "}],"
-	Print #f3, "{time: " & tms2 & ", size: " & Round(siz, 2) & "}],"
-	End If
-	Print #f4, Format(dt + intvl * i + best, "yyyy-mm-dd hh:mm:ss") & "," & alti & "," & brig & "," & siz
-	Next i
-	If maxbri < 0 Then
-	maxbri = Application.RoundDown(Abs(maxbri), 0)
-	maxbri = maxbri * -1
-	Else
-	maxbri = Application.RoundUp(maxbri, 0)
-	End If
-	If minbri < 0 Then
-	minbri = Application.RoundUp(Abs(minbri), 0)
-	minbri = minbri * -1
-	Else
-	minbri = Application.RoundDown(minbri, 0)
-	End If
-	maxsiz = Application.RoundUp((maxsiz * 12) \ 10, 2)
-	minsiz = Application.RoundDown((minsiz * 12) \ 10, 2)
-	maxalt = Application.RoundUp((maxalt * 12) \ 10, 2)
+		maxbri = MyRound(maxbri, 0, 1);
+		minbri = MyRound(minbri, 0, 2);
+		maxsiz = MyRound(maxsiz * 1.2, 2, 1);
+		minsiz = MyRound(minsiz * 0.8, 2, 2);
+		maxalt = MyRound(maxalt * 1.2, 2, 1);
 
-	Call addFooter(f1, "\xB0", "Altitude", minalt, maxalt)
-	Close f1
-	Call addFooter(f2, " mag", "Magnitude", maxbri, minbri)
-	Close f2
-	Call addFooter(f3, " as", "Size", minsiz, maxsiz)
-	Close f3
-	Close f4
-	Next planetno
-	End Sub
+		addFooter(f1, "\\xB0", "altitude", minalt, maxalt);
+		fclose(f1);
+		addFooter(f2, " mag", "magnitude", maxbri, minbri);
+		fclose(f2);
+		addFooter(f3, " as", "size", minsiz, maxsiz);
+		fclose(f3);
+		fclose(f4);
+	}
+}
 
-	Sub addHeader(f, pname, typ)
-	Print #f, "$(function() {"
-	Print #f, "Morris.Line({"
-	'    Print #f, "  element: '" & pname & " - " & typ & "',"
-	Print #f, "  element: 'planet-" & LCase(typ) & "',"
-	Print #f, "data: [ "
-	End Sub
+double MyRound(double input, int places, int updown)
+{
+	double multi = pow(10, places);
+	return updown == 1 ? ceil(input*multi) / multi: floor(input*multi) / multi;
+}
 
-	Sub addFooter(f, unt, typ, minv, maxv)
-	Print #f, "        xkey: 'time',"
-	Print #f, "        ykeys: ['" & LCase(typ) & "'],"
-	Print #f, "        labels: ['" & typ & "'],"
-	Print #f, "        hideHover: 'auto',"
-	Print #f, "        xLabelAngle: 45,"
-	Print #f, "        ymax: " & Round(maxv, 2) & " ,"
-	Print #f, "        ymin: " & Round(minv, 2) & ","
-	Print #f, "        postUnits: '" & unt & "',"
-	Print #f, "        resize: true"
-	Print #f, "    });"
-	Print #f, "});"
-	End Sub
-
-#endif

@@ -1,4 +1,3 @@
-#include <Windows.h>
 #include <math.h>
 #include "OrbitCalcs.h"
 

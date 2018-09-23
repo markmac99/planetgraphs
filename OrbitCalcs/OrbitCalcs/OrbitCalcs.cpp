@@ -7,6 +7,7 @@
 // model taken from http://www.stjarnhimlen.se/comp/ppcomp.html
 
 char szPath[512]; // path to the DLL and asteroid and comet data files
+char szOutputPath[512]; // path to the exported datafiles
 int maxloaded = 0; // number of objects loaded, including the planets sun and moon
 
 struct OrbitalElements elements[NUMELEMENTS];
@@ -14,11 +15,7 @@ struct OrbitalElements elements[NUMELEMENTS];
 double __stdcall GetOrbitalParam(int planetno, int what)
 {
 	planetno = (planetno > maxloaded ? maxloaded : planetno);
-#ifdef _DEBUG
-	FILE *f = fopen("c:/temp/dd.txt","w");
-	fprintf(f, "%d %d\n", planetno, what);
-	fclose(f);
-#endif
+
 	if (what == 'N' || what =='n')
 		return LongOfAscNode(planetno, 0);
 	if (what == 'i' || what =='I')

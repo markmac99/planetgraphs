@@ -55,9 +55,12 @@ double __stdcall GetDtvalFromDate(int yy, int mo, int dd, int hh, int mm, int ss
 	tmval.tm_hour =hh;
 	tmval.tm_min =mm;
 	tmval.tm_sec=ss;
-
+#ifndef _WIN32
+	tmval.tm_isdst=0;
+	unixdt = mktime(&tmval);
+#else
 	unixdt = _mkgmtime64(&tmval);
-
+#endif
 	dtval = unixdt / 86400.0;
 	dtval += 25569;
 
@@ -68,8 +71,11 @@ double __stdcall GetDateFromDtval(double dtval, int& yy, int& mo, int& dd, int& 
 {
 	time_t unixdt= (time_t)((dtval - 25569.0) * 86400.0);
 	struct tm tmval;
+#ifndef _WIN32
+	gmtime_r(&unixdt, &tmval);
+#else
 	errno_t err = _gmtime64_s(&tmval, &unixdt);
-
+#endif
 	yy = tmval.tm_year+1900;
 	mo = tmval.tm_mon+1;
 	dd = tmval.tm_mday;

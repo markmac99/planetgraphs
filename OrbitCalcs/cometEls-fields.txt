@@ -1,0 +1,36 @@
+Comet mag calc
+m = H + 5log( d ) +2.5*G*log( r );
+where H = abs mag and G = slope parameter
+d = geocentric distance
+r = heliocentric distance
+
+Comet Data column description
+
+ Columns   F77    Use
+
+    1 -   4  i4     Periodic comet number
+    5        a1     Orbit type (generally `C', `P' or `D')
+    6 -  12  a7     Provisional designation (in packed form)
+
+   15 -  18  i4     Year of perihelion passage
+   20 -  21  i2     Month of perihelion passage
+   23 -  29  f7.4   Day of perihelion passage (TT)
+
+   31 -  39  f9.6   Perihelion distance (AU)
+   42 -  49  f8.6   Orbital eccentricity
+
+   52 -  59  f8.4   Argument of perihelion, J2000.0 (degrees)
+   62 -  69  f8.4   Longitude of the ascending node, J2000.0
+                      (degrees)
+   72 -  79  f8.4   Inclination in degrees, J2000.0 (degrees)
+
+   82 -  85  i4     Year of epoch for perturbed solutions
+   86 -  87  i2     Month of epoch for perturbed solutions
+   88 -  89  i2     Day of epoch for perturbed solutions
+
+   92 -  95  f4.1   Absolute magnitude
+   97 - 100  f4.0   Slope parameter
+
+  103 - 158  a56    Designation and Name
+
+  160 - 168  a9     Reference

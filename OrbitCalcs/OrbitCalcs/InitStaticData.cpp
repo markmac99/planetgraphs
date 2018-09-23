@@ -43,6 +43,7 @@ int LoadOrbitalElements(OrbitalElements* elements)
 	elements[0].epoch[0] = yr;
 	elements[0].epoch[1] = mo;
 	elements[0].epoch[2] = dy;
+	printf("Loaded %s %lf %lf\n", elements[n].name, elements[n].N[0], elements[n].MA[0]);
 
 	n++;
 	strcpy(elements[1].name,"Moon");
@@ -66,6 +67,7 @@ int LoadOrbitalElements(OrbitalElements* elements)
 	elements[n].epoch[0] = yr;
 	elements[n].epoch[1] = mo;
 	elements[n].epoch[2] = dy;
+	printf("Loaded %s %lf %lf\n", elements[n].name, elements[n].N[0], elements[n].MA[0]);
 	n++;
 
 	strcpy(elements[2].name,"Mercury");
@@ -89,6 +91,7 @@ int LoadOrbitalElements(OrbitalElements* elements)
 	elements[n].epoch[0] = yr;
 	elements[n].epoch[1] = mo;
 	elements[n].epoch[2] = dy;
+	printf("Loaded %s %lf %lf\n", elements[n].name, elements[n].N[0], elements[n].MA[0]);
 	n++;
 
 	strcpy(elements[3].name, "Venus");
@@ -112,6 +115,7 @@ int LoadOrbitalElements(OrbitalElements* elements)
 	elements[n].epoch[0] = yr;
 	elements[n].epoch[1] = mo;
 	elements[n].epoch[2] = dy;
+	printf("Loaded %s %lf %lf\n", elements[n].name, elements[n].N[0], elements[n].MA[0]);
 	n++;
 
 	strcpy(elements[4].name, "Mars");
@@ -135,6 +139,7 @@ int LoadOrbitalElements(OrbitalElements* elements)
 	elements[n].epoch[0] = yr;
 	elements[n].epoch[1] = mo;
 	elements[n].epoch[2] = dy;
+	printf("Loaded %s %lf %lf\n", elements[n].name, elements[n].N[0], elements[n].MA[0]);
 	n++;
 
 	strcpy(elements[5].name, "Jupiter");
@@ -158,6 +163,7 @@ int LoadOrbitalElements(OrbitalElements* elements)
 	elements[n].epoch[0] = yr;
 	elements[n].epoch[1] = mo;
 	elements[n].epoch[2] = dy;
+	printf("Loaded %s %lf %lf\n", elements[n].name, elements[n].N[0], elements[n].MA[0]);
 	n++;
 
 	strcpy(elements[6].name, "Saturn");
@@ -181,6 +187,7 @@ int LoadOrbitalElements(OrbitalElements* elements)
 	elements[n].epoch[0] = yr;
 	elements[n].epoch[1] = mo;
 	elements[n].epoch[2] = dy;
+	printf("Loaded %s %lf %lf\n", elements[n].name, elements[n].N[0], elements[n].MA[0]);
 	n++;
 
 	strcpy(elements[7].name, "Uranus");
@@ -204,6 +211,7 @@ int LoadOrbitalElements(OrbitalElements* elements)
 	elements[n].epoch[0] = yr;
 	elements[n].epoch[1] = mo;
 	elements[n].epoch[2] = dy;
+	printf("Loaded %s %lf %lf\n", elements[n].name, elements[n].N[0], elements[n].MA[0]);
 	n++;
 
 	strcpy(elements[8].name, "Neptune");
@@ -227,6 +235,7 @@ int LoadOrbitalElements(OrbitalElements* elements)
 	elements[n].epoch[0] = yr;
 	elements[n].epoch[1] = mo;
 	elements[n].epoch[2] = dy;
+	printf("Loaded %s %lf %lf\n", elements[n].name, elements[n].N[0], elements[n].MA[0]);
 	n++;
 
 	strcpy(elements[9].name, "Earth");
@@ -250,14 +259,19 @@ int LoadOrbitalElements(OrbitalElements* elements)
 	elements[n].epoch[0] = yr;
 	elements[n].epoch[1] = mo;
 	elements[n].epoch[2] = dy;
+	printf("Loaded %s %lf %lf\n", elements[n].name, elements[n].N[0], elements[n].MA[0]);
 	n++;
-	// no orbital elements for pluto
+
+	// no proper orbital elements for pluto
 	strcpy(elements[10].name, "Pluto");
 	elements[n].a[0] = 40;
+	elements[n].mag[0] = -1;
+	elements[n].mag[1] = elements[n].mag[2] = elements[n].mag[3] = 0;
 	elements[n].siz = 2376.0 / AU * 3600.0 * RAD2DEG;
 	elements[n].epoch[0] = yr;
 	elements[n].epoch[1] = mo;
 	elements[n].epoch[2] = dy;
+	printf("Loaded %s %lf %lf\n", elements[n].name, elements[n].N[0], elements[n].MA[0]);
 	n++;
 
 	// Asteroids start from ID 11
@@ -286,98 +300,7 @@ int LoadOrbitalElements(OrbitalElements* elements)
 	}
 	return maxn;
 }
-#if 0
-int LoadAsteroidsJPL(int n)
-{
-	FILE *f = NULL;
-	FILE *errf = NULL;
-	char fileloc[512];
-	sprintf(fileloc, "%s\\asteroids.txt", szPath);
-	f = fopen(fileloc, "r");
-	if (f == NULL)
-	{
-		errf = fopen("c:/temp/error.txt", "w");
-		fprintf(errf, "unable to find file in %s", szPath);
-		fclose(errf);
-		return -1;
-	}
-	char line[256];
-	errf = fopen("c:/temp/asteroid-log.txt", "w");
-	while ((fgets(line, 256, f) != NULL) && (n <=NUMELEMENTS))
-	{
-		int epochdt, yr, mo, dy;
-		double epoch;
-		int id = 0;
-		char *token;
-		char seps[] = ",";
 
-		fprintf(errf, "%s\n", line);
-		fclose(errf);
-		errf = fopen("c:/temp/asteroid-log.txt", "a");
-
-		token = strtok(line, seps);
-		sscanf(token, "%d", &id);
-
-		token = strtok(NULL, seps);
-		sscanf(token, "%s", elements[n].name);
-		token = strtok(NULL, seps);
-		sscanf(token, "%d", &epochdt);
-		yr = epochdt / 10000;
-		mo = (epochdt - yr * 10000) / 100;
-		dy = (epochdt - yr * 10000 - mo * 100);
-		elements[n].epoch[0] = yr;
-		elements[n].epoch[1] = mo;
-		elements[n].epoch[2] = dy;
-
-		token = strtok(NULL, seps);
-		sscanf(token, "%lf", &epoch);
-
-		token = strtok(NULL, seps);
-		sscanf(token, "%lf", &(elements[n].N[0]));
-		elements[n].N[1] = 0.0;
-
-		token = strtok(NULL, seps);
-		sscanf(token, "%lf", &(elements[n].incl[0]));
-		elements[n].incl[1] = 0.0;
-
-		token = strtok(NULL, seps);
-		sscanf(token, "%lf", &(elements[n].omega[0]));
-		elements[n].omega[1] = 0.0;
-
-		token = strtok(NULL, seps);
-		sscanf(token, "%lf", &(elements[n].a[0]));
-		elements[n].a[1] = 0.0;
-
-		token = strtok(NULL, seps);
-		sscanf(token, "%lf", &(elements[n].e[0]));
-		elements[n].e[1] = 0.0;
-
-		token = strtok(NULL, seps);
-		sscanf(token, "%lf", &(elements[n].MA[0]));
-		token = strtok(NULL, seps);
-		sscanf(token, "%lf", &(elements[n].MA[1]));
-
-		token = strtok(NULL, seps);
-		sscanf(token, "%lf", &(elements[n].mag[0]));
-		token = strtok(NULL, seps);
-		sscanf(token, "%lf", &(elements[n].mag[1]));
-		elements[n].mag[2] = elements[n].mag[3] = 0.0;
-
-		token = strtok(NULL, seps);
-		sscanf(token, "%lf", &(elements[n].siz));
-
-		fprintf(errf, "Body %s LAN %lf MA %lf e %lf a %lf Epoch %d/%d/%d\n", elements[n].name,
-			elements[n].N[0], elements[n].MA[0], 
-			elements[n].e[0], elements[n].a[0],
-			elements[n].epoch[0], elements[n].epoch[1], elements[n].epoch[2]);
-
-		n++;
-	}
-	fclose(errf);
-	fclose(f);
-	return n-1;
-}
-#endif
 void trim(char *str)
 {
 	int i = 0;
@@ -407,13 +330,13 @@ int LoadAsteroidsMPC(int n)
 	f = fopen(fileloc, "r");
 	if (f == NULL)
 	{
-		errf = fopen("c:/temp/error.txt", "w");
+		sprintf(fileloc, "%s/orbitcalcs.err", szPath);
+		errf = fopen(fileloc, "w");
 		fprintf(errf, "unable to find file in %s", szPath);
 		fclose(errf);
 		return -1;
 	}
 	char line[256] = { 0 };
-	errf = fopen("c:/temp/asteroid-log.txt", "w");
 	while (strncmp(line, "----", 4) != 0)
 		fgets(line, 256, f);
 
@@ -451,7 +374,7 @@ int LoadAsteroidsMPC(int n)
 		trim(name);
 		epochyyyymmdd = atol(line + 194);
 
-		printf("%s %s %d %lf\n", name, id, epochyyyymmdd, M);
+		printf("Loaded %s %s %ld %lf\n", name, id, epochyyyymmdd, M);
 		ii++;
 		strcpy(elements[n].name, name);
 		elements[n].N[0] = N; elements[n].N[1] = 0.0;
@@ -469,14 +392,8 @@ int LoadAsteroidsMPC(int n)
 		elements[n].epoch[1] = mo;
 		elements[n].epoch[2] = dy;
 
-		fprintf(errf, "Body %s LAN %lf MA %lf e %lf a %lf Epoch %d/%d/%d\n", elements[n].name,
-			elements[n].N[0], elements[n].MA[0],
-			elements[n].e[0], elements[n].a[0],
-			elements[n].epoch[0], elements[n].epoch[1], elements[n].epoch[2]);
-
 		n++;
 	}
-	fclose(errf);
 	fclose(f);
 
 	return n-1;
