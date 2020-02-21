@@ -53,5 +53,8 @@
     <ClInclude Include="..\OrbitCalcs\Comets.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="Outputter.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
 </Project>

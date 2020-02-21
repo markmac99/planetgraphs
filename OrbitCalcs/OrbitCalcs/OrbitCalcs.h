@@ -6,7 +6,8 @@
 #define RAD2DEG		57.29577951	
 #define HR2DEG		15.04107		// precision value
 
-#define NUMELEMENTS 30
+#define NUMELEMENTS 30				// maximum number of planets and asteroids
+#define MAXMPC		5				// only load five of them
 
 #define SUN			0
 #define MOON		1
@@ -82,11 +83,14 @@ double __stdcall GasPerturbations(int planetno, double dd, int latlongpos);
 double __stdcall SunRiseSet(double dtval, double lat, double longi, int ros, double h, double temp, double pres);
 double __stdcall RiseSet(int planetno, double dtval, double  lat, double longi, int ros, double h, double temp, double pres);
 double __stdcall TimeofTransit(int planetno, double dtval, double lat, double longi);
+double __stdcall GenericTimeofTransit(double dd, double ra, double tz, double longi);
 double __stdcall IsVisible(int planetno, double dtval, double lat, double longi, int vis_or_tele, int a_or_t, double temp, double pres);
 double __stdcall AltAtTransit(int planetno, double dtval, double lat, double longi, double temp, double pres);
 
 void DoPluto(double dd, double& lonecl, double& latecl, double& r);
 
+double __stdcall PhaseAngle(long planetno, double dd);
+double __stdcall PhaseOrElongGeneral(long planetno, double dd, short poe, double lst, double lat);
 double __stdcall PhaseOrElong(long planetno, double dd, short poe);
 double __stdcall Elongation(long planetno, double dd);
 double __stdcall Phase(long planetno, double dd);
@@ -95,3 +99,7 @@ double __stdcall ApparentSize(long planetno, double dd);
 double __stdcall SaturnRingMag(double dd);
 
 void CreateOutputFiles(double lati, double longi, double dt);
+char* TimeToStr(double t);
+void trim(char *str);
+char* fmt_hours(double ra);
+void cleanup_name(char* str);

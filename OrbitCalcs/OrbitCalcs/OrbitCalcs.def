@@ -36,3 +36,12 @@ EXPORTS
 	AltAtTransit
 
 	GetObjectNames
+
+	CometMeanAnomaly
+	CometDayNumber
+	CometPeriod
+	CometSemiMajorAxis
+	CometSunDist
+	CometEarthDist
+	CometMagnitude
+

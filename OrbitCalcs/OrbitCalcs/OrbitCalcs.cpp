@@ -1,7 +1,12 @@
 #define _CRT_SECURE_NO_WARNINGS 1
 
-#include <math.h>
 #include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
+#include <time.h>
+#include <math.h>
+#include <string>
+#include <algorithm>
 #include "OrbitCalcs.h"
 
 // model taken from http://www.stjarnhimlen.se/comp/ppcomp.html
@@ -28,16 +33,16 @@ double __stdcall GetOrbitalParam(int planetno, int what)
 		return Eccentricity(planetno,0);
 	if (what == 'M' || what =='m')
 		return MeanAnomaly(planetno, 0);
-	if (what == 'G' || what =='G')
+	if (what == 'G' || what =='g')
 		return elements[planetno].mag[0];
 	if (what == 's' || what == 'S')
 		return elements[planetno].siz *(planetno == MOON ? ERAD*60 : AU) / (3600.0 * RAD2DEG);
 	if (what == 'T' ||  what =='t')
-		return (double)(elements[planetno].epoch[0]*10000+ elements[planetno].epoch[1] * 10+ elements[planetno].epoch[2]);
+		return (double)(elements[planetno].epoch[0] * 10000+ elements[planetno].epoch[1] * 10 + elements[planetno].epoch[2]);
 	return 0.0;
 }
 
-double __stdcall MeanAnomaly(int planetno , double dd ) 
+double __stdcall MeanAnomaly(int planetno , double dd )
 {
 	double k = elements[planetno].MA[0];
 	double p = elements[planetno].MA[1];
@@ -200,7 +205,8 @@ double __stdcall AltAtTransit(int planetno, double dtval, double lat, double lon
 {
 //	if (planetno > maxloaded) return 0;
 	double tt = TimeofTransit(planetno, dtval, lat, longi);
-	double dd = AstroDaysFromDt(dtval + tt / 24.0);
+	double dv = dtval + tt / 24.0;
+	double dd = AstroDaysFromDt(dv);
 	double lst = LSTFromDt(dtval + tt/24.0, longi)/24.0;
 	return PlanetXYZ(planetno, dd, 8, lst, lat, temp, pres);
 }
@@ -210,7 +216,8 @@ double __stdcall PlanetXYZ(int planetno, double dd, int xyz, double lst, double 
 	double lonecl, latecl, r, v;
 	double xh, yh, zh, ra, decl, azi, alti;
 
-//	if (planetno > maxloaded) return 0;
+//	if (planetno == 11)
+//		printf("%f %d %f %f %f %f \n", dd, xyz, lst, lat, temp, pres);
 
 	if (planetno != PLUTO)
 	{
@@ -238,6 +245,9 @@ double __stdcall PlanetXYZ(int planetno, double dd, int xyz, double lst, double 
 		zh = r * (sin(v + w) * sin(i));
 
 		r = sqrt(xh*xh + yh*yh + zh*zh);
+
+//		if (planetno == 11)
+//			printf("%f %f %f %f %f %f %f %f \n", e, w, a, N, m, xh, yh, zh);
 
 		// coords in ecliptic plane
 		lonecl = atan2(yh, xh);
@@ -308,6 +318,7 @@ double __stdcall PlanetXYZ(int planetno, double dd, int xyz, double lst, double 
 		double ze = yh * sin(ecl) + zh * cos(ecl);
 		ra = atan2(ye, xe) * RAD2DEG;
 		decl = atan2(ze, sqrt(xe*xe + ye*ye)) * RAD2DEG;
+
 		while (ra < 0)
 			ra = ra + 360.0;
 		while (ra > 360.0)
@@ -318,13 +329,34 @@ double __stdcall PlanetXYZ(int planetno, double dd, int xyz, double lst, double 
 
 		// correct to topographic coords (surface of earth)
 		// mainly relevant for the moon but worth doing for the others
-		alti = alti * PI / 180;
+		alti = alti /RAD2DEG;
 		if (planetno == MOON)
-			alti = alti - cos(alti) * asin(1 / r);
+			alti = alti - cos(alti) * asin(1 / distearth);
 		else
-			alti = alti - (8.794 / 3600.0) / RAD2DEG / r;
+			alti = alti - (8.794 / 3600.0) / RAD2DEG / distearth;
 
 		alti = alti * RAD2DEG;
+
+		// now correct RA and DEC to topographic coords
+		double par = (planetno==MOON? asin(1 / distearth): (8.794 / 3600)/distearth/RAD2DEG); // parallax of planet
+		double gclat = lat - 0.1924 * sin(2 * lat/RAD2DEG); //geocentric latitude of observer allowing for earth being oblate
+		double rho = 0.99833 + 0.00167 * cos(2 * lat/ RAD2DEG); // distance of observer from centre of earth
+		double HA = (lst * 360 - ra)/RAD2DEG; // planet's hour angle in radians
+		double g = atan(tan(gclat/RAD2DEG) / cos(HA)); // auxiliary angle 
+		double racorr, declcorr;
+
+		// formula breaks down close to the celestial poles though planets should never be there
+		if (fabs(decl) > 89.9999)
+			racorr = 0;
+		else 
+			racorr = (par * rho * cos(gclat / RAD2DEG) * sin(HA) / cos(decl / RAD2DEG))*RAD2DEG;
+
+		if (fabs(gclat) < 0.00001) // breaks down near earth's equator
+			declcorr = (par * rho * sin(-decl / RAD2DEG) * cos(HA)) * RAD2DEG;
+		else
+			declcorr = (par * rho * sin(gclat / RAD2DEG) * sin(g - decl / RAD2DEG) / sin(g))*RAD2DEG;
+		ra -= racorr ;
+		decl -= declcorr;
 	}
 	// results
 	switch (xyz)
@@ -344,3 +376,43 @@ double __stdcall PlanetXYZ(int planetno, double dd, int xyz, double lst, double 
 }
 
 
+void trim(char *str)
+{
+	int i = 0;
+	char outstr[64] = { 0 };
+	while (str[i] == ' ')i++;
+	strcpy(outstr, str + i);
+	i = (int)strlen(outstr) - 1;
+	while (outstr[i] == ' ')i--;
+	outstr[i + 1] = 0;
+	strcpy(str, outstr);
+}
+
+void cleanup_name(char* str)
+{
+	size_t i, j;
+	char outstr[64] = { 0 };
+	trim(str);
+	std::string s = str;
+	std::replace(s.begin(),s.end(),' ','-');
+	std::replace(s.begin(),s.end(),'/','-');
+	strcpy(str, s.c_str());
+	for (i = 0, j=0; i < strlen(str); i++)
+	{
+			if (str[i]=='(' || str[i]==')')
+					i++;
+			outstr[j++] = str[i];
+	}
+	trim(outstr);
+	strcpy(str, outstr);
+}
+
+char* fmt_hours(double ra)
+{
+	static char ret[6] = { 0 };
+	ra /= 15.0;
+	int hr = (int)ra;
+	int min = (int)(60 * (ra - hr));
+	sprintf(ret, "%02d:%02d", hr, min);
+	return ret;
+}

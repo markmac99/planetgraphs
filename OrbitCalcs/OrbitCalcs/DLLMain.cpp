@@ -39,7 +39,7 @@ SAFEARRAY* __stdcall GetObjectNames(int *numloaded)
 		indices[0] = 0;
 		indices[1] = i;
 		char *name = elements[i].name;
-		HRESULT hResult = SafeArrayPutElement(retArray, indices, SysAllocStringByteLen(name, strlen(name)));
+		HRESULT hResult = SafeArrayPutElement(retArray, indices, SysAllocStringByteLen(name, (UINT)strlen(name)));
 		BSTR tmpBstr;
 		hResult = SafeArrayGetElement(retArray, indices, &tmpBstr);
 		char *c = (LPSTR)tmpBstr;

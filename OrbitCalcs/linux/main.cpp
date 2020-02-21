@@ -7,12 +7,12 @@
 
 int main(int argc, char **argv)
 {
-	if (argc < 4)
+	if (argc < 5)
 	{
 		printf("usage: orbitcalcs lat long date targetdir\n");
 		printf("lat and long as decimals(west negative)\n");
 		printf("date as yyyymmdd\n\n");
-		printf("eg OrbitCalcsSL 51.88 -1.31 20180411\n");
+		printf("eg OrbitCalcsSL 51.88 -1.31 20180411 123456\n");
 		//sleep(100);;
 		return -1;
 	}
@@ -28,7 +28,7 @@ int main(int argc, char **argv)
 	int vis_or_tele = 1;//  (planetno < 4 ? 1: 2);
 	double dd = days(yy, mo, dy, 0, 0, 0);
 #ifndef _WIN32
-	strcpy(szPath, "/var/www/html/astro/mpcdata");
+	strcpy(szPath, ".");
 	strcpy(szOutputPath, argv[4]);
 #else
 	strcpy(szPath, "//thelinux/www$/html/astro/mpcdata");

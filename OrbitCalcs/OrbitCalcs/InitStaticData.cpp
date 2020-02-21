@@ -43,7 +43,7 @@ int LoadOrbitalElements(OrbitalElements* elements)
 	elements[0].epoch[0] = yr;
 	elements[0].epoch[1] = mo;
 	elements[0].epoch[2] = dy;
-	printf("Loaded %s %lf %lf\n", elements[n].name, elements[n].N[0], elements[n].MA[0]);
+//	printf("Loaded %s %lf %lf\n", elements[n].name, elements[n].N[0], elements[n].MA[0]);
 
 	n++;
 	strcpy(elements[1].name,"Moon");
@@ -67,7 +67,7 @@ int LoadOrbitalElements(OrbitalElements* elements)
 	elements[n].epoch[0] = yr;
 	elements[n].epoch[1] = mo;
 	elements[n].epoch[2] = dy;
-	printf("Loaded %s %lf %lf\n", elements[n].name, elements[n].N[0], elements[n].MA[0]);
+//	printf("Loaded %s %lf %lf\n", elements[n].name, elements[n].N[0], elements[n].MA[0]);
 	n++;
 
 	strcpy(elements[2].name,"Mercury");
@@ -91,7 +91,7 @@ int LoadOrbitalElements(OrbitalElements* elements)
 	elements[n].epoch[0] = yr;
 	elements[n].epoch[1] = mo;
 	elements[n].epoch[2] = dy;
-	printf("Loaded %s %lf %lf\n", elements[n].name, elements[n].N[0], elements[n].MA[0]);
+//	printf("Loaded %s %lf %lf\n", elements[n].name, elements[n].N[0], elements[n].MA[0]);
 	n++;
 
 	strcpy(elements[3].name, "Venus");
@@ -115,7 +115,7 @@ int LoadOrbitalElements(OrbitalElements* elements)
 	elements[n].epoch[0] = yr;
 	elements[n].epoch[1] = mo;
 	elements[n].epoch[2] = dy;
-	printf("Loaded %s %lf %lf\n", elements[n].name, elements[n].N[0], elements[n].MA[0]);
+//	printf("Loaded %s %lf %lf\n", elements[n].name, elements[n].N[0], elements[n].MA[0]);
 	n++;
 
 	strcpy(elements[4].name, "Mars");
@@ -139,7 +139,7 @@ int LoadOrbitalElements(OrbitalElements* elements)
 	elements[n].epoch[0] = yr;
 	elements[n].epoch[1] = mo;
 	elements[n].epoch[2] = dy;
-	printf("Loaded %s %lf %lf\n", elements[n].name, elements[n].N[0], elements[n].MA[0]);
+//	printf("Loaded %s %lf %lf\n", elements[n].name, elements[n].N[0], elements[n].MA[0]);
 	n++;
 
 	strcpy(elements[5].name, "Jupiter");
@@ -163,7 +163,7 @@ int LoadOrbitalElements(OrbitalElements* elements)
 	elements[n].epoch[0] = yr;
 	elements[n].epoch[1] = mo;
 	elements[n].epoch[2] = dy;
-	printf("Loaded %s %lf %lf\n", elements[n].name, elements[n].N[0], elements[n].MA[0]);
+//	printf("Loaded %s %lf %lf\n", elements[n].name, elements[n].N[0], elements[n].MA[0]);
 	n++;
 
 	strcpy(elements[6].name, "Saturn");
@@ -187,7 +187,7 @@ int LoadOrbitalElements(OrbitalElements* elements)
 	elements[n].epoch[0] = yr;
 	elements[n].epoch[1] = mo;
 	elements[n].epoch[2] = dy;
-	printf("Loaded %s %lf %lf\n", elements[n].name, elements[n].N[0], elements[n].MA[0]);
+//	printf("Loaded %s %lf %lf\n", elements[n].name, elements[n].N[0], elements[n].MA[0]);
 	n++;
 
 	strcpy(elements[7].name, "Uranus");
@@ -211,7 +211,7 @@ int LoadOrbitalElements(OrbitalElements* elements)
 	elements[n].epoch[0] = yr;
 	elements[n].epoch[1] = mo;
 	elements[n].epoch[2] = dy;
-	printf("Loaded %s %lf %lf\n", elements[n].name, elements[n].N[0], elements[n].MA[0]);
+//	printf("Loaded %s %lf %lf\n", elements[n].name, elements[n].N[0], elements[n].MA[0]);
 	n++;
 
 	strcpy(elements[8].name, "Neptune");
@@ -235,7 +235,7 @@ int LoadOrbitalElements(OrbitalElements* elements)
 	elements[n].epoch[0] = yr;
 	elements[n].epoch[1] = mo;
 	elements[n].epoch[2] = dy;
-	printf("Loaded %s %lf %lf\n", elements[n].name, elements[n].N[0], elements[n].MA[0]);
+//	printf("Loaded %s %lf %lf\n", elements[n].name, elements[n].N[0], elements[n].MA[0]);
 	n++;
 
 	strcpy(elements[9].name, "Earth");
@@ -259,7 +259,7 @@ int LoadOrbitalElements(OrbitalElements* elements)
 	elements[n].epoch[0] = yr;
 	elements[n].epoch[1] = mo;
 	elements[n].epoch[2] = dy;
-	printf("Loaded %s %lf %lf\n", elements[n].name, elements[n].N[0], elements[n].MA[0]);
+//	printf("Loaded %s %lf %lf\n", elements[n].name, elements[n].N[0], elements[n].MA[0]);
 	n++;
 
 	// no proper orbital elements for pluto
@@ -271,7 +271,7 @@ int LoadOrbitalElements(OrbitalElements* elements)
 	elements[n].epoch[0] = yr;
 	elements[n].epoch[1] = mo;
 	elements[n].epoch[2] = dy;
-	printf("Loaded %s %lf %lf\n", elements[n].name, elements[n].N[0], elements[n].MA[0]);
+//	printf("Loaded %s %lf %lf\n", elements[n].name, elements[n].N[0], elements[n].MA[0]);
 	n++;
 
 	// Asteroids start from ID 11
@@ -287,7 +287,7 @@ int LoadOrbitalElements(OrbitalElements* elements)
 		//  adjust to J2000 epoch - 2451543.5 - from the epoch of the data from JPL
 		double jd = JulianDate(elements[i].epoch[0], elements[i].epoch[1], elements[i].epoch[2], 0, 0, 0);
 		double dd = days(elements[i].epoch[0], elements[i].epoch[1], elements[i].epoch[2], 0, 0, 0);
-		double epochyr = elements[i].epoch[0] + elements[i].epoch[1] / 12.0 + elements[i].epoch[2] / 30.0; // approx value
+		double epochyr = elements[i].epoch[0] + elements[i].epoch[1] / 12.0 + elements[i].epoch[2] / (30.0*12.0); // approx value
 
 		elements[i].MA[0] -= elements[i].MA[1] * (jd - 2451543.5);
 		while (elements[i].MA[0] > 360)
@@ -301,18 +301,7 @@ int LoadOrbitalElements(OrbitalElements* elements)
 	return maxn;
 }
 
-void trim(char *str)
-{
-	int i = 0;
-	char outstr[32] = { 0 };
-	while (str[i] == ' ')i++;
-	strcpy(outstr, str + i);
-	i = strlen(outstr) - 1;
-	while (outstr[i] == ' ')i--;
-	outstr[i + 1] = 0;
-	strcpy(str, outstr);
-}
-
+void decode_datestr(char* epochstr, long &yr, long &mo, long &dy);
 
 // get data file from http://www.minorplanetcenter.net/iau/MPCORB/MPCORB.DAT.gz
 // will need to be gunzipped
@@ -341,9 +330,11 @@ int LoadAsteroidsMPC(int n)
 		fgets(line, 256, f);
 
 	int ii = 0;
-	while (fgets(line, 256, f) != NULL && ii < 10)
+	while (fgets(line, 256, f) != NULL && ii < MAXMPC)
 	{
 		char tmp[11] = { 0 };
+		char epochstr[6] = { 0 };
+
 		memset(name, 0, 32);
 		memset(id, 0, 8);
 
@@ -354,6 +345,8 @@ int LoadAsteroidsMPC(int n)
 		M = atof(tmp);
 		strncpy(tmp, line + 14, 5);
 		G = atof(tmp);
+
+		strncpy(epochstr, line + 20, 5);
 
 		strncpy(tmp, line + 26, 9);
 		MA = atof(tmp);
@@ -372,9 +365,9 @@ int LoadAsteroidsMPC(int n)
 
 		strncpy(name, line + 170, 20);
 		trim(name);
-		epochyyyymmdd = atol(line + 194);
+		epochyyyymmdd = atol(line + 194); // this is actually the last observation date - ignore! 
 
-		printf("Loaded %s %s %ld %lf\n", name, id, epochyyyymmdd, M);
+//		printf("Loaded %s %s %ld %lf\n", name, id, epochyyyymmdd, M);
 		ii++;
 		strcpy(elements[n].name, name);
 		elements[n].N[0] = N; elements[n].N[1] = 0.0;
@@ -385,9 +378,13 @@ int LoadAsteroidsMPC(int n)
 		elements[n].MA[0] = MA; elements[n].MA[1] = dm;
 		elements[n].mag[0] = M; elements[n].mag[1] = G;
 		elements[n].siz = 0;
-		long yr = epochyyyymmdd / 10000;
-		long mo = (epochyyyymmdd - yr * 10000) / 100;
-		long dy = (epochyyyymmdd - yr * 10000 - mo * 100);
+
+		long yr, mo, dy;
+		decode_datestr(epochstr, yr, mo, dy);
+
+//		long yr = epochyyyymmdd / 10000;
+//		long mo = (epochyyyymmdd - yr * 10000) / 100;
+//		long dy = (epochyyyymmdd - yr * 10000 - mo * 100);
 		elements[n].epoch[0] = yr;
 		elements[n].epoch[1] = mo;
 		elements[n].epoch[2] = dy;
@@ -397,4 +394,14 @@ int LoadAsteroidsMPC(int n)
 	fclose(f);
 
 	return n-1;
+}
+
+void decode_datestr(char* epochstr, long &yr, long &mo, long &dy)
+{
+	yr = 100 * (epochstr[0] - 'I' + 18) + 10 * (epochstr[1] - '0') + (epochstr[2] - '0');
+	mo = epochstr[3] - '0';
+	if (epochstr[4] > '9')
+		dy = epochstr[4] - 'A' + 10;
+	else
+		dy = epochstr[4] - '0';
 }

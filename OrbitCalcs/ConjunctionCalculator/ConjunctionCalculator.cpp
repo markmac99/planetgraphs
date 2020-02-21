@@ -66,7 +66,6 @@ int main(int argc, char** argv)
 
 //	tstruct->tm_mday=7;// for debugging purposes, set to start of current month
 
-	double dy = tstruct->tm_mday + tstruct->tm_hour / 24.0 + tstruct->tm_min / (24.0*60.0);
 	double dd = days(yr, mth, tstruct->tm_mday, 0, 0, 0);
 
 	// local sidereal time
@@ -76,7 +75,7 @@ int main(int argc, char** argv)
 	printf("loading data\n"); fflush(stdout);
 	int maxloaded = LoadOrbitalElements(elements);
 
-	printf("Loaded %d planets, calculating conjunctions for %d days\n", maxloaded, maxdate); fflush(stdout);
+	printf("Loaded %d planets, calculating conjunctions for %ld days\n", maxloaded, maxdate); fflush(stdout);
 	if (maxloaded > 10) maxloaded = 11; // just the planets thanks
 	int conjno = 0;
 
@@ -240,9 +239,9 @@ void ConjCreateOutputLine(FILE* outf, struct Conjunction c)
 	fprintf(outf, "var cell = row.insertCell(0);\n");
 	fprintf(outf, "cell.innerHTML = \"%4.4d-%2.2d-%2.2d\";\n", c.yr, c.mth, c.dy);
 	fprintf(outf, "var cell = row.insertCell(1);\n");
-	fprintf(outf, "cell.innerHTML = \"\\<a href=\\\"planets.shtml?%s\\\"\\>%s\\</a\\>\";\n", c.p1name, c.p1name);
+	fprintf(outf, "cell.innerHTML = \"\\<a href=\\\"/%s\\\"\\>%s\\</a\\>\";\n", c.p1name, c.p1name);
 	fprintf(outf, "var cell = row.insertCell(2);\n");
-	fprintf(outf, "cell.innerHTML = \"\\<a href=\\\"planets.shtml?%s\\\"\\>%s\\</a\\>\";\n", c.p2name, c.p2name);
+	fprintf(outf, "cell.innerHTML = \"\\<a href=\\\"/%s\\\"\\>%s\\</a\\>\";\n", c.p2name, c.p2name);
 	fprintf(outf, "var cell = row.insertCell(3);\n");
 	fprintf(outf, "cell.innerHTML = \"%2.2f\";\n", c.minsep);
 	fprintf(outf, "var cell = row.insertCell(4);\n");

@@ -1,5 +1,6 @@
 //#include <Windows.h>
 #include <math.h>
+#include <stdio.h>
 #include "OrbitCalcs.h"
 
 
@@ -25,17 +26,16 @@ double __stdcall RiseSet(int planetno, double dtval, double  lat, double longi, 
 	// calculate UT when the planet is due south
 
 	double dd, lst, lha, coslha;
-	int yy, mo, dy, hh, mm, ss, tz;
+	int yy, mo, dy, hh, mm, ss;
 	double ra, sunlong, gmst0, ut_sis=0;
 	double lati=0, decl=0;
 	double rs=0;
 
 	GetDateFromDtval(dtval, yy, mo, dy, hh, mm, ss);
 	dd = days(yy, mo, dy, 12, 0, 0);
-	lst = LocalSiderealTime(yy, mo, dy, 0, 0, 0, lat);
-	tz = 0; // for GMT
+	lst = LocalSiderealTime(yy, mo, dy, hh, mm, ss, longi)/24.0;
 
-	if(planetno > MOON)
+	if(planetno >= MOON)
 		ut_sis = TimeofTransit(planetno, dtval, lat, longi);
 	else
 	{
@@ -91,9 +91,9 @@ double __stdcall RiseSet(int planetno, double dtval, double  lat, double longi, 
 
 double __stdcall TimeofTransit(int planetno, double dtval, double lat, double longi)
 {
-	// transit time T  = (RA - lat -Me  - PIe)/15 - Tz
+	// transit time T  = (RA - long - Me  - PIe)/15 - Tz
 	// where Tz is the number of hours to be added to local clock to get UT
-	// lat = Observers Longitude
+	// long = Observers Longitude
 	// Me = mean anomaly of earth
 	// PIe = Long of Asc Node of Earth + argument of perihelion
 
@@ -101,7 +101,7 @@ double __stdcall TimeofTransit(int planetno, double dtval, double lat, double lo
 
 	double dd, lst, temp, pres;
 	int yy, mo, dy, hh, mm, ss, tz;
-	double ra, MA, N, aop, tt;
+	double ra;
 
 	temp = 10; // default value
 	pres = 1010; // default value
@@ -110,23 +110,30 @@ double __stdcall TimeofTransit(int planetno, double dtval, double lat, double lo
 	GetDateFromDtval(dtval, yy, mo, dy, hh, mm, ss);
 	dd = days(yy, mo, dy, 0, 0, 0);
 	lst = LocalSiderealTime(yy, mo, dy, 0, 0, 0, lat);
-	ra = PlanetXYZ(planetno, dd, 6, lst, lat, temp, pres);
-	MA = MeanAnomaly(EARTH, dd) * 180 / PI;
-	N = elements[EARTH].N[0] + elements[EARTH].N[1] * dd;
+	ra = PlanetXYZ(planetno, dd, 6, lst/24.0, lat, temp, pres);
+	double tt = GenericTimeofTransit(dd, ra, tz, longi);
+	//printf("%f %d %d %d %f %f %f\n", lst, yy, mo ,dy, dd, ra, longi);
+	return tt;
+}
+
+double __stdcall GenericTimeofTransit(double dd, double ra, double tz, double longi)
+{
+	double MA = MeanAnomaly(EARTH, dd) * 180 / PI;
+	double N = elements[EARTH].N[0] + elements[EARTH].N[1] * dd;
 
 	while (N < 0)
 		N = N + 360;
 
-	aop = ArgOfPerihelion(EARTH, dd) * 180 / PI;
+	double aop = ArgOfPerihelion(EARTH, dd) * 180 / PI;
 	N = N + aop;
 	if (N > 360)
 		N = N - 360;
-	tt = (ra - longi - MA - N) / 15 - tz;
+	double tt = (ra - longi - MA - N) / 15 - tz;
 	while (tt < 0)
 		tt = tt + 24;
 	while(tt > 24)
 		tt = tt - 24;
-
+	//printf("%f %f %f\n", aop, N, MA);
 	return tt;
 }
 
@@ -142,8 +149,6 @@ double __stdcall IsVisible(int planetno, double dtval, double lat, double longi,
 	double talt, tt;
 	double sunalt, planalt, sunrise, sunset0, planrise, planset0;
 	double dd, lst;
-
-//	if (planetno > maxloaded) return 0;
 
 	GetDateFromDtval(dtval, yy, mo, dy, hh, mm, ss);
 	if (vis_or_tele == 1)
@@ -212,6 +217,7 @@ double __stdcall IsVisible(int planetno, double dtval, double lat, double longi,
 			lst = LocalSiderealTime(yy, mo, dy, hh, mm, ss, longi) / 24;
 			talt = PlanetXYZ(planetno, dd, 8, lst, lat, temp, pres);
 		}
+		//printf("%f %f %f %f %f %f\n",  lst, tt, talt, planrise, planset0, dtval);
 		if (a_or_t == 1)
 			return talt;
 		else
