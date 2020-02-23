@@ -12,7 +12,7 @@
 #
 # for C++ define  CC = g++
 CC = gcc
-CFLAGS  = -g -Wall
+CFLAGS  = -g -Wall -Wno-write-strings
 
 all: orbitcalcs cometpp pgsummary conjunctioncalcs mooncalcs
 
