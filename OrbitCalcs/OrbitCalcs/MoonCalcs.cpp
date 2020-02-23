@@ -4,8 +4,12 @@
 #define _CRT_SECURE_NO_WARNINGS 1
 
 #include <iostream>
+#include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
 #include <time.h>
-#include "orbitcalcs.h"
+#include <math.h>
+#include "OrbitCalcs.h"
 
 int main(int argc, char** argv)
 {
@@ -67,15 +71,14 @@ int main(int argc, char** argv)
 		lst2/= 24.0;
 
 		double h = -0.25; //the upper limb is just rising
-		double pres = 1010, temp = 10;
 
 		double ra = PlanetXYZ(MOON, thisdd, 6, lst2, lati, temp, press);
 		double dec = PlanetXYZ(MOON, thisdd, 7, lst2, lati, temp, press);
-		double rise = RiseSet(MOON, thisdv, lati, longi, 1, h, temp, pres);
-		double set  = RiseSet(MOON, thisdv, lati, longi, 2, h, temp, pres);
+		double rise = RiseSet(MOON, thisdv, lati, longi, 1, h, temp, press);
+		double set  = RiseSet(MOON, thisdv, lati, longi, 2, h, temp, press);
 		double phase = PhaseOrElongGeneral(MOON, thisdd,1, lst2, lati);
-		double phaseangle = PhaseOrElongGeneral(MOON, thisdd, 0, lst2, lati)*RAD2DEG;
-		double elong = PhaseOrElongGeneral(MOON, thisdd, 2, lst2, lati) * RAD2DEG;
+		//double phaseangle = PhaseOrElongGeneral(MOON, thisdd, 0, lst2, lati)*RAD2DEG;
+		//double elong = PhaseOrElongGeneral(MOON, thisdd, 2, lst2, lati) * RAD2DEG;
 
 		int rah = (int)floor(ra / 15);
 		int ram = (int)floor((ra - rah*15) * 4);

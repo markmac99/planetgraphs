@@ -14,28 +14,39 @@
 CC = gcc
 CFLAGS  = -g -Wall
 
-# typing 'make' will invoke the first target entry in the file 
-# (in this case the default target entry)
-# you can name this target entry anything, but "default" or "all"
-# are the most commonly used names by convention
-#
+all: orbitcalcs cometpp pgsummary conjunctioncalcs mooncalcs
+
 default: orbitcalcs
 
-install: orbitcalcs
-	install -m 755 orbitcalcs /var/www/html/planetgraphs/
+orbitcalcs: main.o DateMaths.o InitStaticData.o MagAndSize.o OrbitCalcs.o Perturbations.o Pluto.o TransitRiseSet.o Outputter.o Comets.o
+	$(CC) $(CFLAGS) -o orbitcalcs main.o DateMaths.o InitStaticData.o MagAndSize.o OrbitCalcs.o Perturbations.o Pluto.o TransitRiseSet.o Outputter.o Comets.o -lstdc++ -lm
 
-# To create the executable file count we need the object files
-#
-orbitcalcs:  main.o DateMaths.o InitStaticData.o MagAndSize.o OrbitCalcs.o Perturbations.o Pluto.o TransitRiseSet.o Outputter.cpp
-	$(CC) $(CFLAGS) -lm -o orbitcalcs main.o DateMaths.o InitStaticData.o MagAndSize.o OrbitCalcs.o Perturbations.o Pluto.o TransitRiseSet.o Outputter.cpp -lstdc++
+cometpp: cometmain.o DateMaths.o InitStaticData.o MagAndSize.o OrbitCalcs.o Perturbations.o Pluto.o TransitRiseSet.o Outputter.o Comets.o
+	$(CC) $(CFLAGS) -o cometpp cometmain.o DateMaths.o InitStaticData.o MagAndSize.o OrbitCalcs.o Perturbations.o Pluto.o Comets.o TransitRiseSet.o Outputter.o -lstdc++ -lm
 
-# To create the object file countwords.o, we need the source
-#
+pgsummary: summarycalc.o DateMaths.o InitStaticData.o MagAndSize.o OrbitCalcs.o Perturbations.o Pluto.o TransitRiseSet.o Outputter.o Comets.o
+	$(CC) $(CFLAGS) -o pgsummary summarycalc.o DateMaths.o InitStaticData.o MagAndSize.o OrbitCalcs.o Comets.o Perturbations.o Pluto.o TransitRiseSet.o Outputter.o -lstdc++ -lm
+
+conjunctioncalcs: ConjunctionCalculator.o DateMaths.o InitStaticData.o MagAndSize.o OrbitCalcs.o Perturbations.o Pluto.o TransitRiseSet.o Outputter.o Comets.o
+	$(CC) $(CFLAGS) -o conjunctioncalcs ConjunctionCalculator.o DateMaths.o InitStaticData.o MagAndSize.o OrbitCalcs.o Comets.o Perturbations.o Pluto.o TransitRiseSet.o Outputter.o -lstdc++ -lm
+
+mooncalcs: MoonCalcs.o DateMaths.o InitStaticData.o MagAndSize.o OrbitCalcs.o Perturbations.o Pluto.o TransitRiseSet.o Outputter.o Comets.o
+	$(CC) $(CFLAGS) -o mooncalcs MoonCalcs.o DateMaths.o InitStaticData.o MagAndSize.o OrbitCalcs.o Comets.o Perturbations.o Pluto.o TransitRiseSet.o Outputter.o -lstdc++ -lm
+
+summarycalc.o: summarycalc.cpp OrbitCalcs.h Comets.h  
+	$(CC) $(CFLAGS) -c summarycalc.cpp
+
 main.o: main.cpp OrbitCalcs.h  
 	$(CC) $(CFLAGS) -c main.cpp
 
+cometmain.o: cometmain.cpp OrbitCalcs.h  Comets.h
+	$(CC) $(CFLAGS) -c cometmain.cpp
+
 DateMaths.o:  DateMaths.cpp OrbitCalcs.h
 	$(CC) $(CFLAGS) -c DateMaths.cpp
+
+Comets.o:  Comets.cpp OrbitCalcs.h
+	$(CC) $(CFLAGS) -c Comets.cpp
 
 InitStaticData.o:  InitStaticData.cpp OrbitCalcs.h
 	$(CC) $(CFLAGS) -c InitStaticData.cpp
@@ -58,9 +69,16 @@ TransitRiseSet.o:  TransitRiseSet.cpp OrbitCalcs.h
 Outputter.o:  Outputter.cpp OrbitCalcs.h
 	$(CC) $(CFLAGS) -c Outputter.cpp
 
+MoonCalcs.o:  MoonCalcs.cpp OrbitCalcs.h
+	$(CC) $(CFLAGS) -c MoonCalcs.cpp
+
+ConjunctionCalculator.o: ConjunctionCalculator.cpp OrbitCalcs.h Comets.h  
+	$(CC) $(CFLAGS) -c ConjunctionCalculator.cpp
+
+
 # To start over from scratch, type 'make clean'.  This
 # removes the executable file, as well as old .o object
 # files and *~ backup files:
 #
 clean: 
-	$(RM) count *.o *~
+	$(RM) *.o *~
