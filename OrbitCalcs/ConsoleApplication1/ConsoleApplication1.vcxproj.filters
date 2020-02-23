@@ -39,10 +39,10 @@
     <ClCompile Include="..\OrbitCalcs\TransitRiseSet.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="main.cpp">
+    <ClCompile Include="..\OrbitCalcs\Comets.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="..\OrbitCalcs\Comets.cpp">
+    <ClCompile Include="..\orbitcalcs\main.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>

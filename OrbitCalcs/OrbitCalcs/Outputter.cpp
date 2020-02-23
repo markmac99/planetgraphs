@@ -64,6 +64,7 @@ void CreateOutputFiles(double lati, double longi, double dt)
 		FILE *f1, *f2, *f3, *f4;
 		char fnam[256];
 		char* pname = elements[planetno].name;
+		printf("%s\n", pname);
 		if (pname[0] == '(')
 		{
 			char tmpnam[256] = { 0 };

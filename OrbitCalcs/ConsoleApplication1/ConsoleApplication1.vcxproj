@@ -157,12 +157,12 @@
     <ClCompile Include="..\OrbitCalcs\DateMaths.cpp" />
     <ClCompile Include="..\OrbitCalcs\InitStaticData.cpp" />
     <ClCompile Include="..\OrbitCalcs\MagAndSize.cpp" />
+    <ClCompile Include="..\orbitcalcs\main.cpp" />
     <ClCompile Include="..\OrbitCalcs\OrbitCalcs.cpp" />
     <ClCompile Include="..\OrbitCalcs\Outputter.cpp" />
     <ClCompile Include="..\OrbitCalcs\Perturbations.cpp" />
     <ClCompile Include="..\OrbitCalcs\Pluto.cpp" />
     <ClCompile Include="..\OrbitCalcs\TransitRiseSet.cpp" />
-    <ClCompile Include="main.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\OrbitCalcs\Comets.h" />

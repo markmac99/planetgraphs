@@ -145,13 +145,7 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <Text Include="ReadMe.txt" />
-  </ItemGroup>
-  <ItemGroup>
-    <ClInclude Include="stdafx.h" />
-    <ClInclude Include="targetver.h" />
-  </ItemGroup>
-  <ItemGroup>
+    <ClCompile Include="..\orbitcalcs\ConjunctionCalculator.cpp" />
     <ClCompile Include="..\OrbitCalcs\DateMaths.cpp" />
     <ClCompile Include="..\OrbitCalcs\InitStaticData.cpp" />
     <ClCompile Include="..\OrbitCalcs\MagAndSize.cpp" />
@@ -159,7 +153,6 @@
     <ClCompile Include="..\OrbitCalcs\Perturbations.cpp" />
     <ClCompile Include="..\OrbitCalcs\Pluto.cpp" />
     <ClCompile Include="..\OrbitCalcs\TransitRiseSet.cpp" />
-    <ClCompile Include="ConjunctionCalculator.cpp" />
     <ClCompile Include="stdafx.cpp" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
