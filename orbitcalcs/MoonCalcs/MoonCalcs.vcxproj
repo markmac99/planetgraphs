@@ -155,11 +155,11 @@
     <ClCompile Include="..\OrbitCalcs\DateMaths.cpp" />
     <ClCompile Include="..\OrbitCalcs\InitStaticData.cpp" />
     <ClCompile Include="..\OrbitCalcs\MagAndSize.cpp" />
+    <ClCompile Include="..\orbitcalcs\MoonCalcs.cpp" />
     <ClCompile Include="..\OrbitCalcs\OrbitCalcs.cpp" />
     <ClCompile Include="..\OrbitCalcs\Perturbations.cpp" />
     <ClCompile Include="..\OrbitCalcs\Pluto.cpp" />
     <ClCompile Include="..\OrbitCalcs\TransitRiseSet.cpp" />
-    <ClCompile Include="MoonCalcs.cpp" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
