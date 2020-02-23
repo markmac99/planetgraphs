@@ -23,3 +23,10 @@
 *.user
 /orbitcalcs/linux/MPCORB.DAT
 /OrbitCalcs/tmp
+*.o
+cometpp
+conjunctioncalcs
+mooncalcs
+orbitcalcs
+pgsummary
+
