@@ -171,7 +171,7 @@ void CreateOutputLine(FILE* outf, char*name, double siz, double mag, char* t,
 {
 	fprintf(outf,"var row = table.insertRow(-1);\n");
 	fprintf(outf, "var cell = row.insertCell(0);\n");
-	fprintf(outf, "cell.innerHTML = \"\\<a href=\\\"%s.shtml?%s\\\"\\>%s\\</a\\>\";\n", targ, name, name);
+	fprintf(outf, "cell.innerHTML = \"\\<a href=\\\"%s/\\\"\\>%s\\</a\\>\";\n", name, name);
 	fprintf(outf, "var cell = row.insertCell(1);\n");
 	fprintf(outf, "cell.innerHTML = \"%2.2f\";\n", siz);
 	fprintf(outf, "var cell = row.insertCell(2);\n");
