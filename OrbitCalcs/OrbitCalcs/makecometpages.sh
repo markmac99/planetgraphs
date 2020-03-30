@@ -9,3 +9,4 @@ do
     ./create_page.php $k 2>/dev/null
   fi
 done
+./charter.sh

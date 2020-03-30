@@ -30,8 +30,9 @@ int main(int argc, char **argv)
 
 	FILE *inf = fopen(argv[1], "r");
 	FILE * outf = fopen(argv[2], "w");
+	FILE *comf = fopen(argv[4], "w");
 
-	if (!inf || !outf) {
+	if (!inf || !outf || !comf) {
 		printf("unable to open input or output file\n");
 		return -1;
 	}
@@ -41,6 +42,10 @@ int main(int argc, char **argv)
 	int mth = tstruct->tm_mon + 1;
 	double dy = tstruct->tm_mday + tstruct->tm_hour / 24.0 + tstruct->tm_min / (24.0*60.0);
 
+	FILE *jd = fopen("jd.txt", "w");
+	double thejd = JulianDate(yr, mth, tstruct->tm_mday, 12, 0, 0);
+	fprintf(jd, "%.0f\n",thejd);
+	fclose(jd);
 	// local sidereal time
 	double lst = LocalSiderealTime(yr, mth, tstruct->tm_mday,
 		tstruct->tm_hour, tstruct->tm_min, tstruct->tm_sec, longi) / 24.0;
@@ -97,7 +102,7 @@ int main(int argc, char **argv)
 			aComet.N, aComet.omega, aComet.incl);
 		double mag = CometMagnitude(aComet.mag[0], aComet.mag[1], sundist, earthdist);
 
-		if (mag <= 14.0)
+		if (mag < 15.1)
 		{
 			double minalt = 5.0; // minimum altitude to be vaguely visible
 
@@ -155,13 +160,14 @@ int main(int argc, char **argv)
 			cleanup_name(aComet.name);
 			printf("Check2 %s %.2f %.2f %s %.2f %.2f %s %.2f %s %s\n", aComet.name, siz, mag, t, alti, azi, f, dec, ri, se);
 			CreateOutputLine(outf, aComet.name, siz, mag, t, alti, azi, f, dec, ri, se, "comets", ra/15);
-
+ 			fprintf(comf, "%s,%s\n", aComet.id, aComet.name);
 		}
 	}
 
 	WriteFooter(outf);
 	fclose(inf);
 	fclose(outf);
+        fclose(comf);
 
 	return 0;
 }

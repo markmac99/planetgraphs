@@ -2,8 +2,8 @@
 cd /opt/bitnami/apps/wordpress/htdocs/data/src
 git pull
 make
-./cometpp ./CometEls.txt ./VisCometEls.txt /opt/bitnami/apps/wordpress/htdocs/data/
-./pgsummary ./CometEls.txt /home/bitnami/data/planetpositions.js /opt/bitnami/apps/wordpress/htdocs/data/
+./cometpp ./CometEls.txt ./VisCometEls.txt /opt/bitnami/apps/wordpress/htdocs/data/ 
+./pgsummary ./CometEls.txt /home/bitnami/data/planetpositions.js /opt/bitnami/apps/wordpress/htdocs/data/ ./ChartData.txt
 cd ..
 src/conjunctioncalcs 51.88 -1.31 3 2
 cd src

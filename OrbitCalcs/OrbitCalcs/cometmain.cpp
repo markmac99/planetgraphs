@@ -47,8 +47,9 @@ int main(int argc, char **argv)
 		double earthdist = CometEarthDist(aComet.peri, aComet.e, yr, mth, dy, aComet.yr, aComet.mth, aComet.dy,
 			aComet.N, aComet.omega, aComet.incl);
 		double mag = CometMagnitude(aComet.mag[0], aComet.mag[1], sundist, earthdist);
+		fprintf(stderr, "%s %.1f\n", aComet.name, mag);
 
-		if (mag < 14.1)
+		if (mag < 15.1)
 		{
 			// all brighter comets to be analysed later
 			fprintf(outf, "%s\n", aline);
