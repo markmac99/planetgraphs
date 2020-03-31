@@ -221,8 +221,36 @@ void CometOutputter(double lati, double longi, double dt)
 			// get the declination to work out if the comet is visible
 			earthdist = CometXYZ(aComet.peri, aComet.e, yr, mth, dy, aComet.yr, aComet.mth, aComet.dy,
 				aComet.N, aComet.omega, aComet.incl, temp, press, lst, lati, ra, decl, alti, azi);
-			
+
+			double sunrise, sunset0;
+			double sunalt=-10.0 ; // -10 - sun low enough for good darkness
+
+			// effective sunrise and set times
+			double dtval = GetDtvalFromDate(yr, mth, (int)dy, 0, 0, 0);
+			sunrise = RiseSet(SUN, dtval, lati, longi, 1, sunalt, temp, press)/24.0;
+			sunset0 = RiseSet(SUN, dtval, lati, longi, 2, sunalt, temp, press)/24.0;
+
 			double best = GenericTimeofTransit(dd, ra, 0, longi)/24.0; //tz=0 == GMT
+			if(sunrise < best && sunset0 > best)
+			{
+				double alti1, alti2, azi1, azi2, ra1,ra2,dec1, dec2;
+				// comet transits during daytime
+				printf("dayime transit\n");
+				best = sunrise;
+				hh = (int)(best*24.0);
+				mm = (int)((best *24.0 - hh) * 60);
+				lst = LocalSiderealTime(yr, mth, dy, hh, mm, 0, longi)/24.0;
+				earthdist = CometXYZ(aComet.peri, aComet.e, yr, mth, dy+best, aComet.yr, aComet.mth, aComet.dy,
+					aComet.N, aComet.omega, aComet.incl, temp, press, lst, lati, ra1, dec1, alti1, azi1);
+				best = sunset0;
+				hh = (int)(best*24.0);
+				mm = (int)((best *24.0 - hh) * 60);
+				lst = LocalSiderealTime(yr, mth, dy, hh, mm, 0, longi)/24.0;
+				earthdist = CometXYZ(aComet.peri, aComet.e, yr, mth, dy+best, aComet.yr, aComet.mth, aComet.dy,
+					aComet.N, aComet.omega, aComet.incl, temp, press, lst, lati, ra2, dec2, alti2, azi2);
+				if(alti2 < alti1)
+					best =sunrise;
+			}			
 			hh = (int)(best*24.0);
 			mm = (int)((best *24.0 - hh) * 60);
 			lst = LocalSiderealTime(yr, mth, dy, hh, mm, 0, longi)/24.0;
@@ -233,6 +261,7 @@ void CometOutputter(double lati, double longi, double dt)
 			if (mag < minbri) minbri = mag;
 			if (alti > maxalt) maxalt = alti;
 			long tms2 = DtvalToUnixTS(dv + (double)best);
+			if (alti < 5) alti = 0;
 			if (i < maxiters)
 			{
 				fprintf(f1, "{time: %ld000, altitude: %.2lf},\n", tms2, alti);
