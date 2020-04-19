@@ -19,9 +19,9 @@ int main(int argc, char **argv)
 	double tt, alti, azi, ra, dec, brig, siz, crise, cset;
 	char ri[6], se[6], f[6], t[6];
 
-	if (argc < 4)
+	if (argc < 6)
 	{
-		printf("usage: summarycalc cometfile outputfile datafilepath\n");
+		printf("usage: summarycalc cometfile outputfile datafilepath cometlist cometoutput\n");
 		return -1;
 	}
 
@@ -31,8 +31,9 @@ int main(int argc, char **argv)
 	FILE *inf = fopen(argv[1], "r");
 	FILE * outf = fopen(argv[2], "w");
 	FILE *comf = fopen(argv[4], "w");
+	FILE *comoutf = fopen(argv[5], "w");
 
-	if (!inf || !outf || !comf) {
+	if (!inf || !outf || !comf || !comoutf) {
 		printf("unable to open input or output file\n");
 		return -1;
 	}
@@ -51,6 +52,7 @@ int main(int argc, char **argv)
 		tstruct->tm_hour, tstruct->tm_min, tstruct->tm_sec, longi) / 24.0;
 
 	WriteHeader(outf);
+	WriteHeader(comoutf);
 
 	int planetno;
 	double dt= GetDtvalFromDate(yr, mth, tstruct->tm_mday, 0,0,0);
@@ -160,13 +162,16 @@ int main(int argc, char **argv)
 			cleanup_name(aComet.name);
 			printf("Check2 %s %.2f %.2f %s %.2f %.2f %s %.2f %s %s\n", aComet.name, siz, mag, t, alti, azi, f, dec, ri, se);
 			CreateOutputLine(outf, aComet.name, siz, mag, t, alti, azi, f, dec, ri, se, "comets", ra/15);
+			CreateOutputLine(comoutf, aComet.name, siz, mag, t, alti, azi, f, dec, ri, se, "comets", ra/15);
  			fprintf(comf, "%s,%s\n", aComet.id, aComet.name);
 		}
 	}
 
 	WriteFooter(outf);
+	WriteFooter(comoutf);
 	fclose(inf);
 	fclose(outf);
+	fclose(comoutf);
         fclose(comf);
 
 	return 0;
