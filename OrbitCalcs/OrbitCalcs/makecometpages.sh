@@ -9,4 +9,8 @@ do
     ./create_page.php $k 2>/dev/null
   fi
 done
+pushd /mnt/mjmm-data/ephemeris-compute/
+mv -f data/*.cmt /tmp
+./setup.sh
+popd
 ./charter.sh
