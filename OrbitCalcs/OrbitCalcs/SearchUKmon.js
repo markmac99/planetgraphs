@@ -46,20 +46,35 @@
 
 	// data.Payload is a Readable Stream
 	const events = data.Payload;
-	document.write('Shower,Datestamp,Mag,Dir,Alt,Ra,Dec,Camera<br>');
+	var res='<table><tr><td>Shower</td><td>Datestamp</td><td>Mag</td><td>Dir</td><td>Alt</td><td>Ra</td><td>Dec</td><td>Camera</td></tr>';
+	var dta='';
 	for (const event of events) {
 		if (event.Records) {
 			// event.Records.Payload is a buffer containing
 			// a single record, partial records, or multiple records
-			document.write(event.Records.Payload.toString());
-			document.write('<br>');
+			dta=dta.concat(event.Records.Payload.toString());
+			dta=dta.concat(',');
 		} else if (event.Stats) {
 			console.log(`Processed ${event.Stats.Details.BytesProcessed} bytes`);
 		} else if (event.End) {
 			console.log('SelectObjectContent completed');
 		}
 	}
-      document.write('<br><br>Press F5 to return to the search dialog<br>');
+	//console.log(`${dta}`);
+	dta=dta.replace(" ","");
+	dta=dta.replace(/(\r\n|\n|\r)/gm,",");
+	console.log(`${dta}`);
+	flds=dta.split(",");
+	var i;
+ 	for (i=0;i<flds.length;i++)
+	{
+	  if (i % 8 ==0 ) { res=res.concat('<tr>');}
+	  res=res.concat('<td>').concat(flds[i]).concat('</td>');
+	  if ((i+1) % 8 ==0 ) { res=res.concat('</tr>');}
+	}
+        res=res.concat('</tr></table>');
+        //console.log(`${res}`);
+        document.getElementById("results").innerHTML = res;
       });
     }
 //    </script>

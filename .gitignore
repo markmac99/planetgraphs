@@ -14,7 +14,6 @@
 *.opendb
 *.err
 *.csv
-*.js
 *.txt
 /OrbitCalcs/ConsoleApplication1/x64/Debug
 /OrbitCalcs/orbitcalcs/x64/Debug
