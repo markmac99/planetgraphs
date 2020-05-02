@@ -12,8 +12,12 @@ function queryS3()
 	var dy=document.getElementById("DayEntry").value;
 	var hr=document.getElementById("HrEntry").value;
 	var mn=document.getElementById("MinEntry").value;
+	var mt2=pad(mt,2);
+	var dy2=pad(dy,2);
+	var hr2=pad(hr,2);
+	var mn2=pad(mn,2);
 	
-	var srchval=yr.concat(mt).concat(dy).concat('_').concat(hr).concat(mn).concat('%');
+	var srchval=yr.concat(mt2).concat(dy2).concat('_').concat(hr2).concat(mn2).concat('%');
 	var srchkey='consolidated/M_';
 	var selp1= 'SELECT \"Group\",LocalTime,Mag,Dir1,Alt1,Ra1,Dec1,Loc_Cam FROM S3Object WHERE LocalTime like \'';
 	
@@ -129,11 +133,12 @@ function queryS3()
 				console.log('SelectObjectContent completed');
 			}
 		}
-		console.log(`${dta2}`);
+		//console.log(`${dta2}`);
 		dta2=dta2.replace(" ","");
 		dta2=dta2.replace(/(\r\n|\n|\r)/gm,",");
-		console.log(`${dta2}`);
+		//console.log(`${dta2}`);
 		flds=dta2.split(",");
+		console.log(`${flds.length}`)
 		var i;
 		for (i=0;i<flds.length;i++)
 		{
@@ -147,11 +152,8 @@ function queryS3()
 	});
 }
 
-
-// query for Pi data
-// note all values are strings, left-padded with spaces.
-// could convert data to ints for search with cast(Y as int) for example.
-
-//select Y, "M", D, h, "m", s, Mag, Az1, Alt1, Ra1, Dec1, ID 
-//from s3object q
-//where Y='2020' and "M"=' 1' and D=' 3' and h='18' and "m"='29'
+function pad(n, width, z) {
+	z = z || '0';
+	n = n + '';
+	return n.length >= width ? n : new Array(width - n.length + 1).join(z) + n;
+  }
