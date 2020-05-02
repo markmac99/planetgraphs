@@ -78,14 +78,14 @@ function queryS3()
 	srchkey='consolidated/P_';
 	params.Key=srchkey.concat(yr).concat('-unified.csv');
 	selp1='select Y, \"M\", D, h, \"m\", s, Mag, Az1, Alt1, Ra1, Dec1, ID ';
-	selp1=selp1.concat('from s3object q where ';
-	selp1=selp1.concat('cast(Y as int)=').concat(yr)
-	selp1=selp1.concat(' and cast(\"M\" as int=').concat(mt)
-	selp1=selp1.concat(' and cast(D as int)=').concat(dy)
-	selp1=selp1.concat(' and cast(h as int=').concat(hr)
-	selp1=selp1.concat(' and cast(\"m\" as int=').concat(mn)
-	console.log(`${selp1}`)
-	params.Expression= selp1
+	selp1=selp1.concat('from s3object q where ');
+	selp1=selp1.concat('cast(Y as int)=').concat(yr);
+	selp1=selp1.concat(' and cast(\"M\" as int=').concat(mt);
+	selp1=selp1.concat(' and cast(D as int)=').concat(dy);
+	selp1=selp1.concat(' and cast(h as int=').concat(hr);
+	selp1=selp1.concat(' and cast(\"m\" as int=').concat(mn);
+	console.log(`${selp1}`);
+	params.Expression= selp1;
 	client.selectObjectContent(params, (err, data) => {
 		if (err) {
 			switch (err.name) {
