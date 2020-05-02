@@ -79,7 +79,7 @@ function queryS3()
 	var client2 = new AWS.S3({apiVersion: '2006-03-01'});
 	var res2='<table><tr><td>Y</td><td>M</td><td>D</td><td>h</td><td>m</td><td>s</td><td>Mag</td><td>Dir</td><td>Alt</td><td>Ra</td><td>Dec</td><td>Camera</td></tr>';
 	srchkey='consolidated/P_';
-	dta='';
+	var dta2='';
 	var params2 = {
 		Bucket: 'ukmon-shared',
 		Key: '',
@@ -121,19 +121,19 @@ function queryS3()
 			if (event2.Records) {
 				// event.Records.Payload is a buffer containing
 				// a single record, partial records, or multiple records
-				dta=dta.concat(event2.Records.Payload.toString());
-				dta=dta.concat(',');
+				dta2=dta2.concat(event2.Records.Payload.toString());
+				dta2=dta2.concat(',');
 			} else if (event2.Stats) {
 				console.log(`Processed ${event2.Stats.Details.BytesProcessed} bytes`);
 			} else if (event2.End) {
 				console.log('SelectObjectContent completed');
 			}
 		}
-		console.log(`${dta}`);
-		dta=dta.replace(" ","");
-		dta=dta.replace(/(\r\n|\n|\r)/gm,",");
-		console.log(`${dta}`);
-		flds=dta.split(",");
+		console.log(`${dta2}`);
+		dta2=dta2.replace(" ","");
+		dta2=dta2.replace(/(\r\n|\n|\r)/gm,",");
+		console.log(`${dta2}`);
+		flds=dta2.split(",");
 		var i;
 		for (i=0;i<flds.length;i++)
 		{
