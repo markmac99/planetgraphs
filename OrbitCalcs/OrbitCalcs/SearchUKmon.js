@@ -76,7 +76,7 @@ function queryS3()
 		document.getElementById("results").innerHTML = res;
 		//console.log(`${res}`);
 	});
-	res='<table><tr><td>Shower</td><td>Datestamp</td><td>Mag</td><td>Dir</td><td>Alt</td><td>Ra</td><td>Dec</td><td>Camera</td></tr>';
+	var res2='<table><tr><td>Y</td><td>M</td><td>D</td><td>h</td><td>m</td><td>s</td><td>Mag</td><td>Dir</td><td>Alt</td><td>Ra</td><td>Dec</td><td>Camera</td></tr>';
 	srchkey='consolidated/P_';
 	params.Key=srchkey.concat(yr).concat('-unified.csv');
 	selp1='select Y, \"M\", D, h, \"m\", s, Mag, Az1, Alt1, Ra1, Dec1, ID ';
@@ -118,12 +118,12 @@ function queryS3()
 		var i;
 		for (i=0;i<flds.length;i++)
 		{
-			if (i % 8 ==0 ) { res=res.concat('<tr>');}
-			res=res.concat('<td>').concat(flds[i]).concat('</td>');
-			if ((i+1) % 8 ==0 ) { res=res.concat('</tr>');}
+			if (i % 12 ==0 ) { res2=res2.concat('<tr>');}
+			res2=res2.concat('<td>').concat(flds[i]).concat('</td>');
+			if ((i+1) % 12 ==0 ) { res2=res2.concat('</tr>');}
 		}
-		res=res.concat('</tr></table>');
-		document.getElementById("results2").innerHTML = res;
+		res2=res2.concat('</tr></table>');
+		document.getElementById("results2").innerHTML = res2;
 		//console.log(`${res}`);
 	});
 }
