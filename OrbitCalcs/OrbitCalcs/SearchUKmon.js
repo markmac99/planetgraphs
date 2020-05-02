@@ -1,80 +1,137 @@
 //    <script type="text/javascript">
 
-        // Initialize the Amazon Cognito credentials provider
-        AWS.config.region = 'eu-west-2'; 
-        AWS.config.credentials = new AWS.CognitoIdentityCredentials({
-             IdentityPoolId: 'eu-west-2:2cf7d5c1-9510-4aad-8a04-4d4effe8d1d7'});
-        
-     function queryS3()
-     {
-      var yr=document.getElementById("YearEntry").value;
-      var mt=document.getElementById("MthEntry").value;
-      var dy=document.getElementById("DayEntry").value;
-      var hr=document.getElementById("HrEntry").value;
-      var mn=document.getElementById("MinEntry").value;
-      
-      var srchval=yr.concat(mt).concat(dy).concat('_').concat(hr).concat(mn).concat('%');
-      var srchkey='consolidated/M_';
-      var selp1= 'SELECT \"Group\",LocalTime,Mag,Dir1,Alt1,Ra1,Dec1,Loc_Cam FROM S3Object WHERE LocalTime like \'';
-      
-      var client = new AWS.S3({apiVersion: '2006-03-01'});
-      var params = {
-	Bucket: 'ukmon-shared',
-	Key: '',
-	ExpressionType: 'SQL',
-	Expression: '',
-	InputSerialization: {
-		CSV: {
-			FileHeaderInfo: 'USE',
-			RecordDelimiter: '\n',
-			FieldDelimiter: ','
+// Initialize the Amazon Cognito credentials provider
+AWS.config.region = 'eu-west-2'; 
+AWS.config.credentials = new AWS.CognitoIdentityCredentials({
+	IdentityPoolId: 'eu-west-2:2cf7d5c1-9510-4aad-8a04-4d4effe8d1d7'});
+	
+function queryS3()
+{
+	var yr=document.getElementById("YearEntry").value;
+	var mt=document.getElementById("MthEntry").value;
+	var dy=document.getElementById("DayEntry").value;
+	var hr=document.getElementById("HrEntry").value;
+	var mn=document.getElementById("MinEntry").value;
+	
+	var srchval=yr.concat(mt).concat(dy).concat('_').concat(hr).concat(mn).concat('%');
+	var srchkey='consolidated/M_';
+	var selp1= 'SELECT \"Group\",LocalTime,Mag,Dir1,Alt1,Ra1,Dec1,Loc_Cam FROM S3Object WHERE LocalTime like \'';
+	
+	var client = new AWS.S3({apiVersion: '2006-03-01'});
+	var params = {
+		Bucket: 'ukmon-shared',
+		Key: '',
+		ExpressionType: 'SQL',
+		Expression: '',
+		InputSerialization: {
+			CSV: {
+				FileHeaderInfo: 'USE',
+				RecordDelimiter: '\n',
+				FieldDelimiter: ','
+			}
+		},
+		OutputSerialization: {
+			CSV: {}
 		}
-	},
-	OutputSerialization: {
-		CSV: {}
-	}
-      };
-      params.Expression= selp1.concat(srchval).concat('\'');
-      params.Key=srchkey.concat(yr).concat('-unified.csv');
-      client.selectObjectContent(params, (err, data) => {
-	if (err) {
-		switch (err.name) {
-			// Check against specific error codes that need custom handling
-		}
-		return;
-	}
-
-	// data.Payload is a Readable Stream
-	const events = data.Payload;
+	};
 	var res='<table><tr><td>Shower</td><td>Datestamp</td><td>Mag</td><td>Dir</td><td>Alt</td><td>Ra</td><td>Dec</td><td>Camera</td></tr>';
 	var dta='';
-	for (const event of events) {
-		if (event.Records) {
-			// event.Records.Payload is a buffer containing
-			// a single record, partial records, or multiple records
-			dta=dta.concat(event.Records.Payload.toString());
-			dta=dta.concat(',');
-		} else if (event.Stats) {
-			console.log(`Processed ${event.Stats.Details.BytesProcessed} bytes`);
-		} else if (event.End) {
-			console.log('SelectObjectContent completed');
+	params.Expression= selp1.concat(srchval).concat('\'');
+	params.Key=srchkey.concat(yr).concat('-unified.csv');
+	client.selectObjectContent(params, (err, data) => {
+		if (err) {
+			switch (err.name) {
+			// Check against specific error codes that need custom handling
+			}
+			return;
 		}
-	}
-	//console.log(`${dta}`);
-	dta=dta.replace(" ","");
-	dta=dta.replace(/(\r\n|\n|\r)/gm,",");
-	console.log(`${dta}`);
-	flds=dta.split(",");
-	var i;
- 	for (i=0;i<flds.length;i++)
-	{
-	  if (i % 8 ==0 ) { res=res.concat('<tr>');}
-	  res=res.concat('<td>').concat(flds[i]).concat('</td>');
-	  if ((i+1) % 8 ==0 ) { res=res.concat('</tr>');}
-	}
-        res=res.concat('</tr></table>');
-        //console.log(`${res}`);
-        document.getElementById("results").innerHTML = res;
-      });
-    }
-//    </script>
+
+		// data.Payload is a Readable Stream
+		const events = data.Payload;
+		for (const event of events) {
+			if (event.Records) {
+				// event.Records.Payload is a buffer containing
+				// a single record, partial records, or multiple records
+				dta=dta.concat(event.Records.Payload.toString());
+				dta=dta.concat(',');
+			} else if (event.Stats) {
+				console.log(`Processed ${event.Stats.Details.BytesProcessed} bytes`);
+			} else if (event.End) {
+				console.log('SelectObjectContent completed');
+			}
+		}
+		//console.log(`${dta}`);
+		dta=dta.replace(" ","");
+		dta=dta.replace(/(\r\n|\n|\r)/gm,",");
+		console.log(`${dta}`);
+		flds=dta.split(",");
+		var i;
+		for (i=0;i<flds.length;i++)
+		{
+			if (i % 8 ==0 ) { res=res.concat('<tr>');}
+			res=res.concat('<td>').concat(flds[i]).concat('</td>');
+			if ((i+1) % 8 ==0 ) { res=res.concat('</tr>');}
+		}
+		res=res.concat('</tr>');
+		//console.log(`${res}`);
+	});
+	srchkey='consolidated/P_';
+	params.Key=srchkey.concat(yr).concat('-unified.csv');
+	selp1='select Y, \"M\", D, h, \"m\", s, Mag, Az1, Alt1, Ra1, Dec1, ID ';
+	selp1=selp1.concat('from s3object q where ';
+	selp1=selp1.concat('cast(Y as int)=').concat(yr)
+	selp1=selp1.concat(' and cast(\"M\" as int=').concat(mt)
+	selp1=selp1.concat(' and cast(D as int)=').concat(dy)
+	selp1=selp1.concat(' and cast(h as int=').concat(hr)
+	selp1=selp1.concat(' and cast(\"m\" as int=').concat(mn)
+	console.log(`${selp1}`)
+	params.Expression= selp1
+	client.selectObjectContent(params, (err, data) => {
+		if (err) {
+			switch (err.name) {
+			// Check against specific error codes that need custom handling
+			}
+			return;
+		}
+
+		// data.Payload is a Readable Stream
+		const events = data.Payload;
+		for (const event of events) {
+			if (event.Records) {
+				// event.Records.Payload is a buffer containing
+				// a single record, partial records, or multiple records
+				dta=dta.concat(event.Records.Payload.toString());
+				dta=dta.concat(',');
+			} else if (event.Stats) {
+				console.log(`Processed ${event.Stats.Details.BytesProcessed} bytes`);
+			} else if (event.End) {
+				console.log('SelectObjectContent completed');
+			}
+		}
+		console.log(`${dta}`);
+		dta=dta.replace(" ","");
+		dta=dta.replace(/(\r\n|\n|\r)/gm,",");
+		console.log(`${dta}`);
+		flds=dta.split(",");
+		var i;
+		for (i=0;i<flds.length;i++)
+		{
+			if (i % 8 ==0 ) { res=res.concat('<tr>');}
+			res=res.concat('<td>').concat(flds[i]).concat('</td>');
+			if ((i+1) % 8 ==0 ) { res=res.concat('</tr>');}
+		}
+		res=res.concat('</tr>');
+		//console.log(`${res}`);
+	});
+	res=res.concat('</table>');
+	document.getElementById("results").innerHTML = res;
+}
+
+
+// query for Pi data
+// note all values are strings, left-padded with spaces.
+// could convert data to ints for search with cast(Y as int) for example.
+
+//select Y, "M", D, h, "m", s, Mag, Az1, Alt1, Ra1, Dec1, ID 
+//from s3object q
+//where Y='2020' and "M"=' 1' and D=' 3' and h='18' and "m"='29'
