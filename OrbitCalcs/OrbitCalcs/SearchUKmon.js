@@ -76,8 +76,10 @@ function queryS3()
 		document.getElementById("results").innerHTML = res;
 		//console.log(`${res}`);
 	});
+	var client2 = new AWS.S3({apiVersion: '2006-03-01'});
 	var res2='<table><tr><td>Y</td><td>M</td><td>D</td><td>h</td><td>m</td><td>s</td><td>Mag</td><td>Dir</td><td>Alt</td><td>Ra</td><td>Dec</td><td>Camera</td></tr>';
 	srchkey='consolidated/P_';
+	dta='';
 	params.Key=srchkey.concat(yr).concat('-unified.csv');
 	selp1='select Y, \"M\", D, h, \"m\", s, Mag, Az1, Alt1, Ra1, Dec1, ID ';
 	selp1=selp1.concat('from s3object q where ');
@@ -88,7 +90,7 @@ function queryS3()
 	selp1=selp1.concat(' and cast(\"m\" as int)=').concat(mn);
 	console.log(`${selp1}`);
 	params.Expression= selp1;
-	client.selectObjectContent(params, (err, data) => {
+	client2.selectObjectContent(params, (err, data) => {
 		if (err) {
 			switch (err.name) {
 			// Check against specific error codes that need custom handling
