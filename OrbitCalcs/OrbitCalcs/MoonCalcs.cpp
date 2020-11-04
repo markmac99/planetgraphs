@@ -120,7 +120,7 @@ int main(int argc, char** argv)
 	fprintf(outf, "cell.innerHTML = \"Rise\";\n");
 	fprintf(outf, "cell.className = \"small\";\n");
 	fprintf(outf, "var cell = row.insertCell(4);\n");
-	fprintf(outf, "cell.innerHTML = \"Seet\";\n");
+	fprintf(outf, "cell.innerHTML = \"Set\";\n");
 	fprintf(outf, "cell.className = \"small\";\n");
 	fprintf(outf, "var cell = row.insertCell(5);\n");
 	fprintf(outf, "cell.innerHTML = \"Phase\";\n");
