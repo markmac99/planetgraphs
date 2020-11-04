@@ -15,6 +15,9 @@
 *.err
 *.csv
 *.txt
+*.obj
+*.log
+*.sarif
 /OrbitCalcs/ConsoleApplication1/x64/Debug
 /OrbitCalcs/orbitcalcs/x64/Debug
 /orbitcalcs/cometpreprocessor/cometpreprocessor.vcxproj
@@ -23,10 +26,5 @@
 /orbitcalcs/linux/MPCORB.DAT
 /OrbitCalcs/tmp
 *.o
-cometpp
-conjunctioncalcs
-mooncalcs
-orbitcalcs
-pgsummary
 MPCORB*
 CometEls.txt

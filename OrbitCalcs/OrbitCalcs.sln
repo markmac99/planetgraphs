@@ -7,11 +7,11 @@ Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "OrbitCalcs", "OrbitCalcs\Or
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{81C54BC1-3C1D-4B14-87A1-ADF26E964876}"
 EndProject
-Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "OrbitCalcsCL", "ConsoleApplication1\ConsoleApplication1.vcxproj", "{0438AA74-0DF8-4882-A409-CE9257597744}"
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "OrbitCalcsCL", "OrbitCalcsCL\OrbitCalcsCL.vcxproj", "{0438AA74-0DF8-4882-A409-CE9257597744}"
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "cometpreprocessor", "cometpreprocessor\cometpreprocessor.vcxproj", "{BF4EE82F-4D73-4ED8-828E-8AF852A901D2}"
 EndProject
-Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "summarycalcs", "ConsoleApplication2\ConsoleApplication2.vcxproj", "{E970ADA1-804B-4751-8743-A20245FE0BFD}"
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "summarycalcs", "summarycalcs\summarycalcs.vcxproj", "{E970ADA1-804B-4751-8743-A20245FE0BFD}"
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "ConjunctionCalculator", "ConjunctionCalculator\ConjunctionCalculator.vcxproj", "{7B229286-E95B-4682-80F9-7D8E50A4B5AF}"
 EndProject
