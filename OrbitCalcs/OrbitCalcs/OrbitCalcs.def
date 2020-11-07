@@ -3,6 +3,7 @@ EXPORTS
 	AstroDaysFromDt
 	days
 	JulianDate
+	InitialiseStatic
 	LocalSiderealTime
 	LSTFromDt
 	GetDateFromDtval
@@ -34,9 +35,7 @@ EXPORTS
 	VisualMagnitude
 	ApparentSize
 	AltAtTransit
-
 	GetObjectNames
-
 	CometMeanAnomaly
 	CometDayNumber
 	CometPeriod

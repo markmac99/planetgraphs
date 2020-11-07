@@ -1,6 +1,16 @@
 #include <math.h>
 #include "OrbitCalcs.h"
 
+double inRangeTwoPi(double n)
+{
+	while (n > TWOPI)
+		n -= TWOPI;
+	while (n < 0)
+		n += TWOPI;
+
+	return n;
+}
+
 double __stdcall MoonPerturbations(double dd, int latlongpos)
 {
 	double Ms, Mm, Nm, ws, wm, ll;
@@ -12,10 +22,11 @@ double __stdcall MoonPerturbations(double dd, int latlongpos)
 	Nm = elements[MOON].N[0] + elements[MOON].N[1] * dd;
 
 	Nm = Nm / RAD2DEG;
-	double ls = Ms + ws;
-	double Lm = Mm + wm + Nm;
-	double Dm = Lm - ls;
-	double f = Lm - Nm;
+	double ls = inRangeTwoPi(Ms + ws);
+	double Lm = inRangeTwoPi(Mm + wm + Nm);
+	double Dm = inRangeTwoPi(Lm - ls);
+	double f = inRangeTwoPi(Lm - Nm);
+
 	if (latlongpos == 1)
 	{
 		// correcting ecliptic longitude

@@ -17,6 +17,11 @@ download multiple minor planet datasets here: https://ssd.jpl.nasa.gov/sbdb_quer
 Other useful pages http://www.met.rdg.ac.uk/~ross/Astronomy/Planets.html - orbital elements (slightly different values!)
 and http://cosinekitty.com/solar_system.html - calculator for comparing with my calcs
 */
+int __stdcall InitialiseStatic(int dummy)
+{
+	return LoadOrbitalElements(elements);
+}
+
 
 int LoadOrbitalElements(OrbitalElements* elements)
 {

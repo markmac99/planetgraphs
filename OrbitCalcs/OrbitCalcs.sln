@@ -17,6 +17,11 @@ Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "ConjunctionCalculator", "Co
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "MoonCalcs", "MoonCalcs\MoonCalcs.vcxproj", "{69C77C09-F79E-487E-B5E8-8339AF088343}"
 EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "cmdlineTester", "cmdlineTester\cmdlineTester.vcxproj", "{8627C009-E37D-425C-8DC6-F881C5471BD8}"
+	ProjectSection(ProjectDependencies) = postProject
+		{10530F9C-9DEC-4572-AA1F-D66647B62538} = {10530F9C-9DEC-4572-AA1F-D66647B62538}
+	EndProjectSection
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|x64 = Debug|x64
@@ -73,6 +78,14 @@ Global
 		{69C77C09-F79E-487E-B5E8-8339AF088343}.Release|x64.Build.0 = Release|x64
 		{69C77C09-F79E-487E-B5E8-8339AF088343}.Release|x86.ActiveCfg = Release|Win32
 		{69C77C09-F79E-487E-B5E8-8339AF088343}.Release|x86.Build.0 = Release|Win32
+		{8627C009-E37D-425C-8DC6-F881C5471BD8}.Debug|x64.ActiveCfg = Debug|x64
+		{8627C009-E37D-425C-8DC6-F881C5471BD8}.Debug|x64.Build.0 = Debug|x64
+		{8627C009-E37D-425C-8DC6-F881C5471BD8}.Debug|x86.ActiveCfg = Debug|Win32
+		{8627C009-E37D-425C-8DC6-F881C5471BD8}.Debug|x86.Build.0 = Debug|Win32
+		{8627C009-E37D-425C-8DC6-F881C5471BD8}.Release|x64.ActiveCfg = Release|x64
+		{8627C009-E37D-425C-8DC6-F881C5471BD8}.Release|x64.Build.0 = Release|x64
+		{8627C009-E37D-425C-8DC6-F881C5471BD8}.Release|x86.ActiveCfg = Release|Win32
+		{8627C009-E37D-425C-8DC6-F881C5471BD8}.Release|x86.Build.0 = Release|Win32
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

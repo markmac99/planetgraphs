@@ -21,22 +21,28 @@ double __stdcall  SunRiseSet(double dtval, double lat, double longi, int ros, do
 	return RiseSet(SUN, dtval, lat, longi, ros, h, temp, pres);
 }
 
-double __stdcall RiseSet(int planetno, double dtval, double  lat, double longi, int ros, double h, double temp, double pres)
+double __stdcall RiseSet(int planetno, double dtval, double  lat, double longi, int ros, 
+	double h, double temp, double pres, int doiter, int loopback, int dysoffset, double lastrs)
 {
 	// calculate UT when the planet is due south
 
 	double dd, lst, lha, coslha;
+	double rh;
 	int yy, mo, dy, hh, mm, ss;
 	double ra, sunlong, gmst0, ut_sis=0;
-	double lati=0, decl=0;
+	double lati = 0, decl = 0;
 	double rs=0;
 
+	// get the astrodate for today
 	GetDateFromDtval(dtval, yy, mo, dy, hh, mm, ss);
-	dd = days(yy, mo, dy, 12, 0, 0);
-	lst = LocalSiderealTime(yy, mo, dy, hh, mm, ss, longi)/24.0;
+	if (hh == 0 && mm == 0)
+		dd = days(yy, mo, dy, 12, 0, 0);
+	else 
+		dd = days(yy, mo, dy, hh, mm, ss);
+	lst = LocalSiderealTime(yy, mo, dy, hh, mm, ss, longi) / 24.0;
 
 	if(planetno >= MOON)
-		ut_sis = TimeofTransit(planetno, dtval, lat, longi);
+		ut_sis = TimeofTransit(planetno, dtval+dysoffset, lat, longi);
 	else
 	{
 		ra = PlanetXYZ(SUN, dd, 6, lst, lat, temp, pres);
@@ -54,37 +60,55 @@ double __stdcall RiseSet(int planetno, double dtval, double  lat, double longi, 
 		ut_sis = ut_sis / 15.0; //  not HR2DEG here, gets the maths wrong...
 	}
 
-	h = h / RAD2DEG;
+	rh = h / RAD2DEG;
 	lati = lat / RAD2DEG;
-	decl = PlanetXYZ(planetno, dd, 7, lst, lat, temp, pres);
+	decl = PlanetXYZ(planetno, dd, 7, lst, lati, temp, pres);
 	decl = decl / RAD2DEG;
 
 	// local hour angle is the angle between local south and sunset or rise
-	coslha = (sin(h) - sin(decl) * sin(lati)) / (cos(decl) * cos(lati));
+	coslha = (sin(rh) - sin(decl) * sin(lati)) / (cos(decl) * cos(lati));
 
 	if (coslha > 1) // planet never rises
 		return -99;
 	else if (coslha < -1) // planet never sets
 	{
 		if (ros == 1)
-			return 0;
+			return -98;
 		else 
-			return 1;
+			return -97;
 	}
 	else // ok planet rises and sets
 	{
 		lha = acos(coslha);
 		lha = lha * RAD2DEG;
-		if (ros == 1)
-			rs = ut_sis - lha / HR2DEG;
-		else
-			rs = ut_sis + lha / HR2DEG;
-		
-		while (rs < 0)
-			rs = rs + 24;
 
-		while (rs > 24)
-			rs = rs - 24;
+		if (ros == 1)
+			rs = ut_sis - lha / (doiter > 0 ? HR2DEG : HR2DEGIMP);
+		else
+			rs = ut_sis + lha / (doiter > 0 ? HR2DEG : HR2DEGIMP);
+
+		// negative time means we worked out yesterday's rise or set. time > 24 means its tomorrows
+		// so add/subtract one and recalc. loopback flag prevents an infinite loop
+		int offs = 0;
+		if (rs < 0) offs = 1;
+		else if (rs > 24) offs = -1;
+		if(offs != 0 && loopback == 1) 
+			rs = RiseSet(planetno, dtval, lat, longi, ros, h, temp, pres, 0, 0, offs);
+
+		// iteration necessary for the moon
+		if (doiter > 0)
+		{
+			doiter--;
+			// recalc using last calculated time, to improve accuracy
+			if (rs < 0) rs += 24;
+			else if (rs > 24) rs -= 24;
+			double dv = dtval + (rs-lastrs) / 24.0;
+			rs = RiseSet(planetno, dv, lat, longi, ros, h, temp, pres, doiter, 0, offs, rs);
+		}
+		if (rs < 0) rs+=24;
+		else if (rs > 24) rs-=24;
+
+
 		return rs;
 	}
 }
@@ -109,10 +133,27 @@ double __stdcall TimeofTransit(int planetno, double dtval, double lat, double lo
 
 	GetDateFromDtval(dtval, yy, mo, dy, hh, mm, ss);
 	dd = days(yy, mo, dy, 0, 0, 0);
-	lst = LocalSiderealTime(yy, mo, dy, 0, 0, 0, lat);
-	ra = PlanetXYZ(planetno, dd, 6, lst/24.0, lat, temp, pres);
+	lst = LocalSiderealTime(yy, mo, dy, 0, 0, 0, longi)/24.0;
+	ra = PlanetXYZ(planetno, dd, 6, lst, lat, temp, pres);
 	double tt = GenericTimeofTransit(dd, ra, tz, longi);
-	//printf("%f %d %d %d %f %f %f\n", lst, yy, mo ,dy, dd, ra, longi);
+
+	// now recalc lst & ra at the time of transit, and from that recalc tt 
+	int ttt = (int)tt;
+	int mmm = (int)((tt - ttt)*60);
+	lst = LocalSiderealTime(yy, mo, dy, ttt, mmm, 0, longi)/24.0;
+	double ddd = dd +tt / 24.0;
+	ra = PlanetXYZ(planetno, ddd, 6, lst, lat, temp, pres);
+
+	tt = GenericTimeofTransit(ddd, ra, tz, longi);
+
+	// and one more time for greater accuracy
+	ttt = (int)tt;
+	mmm = (int)((tt - ttt) * 60);
+	lst = LocalSiderealTime(yy, mo, dy, ttt, mmm, 0, longi)/24.0;
+	ddd = dd + tt / 24.0;
+	ra = PlanetXYZ(planetno, ddd, 6, lst, lat, temp, pres);
+
+	tt = GenericTimeofTransit(ddd, ra, tz, longi);
 	return tt;
 }
 
@@ -168,8 +209,8 @@ double __stdcall IsVisible(int planetno, double dtval, double lat, double longi,
 	sunset0 = RiseSet(SUN, dtval, lat, longi, 2, sunalt, temp, pres);
 
 	// effective rise and set times
-	planrise = RiseSet(planetno, dtval, lat, longi, 1, planalt, temp, pres);
-	planset0 = RiseSet(planetno, dtval, lat, longi, 2, planalt, temp, pres);
+	planrise = RiseSet(planetno, dtval, lat, longi, 1, planalt, temp, pres, 1);
+	planset0 = RiseSet(planetno, dtval, lat, longi, 2, planalt, temp, pres, 1);
 
 	// if the planet only meets the criteria after sunrise AND before sunset, return zero
 	// the planet might set after midnight, so adjust the time to cater for that.
@@ -180,7 +221,8 @@ double __stdcall IsVisible(int planetno, double dtval, double lat, double longi,
 	{
 		return 0;
 	}
-	else if (planrise == -99 || planset0 == -99)
+	else if (planrise < 0 || planset0 < 0)
+		// never rises, or never sets
 		return 0;
 	else
 	{

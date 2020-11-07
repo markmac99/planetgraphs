@@ -139,9 +139,9 @@ void CreateOutputFiles(double lati, double longi, double dt)
 			GetDateFromDtval(dv + best, yy, mo, dy, hh, mm, ss);
 			double dd = days(yy, mo, dy, 0, 0, 0);
 			double lst = LocalSiderealTime(yy, mo, dy, 0, 0, 0, longi);
-			double ra = PlanetXYZ(planetno, dd, 6, lst, lati, 10, 1010);
-			double dec = PlanetXYZ(planetno, dd, 7, lst, lati, 10, 1010);
-			double azi = PlanetXYZ(planetno, dd, 9, lst, lati, 10, 1010);
+			double ra = PlanetXYZ(planetno, dd, 6, lst/24.0, lati, 10, 1010);
+			double dec = PlanetXYZ(planetno, dd, 7, lst/24.0, lati, 10, 1010);
+			double azi = PlanetXYZ(planetno, dd, 9, lst/24.0, lati, 10, 1010);
 
 			fprintf(f4, "%4.4d-%2.2d-%2.2d %2.2d:%2.2d:%2.2d, %.2lf, %.2lf, %.2lf, %.2lf, %s, %02lf\n", 
 				yy, mo, dy, hh, mm, ss, alti, brig, siz, azi, fmt_hours(ra), dec);
@@ -209,7 +209,7 @@ void CometOutputter(double lati, double longi, double dt)
 			double dv = (double)dt + (double)intvl * i;
 			GetDateFromDtval(dv, yr, mth, dy, hh, mm, ss);
 			double dd = days(yr, mth, dy, 0, 0, 0);
-			double lst = LocalSiderealTime(yr, mth, dy, 0, 0, 0, longi);
+			double lst = LocalSiderealTime(yr, mth, dy, 0, 0, 0, longi)/24.0;
 
 			double sundist = CometSunDist(aComet.peri, aComet.e, yr, mth, dy, aComet.yr, aComet.mth, aComet.dy);
 			double earthdist = CometEarthDist(aComet.peri, aComet.e, yr, mth, dy, aComet.yr, aComet.mth, aComet.dy,

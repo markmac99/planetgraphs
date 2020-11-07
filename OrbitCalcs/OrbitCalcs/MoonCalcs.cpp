@@ -74,14 +74,14 @@ int main(int argc, char** argv)
 
 		double ra = PlanetXYZ(MOON, thisdd, 6, lst2, lati, temp, press);
 		double dec = PlanetXYZ(MOON, thisdd, 7, lst2, lati, temp, press);
-		double rise = RiseSet(MOON, thisdv, lati, longi, 1, h, temp, press);
-		double set  = RiseSet(MOON, thisdv, lati, longi, 2, h, temp, press);
+		double rise = RiseSet(MOON, thisdv, lati, longi, 1, h, temp, press, 2);
+		double set  = RiseSet(MOON, thisdv, lati, longi, 2, h, temp, press, 2);
 		double phase = PhaseOrElongGeneral(MOON, thisdd,1, lst2, lati);
 		//double phaseangle = PhaseOrElongGeneral(MOON, thisdd, 0, lst2, lati)*RAD2DEG;
 		//double elong = PhaseOrElongGeneral(MOON, thisdd, 2, lst2, lati) * RAD2DEG;
 
 		int rah = (int)floor(ra / 15);
-		int ram = (int)floor((ra - rah*15) * 4);
+		int ram = (int)floor((ra - (double)rah*15) * 4);
 
 		printf("%04d-%02d-%02d,%02d:%02d:%02d,%03.3f,%03.3f, %0.2f, %0.2f, %0.2f\n",
 			tstruct->tm_year + 1900, tstruct->tm_mon + 1, tstruct->tm_mday,

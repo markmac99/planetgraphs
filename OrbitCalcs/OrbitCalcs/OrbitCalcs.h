@@ -5,6 +5,7 @@
 #define AU			149597870.7		// km
 #define RAD2DEG		57.29577951	
 #define HR2DEG		15.04107		// precision value
+#define HR2DEGIMP	15.0			// imprecise value used when not iterating for rise/set
 
 #define NUMELEMENTS 30				// maximum number of planets and asteroids
 #define MAXMPC		5				// only load five of them
@@ -47,6 +48,7 @@ int LoadAsteroidsJPL(int n);
 int LoadAsteroidsMPC(int n);
 int LoadOrbitalElements(OrbitalElements* elements);
 extern int maxloaded;
+int __stdcall InitialiseStatic(int dummy);
 
 #ifndef _WIN32
 #define __stdcall 
@@ -81,7 +83,8 @@ double __stdcall PlanetXYZ(int planetno, double dd, int xyz, double lst, double 
 double __stdcall MoonPerturbations(double dd, int latlongpos);
 double __stdcall GasPerturbations(int planetno, double dd, int latlongpos);
 double __stdcall SunRiseSet(double dtval, double lat, double longi, int ros, double h, double temp, double pres);
-double __stdcall RiseSet(int planetno, double dtval, double  lat, double longi, int ros, double h, double temp, double pres);
+double __stdcall RiseSet(int planetno, double dtval, double  lat, double longi, int ros, double h, 
+	double temp, double pres, int doiter=0, int loopback=1, int dysoffset=0, double lastrs=0.0);
 double __stdcall TimeofTransit(int planetno, double dtval, double lat, double longi);
 double __stdcall GenericTimeofTransit(double dd, double ra, double tz, double longi);
 double __stdcall IsVisible(int planetno, double dtval, double lat, double longi, int vis_or_tele, int a_or_t, double temp, double pres);
@@ -103,3 +106,4 @@ char* TimeToStr(double t);
 void trim(char *str);
 char* fmt_hours(double ra);
 void cleanup_name(char* str);
+double inRangeTwoPi(double n);

@@ -79,8 +79,8 @@ int main(int argc, char **argv)
 		dec = PlanetXYZ(planetno, AstroDaysFromDt(dt+tt), 7, lst, lati, temp, press);
 		brig = VisualMagnitude(planetno, AstroDaysFromDt(dt+tt));
 		siz = ApparentSize(planetno, AstroDaysFromDt(dt+tt));
-		crise = RiseSet(planetno, dt, lati, longi, 1, 5, temp, press);
-		cset = RiseSet(planetno, dt, lati, longi, 2, 5, temp, press);
+		crise = RiseSet(planetno, dt, lati, longi, 1, 5, temp, press, 1);
+		cset = RiseSet(planetno, dt, lati, longi, 2, 5, temp, press, 1);
 
 		strcpy(f, fmt_hours(ra));
 		strcpy(t,fmt_hours(tt * 24* 15));
