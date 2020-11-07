@@ -17,6 +17,38 @@ char* TimeToStr(double t)
 	sprintf(retval, "%02d:%02d:%02d", h, m, s);
 	return retval;
 }
+char* TimeToHHMM(double t)
+{
+	static char retval[8] = { 0 };
+	int h = (int)t;
+	double mins = 60 * (t - h);
+	int m = (int)mins;
+	sprintf(retval, "%02d:%02d", h, m);
+	return retval;
+}
+
+char* AngleToDDMM(double t)
+{
+	static char retval[12] = { 0 };
+
+	// need to handle -ve angles carefully
+	int sign = 1;
+	if (t < 0) 
+	{ 
+		// temporarily remove the sign; we'll add it back later
+		sign = -1;
+		t *= sign;
+	}
+	int h = (int)t;
+	double mins = 60 * (t - h);
+	int m = (int)mins;
+
+	// put the sign back
+	h *= sign; 
+	sprintf(retval, "%+3.3d&deg;%2.2d", h, m);
+	return retval;
+}
+
 
 double __stdcall AstroDaysFromDt(double dtval)
 {

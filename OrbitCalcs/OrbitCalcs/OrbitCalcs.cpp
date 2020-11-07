@@ -306,7 +306,7 @@ double __stdcall PlanetXYZ(int planetno, double dd, int xyz, double lst, double 
 		xh = xh + xs;
 		yh = yh + ys;
 	}
-
+	//printf("%.2f %.2f %.2f\n", dd, lst, lat);
 	// work out the distance from the earth
 	double distearth = sqrt(xh*xh + yh*yh + zh*zh);
 	if (xyz > 5 && xyz < 10)

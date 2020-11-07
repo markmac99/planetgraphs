@@ -28,7 +28,7 @@ int main(int argc, char** argv)
 	int yr = tstruct->tm_year + 1900;
 	int mth =tstruct->tm_mon + 1;
 	int day = tstruct->tm_mday;
-	int hr = 12; // tstruct->tm_hour;
+	int hr = 0; // tstruct->tm_hour;
 	int mins = 0; // = tstruct->tm_min;
 	int sec = 0; // = tstruct->tm_sec;
 	tstruct->tm_year = yr - 1900;
@@ -44,11 +44,13 @@ int main(int argc, char** argv)
 	double dd = days(yr, mth, day, hr, mins, sec);
 	double dtval = GetDtvalFromDate(yr, mth, day, hr, mins, sec);
 
-	printf("loading data\n"); fflush(stdout);
+	//printf("loading data\n"); fflush(stdout);
 	double maxloaded = LoadOrbitalElements(elements);
 
-	printf("loaded data\n"); fflush(stdout);
+	//printf("loaded data\n"); fflush(stdout);
 	if (maxloaded > 10) maxloaded = 11; // just the planets thanks
+
+	//printf("dd %.2f dtval %.2f\n", dd, dtval);
 
 	FILE* outf = fopen("mooncalcs.js", "w");
 	fprintf(outf, "$(function() {\n");
@@ -60,16 +62,20 @@ int main(int argc, char** argv)
 
 	for (int i = 0; i < maxdate; i++)
 	{
-		double thisdd = dd + i;
+		char rt[6] = { 0 }, st[6] = { 0 }, ras[8] = { 0 }, ds[12] = { 0 };
+		double thisdd = dd + i ; 
 		double thisdv = dtval + i;
 		now = AstroDtToUnixTS(thisdd);
 		tstruct = gmtime(&now);
+
+		//printf("dd %.2f dtval %.2f\n", thisdd, thisdv);
 
 		// local sidereal time
 		double lst2 = LocalSiderealTime(tstruct->tm_year + 1900, tstruct->tm_mon + 1, tstruct->tm_mday,
 			tstruct->tm_hour, tstruct->tm_min, tstruct->tm_sec, longi);
 		lst2/= 24.0;
-
+		
+		//printf("%.3f\n", lst2);
 		double h = -0.25; //the upper limb is just rising
 
 		double ra = PlanetXYZ(MOON, thisdd, 6, lst2, lati, temp, press);
@@ -80,8 +86,10 @@ int main(int argc, char** argv)
 		//double phaseangle = PhaseOrElongGeneral(MOON, thisdd, 0, lst2, lati)*RAD2DEG;
 		//double elong = PhaseOrElongGeneral(MOON, thisdd, 2, lst2, lati) * RAD2DEG;
 
-		int rah = (int)floor(ra / 15);
-		int ram = (int)floor((ra - (double)rah*15) * 4);
+		strncpy(ras, TimeToHHMM(ra / 15.0),5);
+		strncpy(rt, TimeToHHMM(rise),5);
+		strncpy(st, TimeToHHMM(set),5);
+		strncpy(ds, AngleToDDMM(dec),11);
 
 		printf("%04d-%02d-%02d,%02d:%02d:%02d,%03.3f,%03.3f, %0.2f, %0.2f, %0.2f\n",
 			tstruct->tm_year + 1900, tstruct->tm_mon + 1, tstruct->tm_mday,
@@ -93,13 +101,13 @@ int main(int argc, char** argv)
 		fprintf(outf, "cell.innerHTML = \"%4.4d-%2.2d-%2.2d\";\n", 
 			tstruct->tm_year + 1900, tstruct->tm_mon+1, tstruct->tm_mday);
 		fprintf(outf, "var cell = row.insertCell(1);\n");
-		fprintf(outf, "cell.innerHTML = \"%d:%d\";\n", rah, ram);
+		fprintf(outf, "cell.innerHTML = \"%s\";\n", ras);
 		fprintf(outf, "var cell = row.insertCell(2);\n");
-		fprintf(outf, "cell.innerHTML = \"%3.3f\";\n", dec);
+		fprintf(outf, "cell.innerHTML = \"%s\";\n", ds);
 		fprintf(outf, "var cell = row.insertCell(3);\n");
-		fprintf(outf, "cell.innerHTML = \"%2.2f\";\n", rise);
+		fprintf(outf, "cell.innerHTML = \"%s\";\n", rt);
 		fprintf(outf, "var cell = row.insertCell(4);\n");
-		fprintf(outf, "cell.innerHTML = \"%2.2f\";\n", set);
+		fprintf(outf, "cell.innerHTML = \"%s\";\n", st);
 		fprintf(outf, "var cell = row.insertCell(5);\n");
 		fprintf(outf, "cell.innerHTML = \"%.0f\";\n", phase*100);
 

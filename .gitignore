@@ -31,3 +31,4 @@ CometEls.txt
 /Excel/OrbitCalcs.dll
 *.db-shm
 *.db-wal
+*.recipe

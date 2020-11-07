@@ -48,11 +48,12 @@ int LoadAsteroidsJPL(int n);
 int LoadAsteroidsMPC(int n);
 int LoadOrbitalElements(OrbitalElements* elements);
 extern int maxloaded;
-int __stdcall InitialiseStatic(int dummy);
 
 #ifndef _WIN32
 #define __stdcall 
 #endif 
+int __stdcall InitialiseStatic(int dummy);
+
 double __stdcall GetDateFromDtval(double dtval, int& yy, int& mo, int& dd, int& hh, int& mm, int& ss);
 double __stdcall GetDtvalFromDate(int yy, int mo, int dd, int hh, int mm, int ss);
 
@@ -103,6 +104,8 @@ double __stdcall SaturnRingMag(double dd);
 
 void CreateOutputFiles(double lati, double longi, double dt);
 char* TimeToStr(double t);
+char* TimeToHHMM(double t);
+char* AngleToDDMM(double t);
 void trim(char *str);
 char* fmt_hours(double ra);
 void cleanup_name(char* str);
