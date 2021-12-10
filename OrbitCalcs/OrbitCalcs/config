@@ -1,0 +1,5 @@
+WEBHOST=ip-172-31-36-146
+WEBUSER=bitnami
+WEBKEY=~/.ssh/markskey.pem
+DESTDIR=data
+SHAREDDIR=~/data/

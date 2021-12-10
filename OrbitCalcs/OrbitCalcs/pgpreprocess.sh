@@ -1,13 +1,18 @@
 #!/bin/bash
-cd /opt/bitnami/apps/wordpress/htdocs/data/src
-git pull
-make
-./cometpp ./CometEls.txt ./VisCometEls.txt /opt/bitnami/apps/wordpress/htdocs/data/ 
-./pgsummary ./CometEls.txt /home/bitnami/data/planetpositions.js /opt/bitnami/apps/wordpress/htdocs/data/ ./ChartData.txt /home/bitnami/data/comets.js
+here="$( cd "$(dirname "$0")" >/dev/null 2>&1 ; pwd -P )"
+cd $here
+
+mkdir $here/output >/dev/null 2>&1
+./cometpp $here/input/CometEls.txt $here/input/VisCometEls.txt $here/output
+./pgsummary $here/input/CometEls.txt $here/output/planetpositions.js $here/output $here/output/ChartData.txt $here/output/comets.js
+
+cd output
+../conjunctioncalcs 51.88 -1.31 3 2 $here/output
+
 cd ..
-src/conjunctioncalcs 51.88 -1.31 3 2
-cd src
-./orbitcalcs 51.88 -1.31 `date +%Y%m%d`  /home/bitnami/data/
-./mooncalcs 5.188 -1.31 2
-mv mooncalcs.js /home/bitnami/data/
+./orbitcalcs 51.88 -1.31 `date +%Y%m%d`  $here/output $here/input
+./mooncalcs 51.88 -1.31 2 $here/output > $here/output/mooncalcs.csv
+
+rsync -avz -e "ssh -i $WEBKEY" output/* $WEBUSER@$WEBHOST:$DESTDIR
+
 ./makecometpages.sh

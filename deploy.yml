@@ -10,10 +10,18 @@
 #    include_vars: prod-vars.yml
 #    tags: prod
 
+  - name: Ensures logs exists
+    file: path={{destdir}}/../logs state=directory
   - name: Copy files
     copy: src={{ item.src }} dest={{ item.dest }} mode={{ item.mode }}
     tags: [dev,prod]
     with_items:
+    - {src: '{{srcdir}}/orbitcalcs/config', dest: '{{destdir}}', mode: '644', backup: no }
+    - {src: '{{srcdir}}/orbitcalcs/template.sch', dest: '{{destdir}}', mode: '755', backup: no }
+    - {src: '{{srcdir}}/orbitcalcs/charter.sh', dest: '{{destdir}}/', mode: '755', backup: yes }
+    - {src: '{{srcdir}}/orbitcalcs/makecometpages.sh', dest: '{{destdir}}/', mode: '755', backup: yes }
+    - {src: '{{srcdir}}/orbitcalcs/pgpreprocess.sh', dest: '{{destdir}}/', mode: '755', backup: yes }
+    - {src: '{{srcdir}}/orbitcalcs/getmpcdata.sh', dest: '{{destdir}}/', mode: '755', backup: yes }
     - {src: '{{srcdir}}/orbitcalcs/cometmain.cpp', dest: '{{destdir}}/', mode: '644', backup: yes }
     - {src: '{{srcdir}}/orbitcalcs/Comets.cpp', dest: '{{destdir}}/', mode: '644', backup: yes }
     - {src: '{{srcdir}}/orbitcalcs/ConjunctionCalculator.cpp', dest: '{{destdir}}/', mode: '644', backup: yes }
@@ -33,7 +41,8 @@
     - {src: '{{srcdir}}/orbitcalcs/Outputter.h', dest: '{{destdir}}/', mode: '644', backup: yes }
     - {src: '{{srcdir}}/orbitcalcs/Makefile', dest: '{{destdir}}/', mode: '644', backup: yes }
     - {src: '{{srcdir}}/orbitcalcs/create_page.php', dest: '{{destdir}}/', mode: '644', backup: yes }
-    - {src: '{{srcdir}}/orbitcalcs/charter.sh', dest: '{{destdir}}/', mode: '755', backup: yes }
-    - {src: '{{srcdir}}/orbitcalcs/makecometpages.sh', dest: '{{destdir}}/', mode: '755', backup: yes }
-    - {src: '{{srcdir}}/orbitcalcs/pgpreprocess.sh', dest: '{{destdir}}/', mode: '755', backup: yes }
-    - {src: '{{srcdir}}/orbitcalcs/getmpcdata.sh', dest: '{{destdir}}/', mode: '755', backup: yes }
+    - {src: '{{srcdir}}/crontabs.txt', dest: '{{destdir}}', mode: '644', backup: no }
+  - name: make binaries
+    command: make
+    args:
+      chdir: '{{destdir}}'
