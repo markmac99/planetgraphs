@@ -3,7 +3,7 @@ here="$( cd "$(dirname "$0")" >/dev/null 2>&1 ; pwd -P )"
 cd $here
 source ./config
 
-echo "#!/bin/bash\n\n" > /tmp/createpages.sh
+echo "#!/bin/bash" > /tmp/createpages.sh
 echo "cd /tmp" >> /tmp/createpages.sh
 echo "chmod +x ./create_page.php" >> /tmp/createpages.sh
 
@@ -20,10 +20,10 @@ chmod +x /tmp/createpages.sh
 
 scp -i $WEBKEY /tmp/createpages.sh $WEBUSER@$WEBHOST:/tmp
 scp -i $WEBKEY ./create_page.php $WEBUSER@$WEBHOST:/tmp
-ssh -i $WEBKEY $WEBUSER@$WEBHOST:/tmp/createpages.sh
+ssh -i $WEBKEY $WEBUSER@$WEBHOST /tmp/createpages.sh
 
 pushd $SHAREDDIR/ephemeris-compute/
 mv -f data/*.cmt /tmp
 ./setup.sh
 popd
-#./charter.sh
+./charter.sh
