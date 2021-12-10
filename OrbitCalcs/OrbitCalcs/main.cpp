@@ -25,10 +25,10 @@ int main(int argc, char **argv)
 	int mo = (dtval - yy * 10000) / 100;
 	int dy = dtval - yy * 10000 - mo * 100;
 
-	int vis_or_tele = 1;//  (planetno < 4 ? 1: 2);
+	//int vis_or_tele = 1;//  (planetno < 4 ? 1: 2);
 	double dd = days(yy, mo, dy, 0, 0, 0);
 #ifndef _WIN32
-	strcpy(szPath, ".");
+	strcpy(szPath, argv[5]);
 	strcpy(szOutputPath, argv[4]);
 #else
 	strcpy(szPath, "//thelinux/www$/html/astro/mpcdata");

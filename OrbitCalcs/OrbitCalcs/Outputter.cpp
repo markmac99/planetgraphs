@@ -235,7 +235,7 @@ void CometOutputter(double lati, double longi, double dt)
 			{
 				double alti1, alti2, azi1, azi2, ra1,ra2,dec1, dec2;
 				// comet transits during daytime
-				printf("dayime transit\n");
+				//printf("dayime transit\n");
 				best = sunrise;
 				hh = (int)(best*24.0);
 				mm = (int)((best *24.0 - hh) * 60);

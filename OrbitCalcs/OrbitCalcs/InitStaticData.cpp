@@ -318,7 +318,7 @@ int LoadAsteroidsMPC(int n)
 	char fileloc[512];
 	char id[8], name[32];
 	double M, G, MA, w, N, i, e, dm, a;
-	long epochyyyymmdd;
+//	long epochyyyymmdd;
 
 	sprintf(fileloc, "%s/MPCORB.DAT", szPath);
 	f = fopen(fileloc, "r");
@@ -370,7 +370,7 @@ int LoadAsteroidsMPC(int n)
 
 		strncpy(name, line + 170, 20);
 		trim(name);
-		epochyyyymmdd = atol(line + 194); // this is actually the last observation date - ignore! 
+//		epochyyyymmdd = atol(line + 194); // this is actually the last observation date - ignore! 
 
 //		printf("Loaded %s %s %ld %lf\n", name, id, epochyyyymmdd, M);
 		ii++;

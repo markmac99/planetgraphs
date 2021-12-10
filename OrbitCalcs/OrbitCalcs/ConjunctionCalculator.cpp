@@ -46,9 +46,9 @@ void addConj(int &conjno, int yr, int mm, int dy, int hr, int p1, int p2, double
 int main(int argc, char** argv)
 {
 	double temp = 10, press = 1010;
-	if (argc < 5)
+	if (argc < 6)
 	{
-		std::cout << "Usage: ConjunctionCalculator lat long minsep_in_degrees years_to_calc_for" << std::endl;
+		std::cout << "Usage: ConjunctionCalculator lat long minsep_in_degrees years_to_calc_for output_folder" << std::endl;
 		exit(0);
 	}
 	double lati = atof(argv[1]);
@@ -62,7 +62,7 @@ int main(int argc, char** argv)
 	int yr = tstruct->tm_year + 1900;
 	int mth = tstruct->tm_mon + 1;
 
-	strcpy(szPath, "./");
+	strcpy(szPath, argv[5]);
 
 //	tstruct->tm_mday=7;// for debugging purposes, set to start of current month
 
@@ -142,8 +142,11 @@ int main(int argc, char** argv)
 	qsort(Conjunctions, conjno, sizeof(struct Conjunction), CompareDates);
 
 	printf("writing header\n"); fflush(stdout);
-	FILE* outf = fopen("conjunctions.js","w");
-	FILE* csvf = fopen("conjunctions.csv", "w");
+	char fileloc[256]={0};
+	sprintf(fileloc, "%s/conjunctions.js", szPath);
+	FILE* outf = fopen(fileloc,"w");
+	sprintf(fileloc, "%s/conjunctions.csv", szPath);
+	FILE* csvf = fopen(fileloc, "w");
 	ConjWriteHeader(outf);
 	fprintf(csvf,"Subject,StartDate,AllDayEvent, Description\n");
 	for (int i = 1; i <= conjno; i++)

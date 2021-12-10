@@ -14,9 +14,9 @@
 int main(int argc, char** argv)
 {
 	double temp = 10, press = 1010;
-	if (argc < 4)
+	if (argc < 5)
 	{
-		std::cout << "Usage: MoonCalcs lat long years_to_calc_for" << std::endl;
+		std::cout << "Usage: MoonCalcs lat long years_to_calc_for output_dir" << std::endl;
 		exit(0);
 	}
 	double lati = atof(argv[1]);
@@ -39,7 +39,7 @@ int main(int argc, char** argv)
 	tstruct->tm_sec = sec;
 	now = mktime(tstruct);
 
-	strcpy(szPath, "./");
+	strcpy(szPath, argv[4]);
 
 	double dd = days(yr, mth, day, hr, mins, sec);
 	double dtval = GetDtvalFromDate(yr, mth, day, hr, mins, sec);
@@ -52,7 +52,9 @@ int main(int argc, char** argv)
 
 	//printf("dd %.2f dtval %.2f\n", dd, dtval);
 
-	FILE* outf = fopen("mooncalcs.js", "w");
+	char fileloc[256]={0};
+	sprintf(fileloc, "%s/mooncalcs.js", szPath);
+	FILE* outf = fopen(fileloc,"w");
 	fprintf(outf, "$(function() {\n");
 	fprintf(outf, "var table = document.createElement(\"table\");\n");
 	fprintf(outf, "table.className = \"table table-striped table-bordered table-hover table-condensed\";\n");
@@ -76,7 +78,7 @@ int main(int argc, char** argv)
 		lst2/= 24.0;
 		
 		//printf("%.3f\n", lst2);
-		double h = -0.25; //the upper limb is just rising
+		double h =  -0.833; //the upper limb is just touching the horizon, refraction taken into account
 
 		double ra = PlanetXYZ(MOON, thisdd, 6, lst2, lati, temp, press);
 		double dec = PlanetXYZ(MOON, thisdd, 7, lst2, lati, temp, press);
