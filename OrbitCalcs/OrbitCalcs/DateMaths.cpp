@@ -8,7 +8,7 @@
 
 char* TimeToStr(double t) 
 {
-	static char retval[8] = { 0 };
+	static char retval[9] = { 0 };
 	int h = (int)t;
 	double mins = 60 * (t - h);
 	int m = (int)mins;

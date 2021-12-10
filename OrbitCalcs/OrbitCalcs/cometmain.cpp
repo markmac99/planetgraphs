@@ -95,10 +95,10 @@ int main(int argc, char **argv)
 					while (cset > 24)
 						cset -= 24;
 
-					char cr[8] = {0}, cs[8] = { 0 }, tr[8] = { 0 };
-					strncpy(cr, TimeToStr(crise), 7);
-					strncpy(cs, TimeToStr(cset), 7);
-					strncpy(tr, TimeToStr(tt), 7);
+					char cr[9] = {0}, cs[9] = { 0 }, tr[9] = { 0 };
+					strncpy(cr, TimeToStr(crise), 8);
+					strncpy(cs, TimeToStr(cset), 8);
+					strncpy(tr, TimeToStr(tt), 8);
 
 					if (crise < sunrise || crise > sunset0 || cset < sunrise || cset > sunset0)
 					{
