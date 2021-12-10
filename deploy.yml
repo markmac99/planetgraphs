@@ -1,0 +1,39 @@
+- hosts: ukmonhelper
+  vars:
+    srcdir: /mnt/e/dev/planetgraphs/OrbitCalcs
+    destdir: ~/mmwebsite/planetgraphs
+  tasks:
+#  - name: import dev variables 
+#    include_vars: dev-vars.yml
+#    tags: dev
+#  - name: import prod variables
+#    include_vars: prod-vars.yml
+#    tags: prod
+
+  - name: Copy files
+    copy: src={{ item.src }} dest={{ item.dest }} mode={{ item.mode }}
+    tags: [dev,prod]
+    with_items:
+    - {src: '{{srcdir}}/orbitcalcs/cometmain.cpp', dest: '{{destdir}}/', mode: '644', backup: yes }
+    - {src: '{{srcdir}}/orbitcalcs/Comets.cpp', dest: '{{destdir}}/', mode: '644', backup: yes }
+    - {src: '{{srcdir}}/orbitcalcs/ConjunctionCalculator.cpp', dest: '{{destdir}}/', mode: '644', backup: yes }
+    - {src: '{{srcdir}}/orbitcalcs/DateMaths.cpp', dest: '{{destdir}}/', mode: '644', backup: yes }
+    - {src: '{{srcdir}}/orbitcalcs/InitStaticData.cpp', dest: '{{destdir}}/', mode: '644', backup: yes }
+    - {src: '{{srcdir}}/orbitcalcs/MagAndSize.cpp', dest: '{{destdir}}/', mode: '644', backup: yes }
+    - {src: '{{srcdir}}/orbitcalcs/main.cpp', dest: '{{destdir}}/', mode: '644', backup: yes }
+    - {src: '{{srcdir}}/orbitcalcs/MoonCalcs.cpp', dest: '{{destdir}}/', mode: '644', backup: yes }
+    - {src: '{{srcdir}}/orbitcalcs/OrbitCalcs.cpp', dest: '{{destdir}}/', mode: '644', backup: yes }
+    - {src: '{{srcdir}}/orbitcalcs/Outputter.cpp', dest: '{{destdir}}/', mode: '644', backup: yes }
+    - {src: '{{srcdir}}/orbitcalcs/Perturbations.cpp', dest: '{{destdir}}/', mode: '644', backup: yes }
+    - {src: '{{srcdir}}/orbitcalcs/Pluto.cpp', dest: '{{destdir}}/', mode: '644', backup: yes }
+    - {src: '{{srcdir}}/orbitcalcs/summarycalc.cpp', dest: '{{destdir}}/', mode: '644', backup: yes }
+    - {src: '{{srcdir}}/orbitcalcs/TransitRiseSet.cpp', dest: '{{destdir}}/', mode: '644', backup: yes }
+    - {src: '{{srcdir}}/orbitcalcs/Comets.h', dest: '{{destdir}}/', mode: '644', backup: yes }
+    - {src: '{{srcdir}}/orbitcalcs/OrbitCalcs.h', dest: '{{destdir}}/', mode: '644', backup: yes }
+    - {src: '{{srcdir}}/orbitcalcs/Outputter.h', dest: '{{destdir}}/', mode: '644', backup: yes }
+    - {src: '{{srcdir}}/orbitcalcs/Makefile', dest: '{{destdir}}/', mode: '644', backup: yes }
+    - {src: '{{srcdir}}/orbitcalcs/create_page.php', dest: '{{destdir}}/', mode: '644', backup: yes }
+    - {src: '{{srcdir}}/orbitcalcs/charter.sh', dest: '{{destdir}}/', mode: '755', backup: yes }
+    - {src: '{{srcdir}}/orbitcalcs/makecometpages.sh', dest: '{{destdir}}/', mode: '755', backup: yes }
+    - {src: '{{srcdir}}/orbitcalcs/pgpreprocess.sh', dest: '{{destdir}}/', mode: '755', backup: yes }
+    - {src: '{{srcdir}}/orbitcalcs/getmpcdata.sh', dest: '{{destdir}}/', mode: '755', backup: yes }
