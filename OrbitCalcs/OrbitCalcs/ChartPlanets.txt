@@ -1,0 +1,12 @@
+p1,Mercury
+p2,Venus
+p4,Mars
+p5,Jupiter
+p6,Saturn
+p7,Uranus
+p8,Neptune
+p9,Pluto
+A1,1-Ceres
+A2,2-Pallas
+A3,3-Juno
+A4,4-Vesta

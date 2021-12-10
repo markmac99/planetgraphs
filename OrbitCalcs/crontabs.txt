@@ -1,0 +1,4 @@
+# crontab entries
+HOME=
+0 23 * * * $HOME/mmwebsite/planetgraphs/getmpcdata.sh > $HOME/mmwebsite/logs/getmpcdata.log 2>&1
+5 23 * * * $HOME/mmwebsite/planetgraphs/pgpreprocess.sh > $HOME/mmwebsite/logs/pgpreprocess.log 2>&1
