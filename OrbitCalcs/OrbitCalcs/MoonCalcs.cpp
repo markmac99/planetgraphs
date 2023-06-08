@@ -52,7 +52,7 @@ int main(int argc, char** argv)
 
 	//printf("dd %.2f dtval %.2f\n", dd, dtval);
 
-	char fileloc[256]={0};
+	char fileloc[768]={0};
 	sprintf(fileloc, "%s/mooncalcs.js", szPath);
 	FILE* outf = fopen(fileloc,"w");
 	fprintf(outf, "$(function() {\n");

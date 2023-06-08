@@ -315,7 +315,7 @@ int LoadAsteroidsMPC(int n)
 {
 	FILE *f = NULL;
 	FILE *errf = NULL;
-	char fileloc[512];
+	char fileloc[768];
 	char id[8], name[32];
 	double M, G, MA, w, N, i, e, dm, a;
 //	long epochyyyymmdd;

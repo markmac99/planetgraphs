@@ -35,7 +35,7 @@ void addFooter(FILE* f, char* unt, char* typ, double minv, double maxv)
 
 void SaveOrbitalElements(void)
 {
-	char fileloc[256];
+	char fileloc[768];
 	sprintf(fileloc, "%s/orbitalelements.csv", szPath);
 	FILE* f = fopen(fileloc, "w");
 	for (int i = 0; i < 10; i++)
@@ -62,7 +62,7 @@ void CreateOutputFiles(double lati, double longi, double dt)
 	{
 		if (planetno == EARTH) planetno++;
 		FILE *f1, *f2, *f3, *f4;
-		char fnam[256];
+		char fnam[768];
 		char* pname = elements[planetno].name;
 		printf("%s\n", pname);
 		if (pname[0] == '(')
@@ -167,7 +167,7 @@ void CreateOutputFiles(double lati, double longi, double dt)
 void CometOutputter(double lati, double longi, double dt)
 {
 	FILE* inf;
-	char fnam[256];
+	char fnam[768];
 	sprintf(fnam, "%s/%s", szPath, "VisCometEls.txt");
 	inf = fopen(fnam, "r");
 	double temp = 10, press = 1010;

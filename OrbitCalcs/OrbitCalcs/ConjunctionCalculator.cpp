@@ -142,7 +142,7 @@ int main(int argc, char** argv)
 	qsort(Conjunctions, conjno, sizeof(struct Conjunction), CompareDates);
 
 	printf("writing header\n"); fflush(stdout);
-	char fileloc[256]={0};
+	char fileloc[768]={0};
 	sprintf(fileloc, "%s/conjunctions.js", szPath);
 	FILE* outf = fopen(fileloc,"w");
 	sprintf(fileloc, "%s/conjunctions.csv", szPath);
