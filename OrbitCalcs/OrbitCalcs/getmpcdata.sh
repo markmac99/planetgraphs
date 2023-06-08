@@ -1,5 +1,10 @@
 #!/bin/bash
 here="$( cd "$(dirname "$0")" >/dev/null 2>&1 ; pwd -P )"
+
+pushd ~/tools/ephemeris-compute-de430/
+./dataFetch.py
+popd
+
 cd $here
 
 mkdir $here/input>/dev/null 2>&1
