@@ -22,7 +22,7 @@ scp -i $WEBKEY /tmp/createpages.sh $WEBUSER@$WEBHOST:/tmp
 scp -i $WEBKEY ./create_page.php $WEBUSER@$WEBHOST:/tmp
 ssh -i $WEBKEY $WEBUSER@$WEBHOST /tmp/createpages.sh
 
-pushd $SHAREDDIR/ephemeris-compute/
+pushd ~/tools/ephemeris-compute-de430/
 mv -f data/*.cmt /tmp
 ./setup.sh
 popd
