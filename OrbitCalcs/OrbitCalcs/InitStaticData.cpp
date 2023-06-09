@@ -315,7 +315,7 @@ int LoadAsteroidsMPC(int n)
 {
 	FILE *f = NULL;
 	FILE *errf = NULL;
-	char fileloc[768];
+	char fileloc[1024];
 	char id[8], name[32];
 	double M, G, MA, w, N, i, e, dm, a;
 //	long epochyyyymmdd;
@@ -326,7 +326,7 @@ int LoadAsteroidsMPC(int n)
 	{
 		sprintf(fileloc, "%s/orbitcalcs.err", szPath);
 		errf = fopen(fileloc, "w");
-		fprintf(errf, "unable to find file in %s", szPath);
+		fprintf(errf, "unable to find %s", fileloc);
 		fclose(errf);
 		return -1;
 	}

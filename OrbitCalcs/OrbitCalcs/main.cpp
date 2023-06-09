@@ -27,13 +27,11 @@ int main(int argc, char **argv)
 
 	//int vis_or_tele = 1;//  (planetno < 4 ? 1: 2);
 	double dd = days(yy, mo, dy, 0, 0, 0);
-#ifndef _WIN32
+
 	strcpy(szPath, argv[5]);
 	strcpy(szOutputPath, argv[4]);
-#else
-	strcpy(szPath, "//thelinux/www$/html/astro/mpcdata");
-	strcpy(szOutputPath, "//thelinux/www$/html/planetgraphs/data");
-#endif
+	printf("input path %s\n output path %s\n", szPath, szOutputPath);
+
 
 	maxloaded = LoadOrbitalElements(elements);
 	CreateOutputFiles(lati, longi, dd + 36525);	

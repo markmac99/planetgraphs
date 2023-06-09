@@ -1,4 +1,4 @@
-#!/opt/bitnami/php/bin/php
+#!/opt/bitnami/php/bin/php.old
 <?PHP
   include ('/opt/bitnami/apps/wordpress/htdocs/wp-load.php');
   switch_to_blog(3);
@@ -11,11 +11,11 @@
   $p1 = get_page_by_title( $argv[1] );
   if ( empty($p1) ) 
   { 
-    echo 'post not found ';
+    echo "post not found ";
   } 
   else 
   { 
-    echo 'deleting old post ';
+    echo "deleting old post ";
     wp_delete_post($p1->ID);
   }
 
@@ -42,6 +42,6 @@
   } 
   else
   {
-    echo 'inserted new post ';
+    echo "inserted new post \n";
   }
 ?>

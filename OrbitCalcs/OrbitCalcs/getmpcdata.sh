@@ -15,8 +15,8 @@ EXITVAL=$?
 if [ $EXITVAL -eq 0 ]
 then
   gunzip /tmp/tmpfile.gz
-  mv $here/output/MPCORB.DAT $here/input/MPCORB.DAT.prev
-  mv /tmp/tmpfile $here/output/MPCORB.DAT
+  mv $here/input/MPCORB.DAT $here/input/MPCORB.DAT.prev
+  mv /tmp/tmpfile $here/input/MPCORB.DAT
   exit 0
 else
   exit $EXITVAL

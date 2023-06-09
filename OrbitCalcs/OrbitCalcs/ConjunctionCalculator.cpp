@@ -68,6 +68,9 @@ int main(int argc, char** argv)
 
 	double dd = days(yr, mth, tstruct->tm_mday, 0, 0, 0);
 
+	printf("Processing %ld days, %.2f min sep, %.2f lati, %.2f longi, %s location\n", 
+		maxdate, minconj, lati, longi, szPath);
+
 	// local sidereal time
 	double lst = LocalSiderealTime(yr, mth, tstruct->tm_mday,
 		tstruct->tm_hour, tstruct->tm_min, tstruct->tm_sec, longi) / 24.0;

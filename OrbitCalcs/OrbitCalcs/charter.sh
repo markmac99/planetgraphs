@@ -17,7 +17,7 @@ do
 	comname=`echo $i | cut -d, -f2`
 	echo $comid $comname
 	cat $templ | sed s/FNAFNAFNA/$comname/g|sed s/IDIDID/$comid/g|sed s/STASTASTA/$jd/g|sed s/ENDENDEND/$jde/g > /tmp/$comname.sch
-	$SHAREDDIR/star-charter/bin/starchart.bin /tmp/$comname.sch 
+	$HOME/tools/star-charter/bin/starchart.bin /tmp/$comname.sch 
 	rm -f /tmp/$comname.sch
 done
 cat output/ChartPlanets.txt | while read i 
@@ -26,6 +26,6 @@ do
 	comname=`echo $i | cut -d, -f2`
 	echo $comid $comname
 	cat $templ | sed s/FNAFNAFNA/$comname/g|sed s/IDIDID/$comid/g|sed s/STASTASTA/$jd/g|sed s/ENDENDEND/$jde/g > /tmp/$comname.sch
-	$SHAREDDIR/star-charter/bin/starchart.bin /tmp/$comname.sch 
+	$HOME/tools/star-charter/bin/starchart.bin /tmp/$comname.sch 
 	rm -f /tmp/$comname.sch
 done
