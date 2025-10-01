@@ -172,17 +172,17 @@ int LoadOrbitalElements(OrbitalElements* elements)
 	n++;
 
 	strcpy(elements[6].name, "Saturn");
-	elements[6].N[0] = 113.6634;
+	elements[6].N[0] = 113.71504 ; //113.6634;
 	elements[6].N[1] = 0.000023898;
-	elements[6].incl[0] = 2.4886;
+	elements[6].incl[0] = 2.48446; //2.4886;
 	elements[6].incl[1] = -0.0000001081;
-	elements[6].omega[0] = 339.3939;
+	elements[6].omega[0] = 339.329; //339.3939;
 	elements[6].omega[1] = 0.0000297661;
-	elements[6].a[0] = 9.55475;
+	elements[6].a[0] = 9.53707032; //9.55475;
 	elements[6].a[1] = 0;
-	elements[6].e[0] = 0.055546;
+	elements[6].e[0] = 0.05415060; //0.055546;
 	elements[6].e[1] = -0.000000009499;
-	elements[6].MA[0] = 316.967;
+	elements[6].MA[0] = 317.020; //316.967;
 	elements[6].MA[1] = 0.0334442282;
 	elements[6].mag[0] = -9;
 	elements[6].mag[1] = 0.044;
