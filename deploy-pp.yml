@@ -1,6 +1,6 @@
 - hosts: wordpresssite
   vars:
-    srcdir: /mnt/e/dev/astronomy/planetgraphs/OrbitCalcs
+    srcdir: /mnt/c/Users/{{ lookup('env','USER' )}}/onedrive/dev/astro/planetgraphs/OrbitCalcs
     destdir: ~/tools/planetgraphs
   tasks:
 #  - name: import dev variables 
@@ -11,7 +11,7 @@
 #    tags: prod
 
   - name: Ensures logs exists
-    file: path={{destdir}}/../logs state=directory
+    file: path=~/logs state=directory
   - name: Ensures input exists
     file: path={{destdir}}/input state=directory
   - name: Ensures output exists

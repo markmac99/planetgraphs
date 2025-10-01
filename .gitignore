@@ -33,3 +33,4 @@ CometEls.txt
 *.recipe
 *.vcxproj*
 OrbitCalcs/ConjunctionCalculator/readme.txt
+OrbitCalcs/OrbitCalcs.dll
