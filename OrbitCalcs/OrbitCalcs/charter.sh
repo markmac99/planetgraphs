@@ -16,7 +16,7 @@ do
 	comid=`echo $i | cut -d, -f1`
 	comname=`echo $i | cut -d, -f2`
 	echo $comid $comname
-	cat $templ | sed s/FNAFNAFNA/$comname/g|sed s/IDIDID/$comid/g|sed s/STASTASTA/$jd/g|sed s/ENDENDEND/$jde/g > /tmp/$comname.sch
+	cat $templ | sed "s/FNAFNAFNA/$comname/g"|sed "s/IDIDID/$comid/g"|sed "s/STASTASTA/$jd/g"|sed "s/ENDENDEND/$jde/g" > /tmp/$comname.sch
 	$HOME/tools/star-charter/bin/starchart.bin /tmp/$comname.sch 
 	rm -f /tmp/$comname.sch
 done
@@ -25,7 +25,7 @@ do
 	comid=`echo $i | cut -d, -f1`
 	comname=`echo $i | cut -d, -f2`
 	echo $comid $comname
-	cat $templ | sed s/FNAFNAFNA/$comname/g|sed s/IDIDID/$comid/g|sed s/STASTASTA/$jd/g|sed s/ENDENDEND/$jde/g > /tmp/$comname.sch
+	cat $templ | sed "s/FNAFNAFNA/$comname/g"|sed "s/IDIDID/$comid/g"|sed "s/STASTASTA/$jd/g"|sed "s/ENDENDEND/$jde/g" > /tmp/$comname.sch
 	$HOME/tools/star-charter/bin/starchart.bin /tmp/$comname.sch 
 	rm -f /tmp/$comname.sch
 done
