@@ -125,7 +125,7 @@ require_once('calendar/classes/tc_calendar.php');
 								  }
 								</script>
 								<script type="text/javascript" async defer
-								  src="https://maps.googleapis.com/maps/api/js?key=AIzaSyA3j6m0AQ0AwqetHgGg3OE6by4TqUCb-oE&callback=initMap">
+								  src="https://maps.googleapis.com/maps/api/js?key=APIKEYHERE&callback=initMap">
 								</script>
 							  <input type="submit" name="button" id="button" value="Use these Values">
 							  </form>
