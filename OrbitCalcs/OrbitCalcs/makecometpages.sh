@@ -13,7 +13,7 @@ do
   if [ ! -z $k ]
   then 
     echo $k
-    echo "$here/create_page.php $k" >> /tmp/createpages.sh
+    echo "php -c /etc/php/8.1/fpm/php.ini $here/create_page.php $k" >> /tmp/createpages.sh
   fi
 done
 chmod +x /tmp/createpages.sh
