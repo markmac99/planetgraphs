@@ -34,3 +34,5 @@ CometEls.txt
 *.vcxproj*
 OrbitCalcs/ConjunctionCalculator/readme.txt
 OrbitCalcs/OrbitCalcs.dll
+
+servercopy/planetgraphs/*

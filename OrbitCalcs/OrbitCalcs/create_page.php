@@ -1,5 +1,4 @@
-#!/opt/bitnami/php/bin/php.old
-<?PHP
+<?php
   include ('/opt/bitnami/apps/wordpress/htdocs/wp-load.php');
   switch_to_blog(3);
   global $allowedposttags;
