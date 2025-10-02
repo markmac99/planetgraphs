@@ -8,6 +8,8 @@
 #include "OrbitCalcs.h"
 #include "Comets.h"
 
+#define MINMAG 17.1
+
 int main(int argc, char **argv)
 {
 	double temp = 10, press = 1010, lati = 51.88, longi = -1.31;
@@ -49,7 +51,7 @@ int main(int argc, char **argv)
 		double mag = CometMagnitude(aComet.mag[0], aComet.mag[1], sundist, earthdist);
 		fprintf(stderr, "%s %.1f\n", aComet.name, mag);
 
-		if (mag < 15.1)
+		if (mag < MINMAG)
 		{
 			// all brighter comets to be analysed later
 			fprintf(outf, "%s\n", aline);

@@ -7,11 +7,13 @@
 #include "OrbitCalcs.h"
 #include "Comets.h"
 
+#define MINMAG 17.1
+
 extern struct cometData aComet;
 void WriteHeader(FILE* outf);
 void CreateOutputLine(FILE* outf, char*name, double siz, double mag, char* t,
-	double alti, double azi, char* f, double dec, char* ri, char* se, char* targ, double ra);
-void WriteFooter(FILE* outf);
+	double alti, double azi, char* f, double dec, char* ri, char* se, char* targ, double ra, int outputtype);
+void WriteFooter(FILE* outf, int outputtype);
 
 int main(int argc, char **argv)
 {
@@ -89,7 +91,7 @@ int main(int argc, char **argv)
 
 		printf("Check %s %.2f %.2f %s %.2f %.2f %s %.2f %s %s %f %f\n", 
 			elements[planetno].name, siz, brig, t, alti, azi, f, dec, ri, se, lst, tt);
-		CreateOutputLine(outf, elements[planetno].name, siz, brig, t, alti, azi, f, dec, ri, se, "planets", ra/15);
+		CreateOutputLine(outf, elements[planetno].name, siz, brig, t, alti, azi, f, dec, ri, se, "planets", ra/15,1);
 	}
 
 	int sts = 1;
@@ -104,7 +106,7 @@ int main(int argc, char **argv)
 			aComet.N, aComet.omega, aComet.incl);
 		double mag = CometMagnitude(aComet.mag[0], aComet.mag[1], sundist, earthdist);
 
-		if (mag < 15.1)
+		if (mag < MINMAG)
 		{
 			double minalt = 5.0; // minimum altitude to be vaguely visible
 
@@ -161,14 +163,16 @@ int main(int argc, char **argv)
 			strcpy(t, fmt_hours(tt * 15));
 			cleanup_name(aComet.name);
 			printf("Check2 %s %.2f %.2f %s %.2f %.2f %s %.2f %s %s\n", aComet.name, siz, mag, t, alti, azi, f, dec, ri, se);
-			CreateOutputLine(outf, aComet.name, siz, mag, t, alti, azi, f, dec, ri, se, "comets", ra/15);
-			CreateOutputLine(comoutf, aComet.name, siz, mag, t, alti, azi, f, dec, ri, se, "comets", ra/15);
+			if (mag < 10){
+				CreateOutputLine(outf, aComet.name, siz, mag, t, alti, azi, f, dec, ri, se, "comets", ra/15, 1);
+			}
+			CreateOutputLine(comoutf, aComet.name, siz, mag, t, alti, azi, f, dec, ri, se, "comets", ra/15, 0);
  			fprintf(comf, "%s,%s\n", aComet.id, aComet.name);
 		}
 	}
 
-	WriteFooter(outf);
-	WriteFooter(comoutf);
+	WriteFooter(outf, 1);
+	WriteFooter(comoutf, 0);
 	fclose(inf);
 	fclose(outf);
 	fclose(comoutf);
@@ -178,14 +182,15 @@ int main(int argc, char **argv)
 }
 
 void CreateOutputLine(FILE* outf, char*name, double siz, double mag, char* t, 
-	double alti, double azi, char* f, double dec, char* ri, char* se, char* targ, double ra)
+	double alti, double azi, char* f, double dec, char* ri, char* se, char* targ, double ra, int outputtype=1)
 {
 	fprintf(outf,"var row = table.insertRow(-1);\n");
 	fprintf(outf, "var cell = row.insertCell(0);\n");
 	fprintf(outf, "cell.innerHTML = \"\\<a href=\\\"%s/\\\"\\>%s\\</a\\>\";\n", name, name);
 	fprintf(outf, "var cell = row.insertCell(1);\n");
 	fprintf(outf, "cell.innerHTML = \"%2.2f\";\n", siz);
-	fprintf(outf, "var cell = row.insertCell(2);\n");
+
+		fprintf(outf, "var cell = row.insertCell(2);\n");
 	fprintf(outf, "cell.innerHTML = \"%2.2f\";\n", mag);
 	fprintf(outf, "var cell = row.insertCell(3);\n");
 	if (alti <0.01) 
@@ -222,57 +227,55 @@ void WriteHeader(FILE* outf)
 	fprintf(outf, "$(function() {\n");
 	fprintf(outf, "var table = document.createElement(\"table\");\n");
 	fprintf(outf, "table.className = \"table table-striped table-bordered table-hover table-condensed\";\n");
+	fprintf(outf, "table.setAttribute(\"id\", \"comtableid\");\n");
 	fprintf(outf, "var header = table.createTHead();\n");
 	fprintf(outf, "header.className = \"h4\"; \n");
 	fprintf(outf, "\n");
 }
 
-void WriteFooter(FILE* outf)
+void WriteFooter(FILE* outf, int outputtype=1)
 {
 	fprintf(outf, "var row = header.insertRow(0);\n");
 	fprintf(outf, "var cell = row.insertCell(0);\n");
-	fprintf(outf, "cell.innerHTML = \"RA\";\n");
-	fprintf(outf, "cell.className = \"small\";\n");
-	fprintf(outf, "var cell = row.insertCell(1);");
-	fprintf(outf, "cell.innerHTML = \"Dec\";\n");
-	fprintf(outf, "cell.className = \"small\";\n");
-	fprintf(outf, "var cell = row.insertCell(0);\n");
-	fprintf(outf, "cell.innerHTML = \"Alt\";\n");
-	fprintf(outf, "cell.className = \"small\";\n");
-	fprintf(outf, "var cell = row.insertCell(1);\n");
-	fprintf(outf, "cell.innerHTML = \"Az\";\n");
-	fprintf(outf, "cell.className = \"small\";\n");
-
-	fprintf(outf, "var row = header.insertRow(0);\n");
-	fprintf(outf, "var cell = row.insertCell(0);\n");
 	fprintf(outf, "cell.innerHTML = \"Body\";\n");
-	fprintf(outf, "cell.rowSpan = 2;\n");
 	fprintf(outf, "var cell = row.insertCell(1);\n");
 	fprintf(outf, "cell.innerHTML = \"Size\";\n");
-	fprintf(outf, "cell.rowSpan = 2;\n");
+
 	fprintf(outf, "var cell = row.insertCell(2);\n");
 	fprintf(outf, "cell.innerHTML = \"Mag\";\n");
-	fprintf(outf, "cell.rowSpan = 2;\n");
+
 	fprintf(outf, "var cell = row.insertCell(3);\n");
-	fprintf(outf, "cell.innerHTML = \"Best\";\n");
-	fprintf(outf, "cell.colSpan = 2;\n");
+	fprintf(outf, "cell.innerHTML = \"Best Alt\";\n");
+	fprintf(outf, "cell.className = \"small\";\n");
 	fprintf(outf, "var cell = row.insertCell(4);\n");
-	fprintf(outf, "cell.innerHTML = \"Location\";\n");
-	fprintf(outf, "cell.colSpan = 2;\n");
+	fprintf(outf, "cell.innerHTML = \"Best Az\";\n");
+	fprintf(outf, "cell.className = \"small\";\n");
+
+	fprintf(outf, "var cell = row.insertCell(3);\n");
+	fprintf(outf, "cell.innerHTML = \"RA\";\n");
+	fprintf(outf, "var cell = row.insertCell(4);\n");
+	fprintf(outf, "cell.innerHTML = \"Dec\";\n");
+
 	fprintf(outf, "var cell = row.insertCell(5);\n");
 	fprintf(outf, "cell.innerHTML = \"Transit\";\n");
-	fprintf(outf, "cell.rowSpan = 2;\n");
 	fprintf(outf, "var cell = row.insertCell(6);\n");
 	fprintf(outf, "cell.innerHTML = \"Rise\";\n");
-	fprintf(outf, "cell.rowSpan = 2;\n");
 	fprintf(outf, "var cell = row.insertCell(7);\n");
 	fprintf(outf, "cell.innerHTML = \"Set\";\n");
-	fprintf(outf, "cell.rowSpan = 2;\n");
 	fprintf(outf, "var cell = row.insertCell(8);\n");
 	fprintf(outf, "cell.innerHTML = \"Cons\";\n");
-	fprintf(outf, "cell.rowSpan = 2;\n");
 	fprintf(outf, "var outer_div = document.getElementById(\"table6hrs\");\n");
 	fprintf(outf, "outer_div.appendChild(table);\n");
 	fprintf(outf, "})\n");
+	if (outputtype != 1) {
+		fprintf(outf, "$(document).ready(function() {\n");
+		fprintf(outf, "$(\"#comtableid\").DataTable({\n");
+		fprintf(outf, "columnDefs : [\n");
+		fprintf(outf, "{ Type : \"numeric\", targets : [2]}\n");
+		fprintf(outf, "],\n");
+		fprintf(outf, "order : [[ 2, \"asc\"]],\n");
+		fprintf(outf, "paging: false\n");
+		fprintf(outf, "});});\n");
+	}
 	fprintf(outf, "\n");
 }
