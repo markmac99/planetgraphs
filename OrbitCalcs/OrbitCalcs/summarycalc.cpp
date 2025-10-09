@@ -251,18 +251,18 @@ void WriteFooter(FILE* outf, int outputtype=1)
 	fprintf(outf, "cell.innerHTML = \"Best Az\";\n");
 	fprintf(outf, "cell.className = \"small\";\n");
 
-	fprintf(outf, "var cell = row.insertCell(3);\n");
+	fprintf(outf, "var cell = row.insertCell(5);\n");
 	fprintf(outf, "cell.innerHTML = \"RA\";\n");
-	fprintf(outf, "var cell = row.insertCell(4);\n");
+	fprintf(outf, "var cell = row.insertCell(6);\n");
 	fprintf(outf, "cell.innerHTML = \"Dec\";\n");
 
-	fprintf(outf, "var cell = row.insertCell(5);\n");
-	fprintf(outf, "cell.innerHTML = \"Transit\";\n");
-	fprintf(outf, "var cell = row.insertCell(6);\n");
-	fprintf(outf, "cell.innerHTML = \"Rise\";\n");
 	fprintf(outf, "var cell = row.insertCell(7);\n");
-	fprintf(outf, "cell.innerHTML = \"Set\";\n");
+	fprintf(outf, "cell.innerHTML = \"Transit\";\n");
 	fprintf(outf, "var cell = row.insertCell(8);\n");
+	fprintf(outf, "cell.innerHTML = \"Rise\";\n");
+	fprintf(outf, "var cell = row.insertCell(9);\n");
+	fprintf(outf, "cell.innerHTML = \"Set\";\n");
+	fprintf(outf, "var cell = row.insertCell(10);\n");
 	fprintf(outf, "cell.innerHTML = \"Cons\";\n");
 	fprintf(outf, "var outer_div = document.getElementById(\"table6hrs\");\n");
 	fprintf(outf, "outer_div.appendChild(table);\n");
